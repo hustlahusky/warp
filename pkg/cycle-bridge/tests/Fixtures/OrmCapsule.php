@@ -12,9 +12,7 @@ use Cycle\ORM\ORM;
 final class OrmCapsule implements DatabaseProviderInterface
 {
     private DatabaseManager $dbal;
-
     private ORM $orm;
-
     private TestLogger $logger;
 
     public function __construct(DatabaseManager $dbal, ORM $orm)

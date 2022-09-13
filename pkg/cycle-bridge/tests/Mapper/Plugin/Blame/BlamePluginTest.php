@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Warp\Bridge\Cycle\Mapper\Plugin\Blame;
 
 use Cycle\ORM\Heap\Node;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Warp\Bridge\Cycle\AbstractTestCase;
 use Warp\Bridge\Cycle\Fixtures\Todo\TodoItem;
 use Warp\Bridge\Cycle\Fixtures\Todo\TodoItemId;
@@ -13,7 +14,6 @@ use Warp\Bridge\Cycle\Mapper\Plugin\DispatcherMapperPlugin;
 use Warp\Bridge\Cycle\Mapper\Plugin\QueueBeforeEvent;
 use Warp\DataSource\Blame\BlameActorProviderInterface;
 use Warp\DataSource\Blame\NullBlameActorProvider;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class BlamePluginTest extends AbstractTestCase
 {

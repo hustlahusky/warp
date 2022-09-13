@@ -14,12 +14,10 @@ final class CollectionTypeFactory implements TypeFactoryInterface
     use TypeFactoryTrait;
 
     private const ITERABLE = 'iterable';
-
     private const VALUE = 'value';
-
     private const KEY = 'key';
 
-    private TypeFactoryInterface $iterableTypeFactory;
+    private readonly TypeFactoryInterface $iterableTypeFactory;
 
     public function __construct(?TypeFactoryInterface $iterableTypeFactory = null)
     {
@@ -89,7 +87,6 @@ final class CollectionTypeFactory implements TypeFactoryInterface
     }
 
     /**
-     * @param string $type
      * @return array<string,string|null>|null
      */
     private function parseType(string $type): ?array

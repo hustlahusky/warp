@@ -18,7 +18,6 @@ final class Map extends AbstractMap implements StaticConstructorInterface
 {
     /**
      * @param iterable<K,V> $elements
-     * @param TypeInterface|null $valueType
      * @return self<K,V>
      */
     public static function new(iterable $elements = [], ?TypeInterface $valueType = null): self

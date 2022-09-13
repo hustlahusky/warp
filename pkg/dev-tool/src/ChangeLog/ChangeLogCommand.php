@@ -49,9 +49,7 @@ final class ChangeLogCommand extends Command
                 continue;
             }
 
-            /** @var Commit $pathCommit */
             $pathCommit = $git->getLog(['HEAD'], [$path], 0, 1)->getSingleCommit();
-            /** @var Commit $changelogCommit */
             $changelogCommit = $git->getLog(['HEAD'], [$changelog], 0, 1)->getSingleCommit();
 
             if ($changelogCommit->getHash() === $pathCommit->getHash()) {
@@ -89,11 +87,9 @@ final class ChangeLogCommand extends Command
 
     /**
      * @param Log<Commit> $log
-     * @return string|null
      */
     private function getChangelogSection(Log $log): ?string
     {
-        /** @var Commit[] $commits */
         $commits = $log->getCommits();
 
         if (0 === \count($commits)) {

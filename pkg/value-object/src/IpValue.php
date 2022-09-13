@@ -6,7 +6,7 @@ namespace Warp\ValueObject;
 
 class IpValue extends AbstractStringValue
 {
-    protected static function validate($value): void
+    protected static function validate(mixed $value): void
     {
         parent::validate($value);
 

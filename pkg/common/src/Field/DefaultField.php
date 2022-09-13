@@ -6,16 +6,14 @@ namespace Warp\Common\Field;
 
 final class DefaultField implements FieldInterface
 {
-    private string $field;
-
     /**
      * @var string[]
      */
-    private array $elements;
+    private readonly array $elements;
 
-    public function __construct(string $field)
-    {
-        $this->field = $field;
+    public function __construct(
+        private readonly string $field,
+    ) {
         $this->elements = self::parseElements($field);
     }
 
@@ -29,7 +27,7 @@ final class DefaultField implements FieldInterface
         return $this->elements;
     }
 
-    public function extract($element)
+    public function extract(mixed $element): mixed
     {
         $value = $element;
 
@@ -42,7 +40,6 @@ final class DefaultField implements FieldInterface
 
     /**
      * Parse extract path like in symfony property-access component.
-     * @param string $field
      * @return string[]
      */
     public static function parseElements(string $field): array
@@ -79,12 +76,7 @@ final class DefaultField implements FieldInterface
         return $elements;
     }
 
-    /**
-     * @param mixed $element
-     * @param string $key
-     * @return mixed
-     */
-    private static function getValue($element, string $key)
+    private static function getValue(mixed $element, string $key): mixed
     {
         if (\is_array($element) && (isset($element[$key]) || \array_key_exists($key, $element))) {
             return $element[$key];

@@ -13,13 +13,11 @@ final class MoveClassCommand extends Command
 {
     protected static $defaultName = 'refactor:class:move';
 
-    private MoveClassRefactor $refactor;
-
-    public function __construct(MoveClassRefactor $refactor, ?string $name = null)
-    {
+    public function __construct(
+        private readonly MoveClassRefactor $refactor,
+        ?string $name = null,
+    ) {
         parent::__construct($name);
-
-        $this->refactor = $refactor;
     }
 
     /**

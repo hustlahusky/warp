@@ -8,7 +8,7 @@ final class IntersectionType extends AbstractAggregatedType
 {
     public const DELIMITER = '&';
 
-    public function check($value): bool
+    public function check(mixed $value): bool
     {
         foreach ($this->types as $type) {
             if (!$type->check($value)) {

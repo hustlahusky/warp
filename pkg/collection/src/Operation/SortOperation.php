@@ -13,12 +13,13 @@ use Warp\Common\Field\FieldInterface;
  */
 final class SortOperation extends AbstractOperation
 {
-    private int $direction;
+    private readonly int $direction;
 
-    private ?FieldInterface $field;
-
-    public function __construct(int $direction = \SORT_ASC, ?FieldInterface $field = null, bool $preserveKeys = false)
-    {
+    public function __construct(
+        int $direction = \SORT_ASC,
+        private readonly ?FieldInterface $field = null,
+        bool $preserveKeys = false,
+    ) {
         parent::__construct($preserveKeys);
 
         if (\SORT_ASC !== $direction && \SORT_DESC !== $direction) {
@@ -26,7 +27,6 @@ final class SortOperation extends AbstractOperation
         }
 
         $this->direction = $direction;
-        $this->field = $field;
     }
 
     protected function generator(\Traversable $iterator): \Generator
@@ -47,7 +47,7 @@ final class SortOperation extends AbstractOperation
      * @param V $value
      * @return mixed|null
      */
-    private function extractValue($value)
+    private function extractValue(mixed $value): mixed
     {
         return null === $this->field ? $value : $this->field->extract($value);
     }

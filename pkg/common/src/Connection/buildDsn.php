@@ -13,7 +13,6 @@ namespace Warp\Common\Connection;
  * @see https://www.php.net/manual/ru/ref.pdo-sqlite.connection.php
  * @param array<string,string> $options DSN elements
  * @param string $driver DSN driver prefix (`mysql` by default).
- * @return string
  */
 function buildDsn(array $options, string $driver = 'mysql'): string
 {
@@ -70,7 +69,7 @@ function buildDsn(array $options, string $driver = 'mysql'): string
     // TODO: support additional options
 
     foreach ($optionsByOrder as $optionName) {
-        if (!isset($options[$optionName]) || empty($options[$optionName])) {
+        if (empty($options[$optionName])) {
             continue;
         }
 

@@ -33,7 +33,7 @@ class MorphedHasMany extends HasMany
         $rNode = $this->getNode($related);
         \assert(null !== $rNode);
         if ($this->fetchKey($rNode, $this->morphKey) !== $node->getRole()) {
-            $rStore->waitContext($this->columnName($node, $this->morphKey), true);
+            $rStore->waitContext($this->columnName($node, $this->morphKey));
             $rStore->register($this->columnName($node, $this->morphKey), $node->getRole(), true);
             $rNode->register($this->morphKey, $node->getRole(), true);
         }

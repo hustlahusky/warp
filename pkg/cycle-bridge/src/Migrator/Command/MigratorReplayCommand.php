@@ -16,21 +16,16 @@ use Warp\Bridge\Cycle\Migrator\LockFacade;
 final class MigratorReplayCommand extends Command implements MigratorApplyCommandInterface
 {
     protected static $defaultName = 'migrator:replay';
-
     protected static $defaultDescription = 'Rollback then run migrations';
 
-    private Input\ForceOption $force;
+    private readonly Input\ForceOption $force;
+    private readonly Input\MigrationsCountArgument $count;
+    private readonly LockFacade $lockFacade;
 
-    private Input\MigrationsCountArgument $count;
-
-    private ContainerInterface $container;
-
-    private LockFacade $lockFacade;
-
-    public function __construct(ContainerInterface $container, ?string $name = null)
-    {
-        $this->container = $container;
-
+    public function __construct(
+        private readonly ContainerInterface $container,
+        ?string $name = null,
+    ) {
         $this->lockFacade = new LockFacade($this->container);
 
         parent::__construct($name);

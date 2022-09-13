@@ -34,7 +34,7 @@ abstract class AbstractIntValue extends AbstractValueObject
         return $this->value() <= $other->value();
     }
 
-    protected static function validate($value): void
+    protected static function validate(mixed $value): void
     {
         if (false === \filter_var($value, \FILTER_VALIDATE_INT)) {
             throw new \InvalidArgumentException(
@@ -43,7 +43,7 @@ abstract class AbstractIntValue extends AbstractValueObject
         }
     }
 
-    protected static function cast($value): int
+    protected static function cast(mixed $value): int
     {
         return (int)$value;
     }

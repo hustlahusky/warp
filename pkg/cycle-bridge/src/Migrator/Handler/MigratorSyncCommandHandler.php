@@ -14,11 +14,9 @@ use Warp\Bridge\Cycle\Migrator\Generator\ShowChanges;
 
 final class MigratorSyncCommandHandler extends AbstractCommandHandler
 {
-    private Registry $registry;
-
-    public function __construct(Registry $registry)
-    {
-        $this->registry = $registry;
+    public function __construct(
+        private readonly Registry $registry,
+    ) {
     }
 
     public function handle(Command $command, InputInterface $input, OutputStyle $style): int

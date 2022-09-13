@@ -7,9 +7,7 @@ namespace Warp\CommandBus\Middleware\Logger;
 trait MayBeLoggedMessageTrait
 {
     private ?string $beforeMessage = null;
-
     private ?string $afterMessage = null;
-
     private ?string $errorMessage = null;
 
     public function renderBeforeMessage(): ?string

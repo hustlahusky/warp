@@ -21,7 +21,6 @@ interface EntityReferenceInterface
 
     /**
      * @param self<E> $other
-     * @return bool
      */
     public function equals(self $other): bool;
 }

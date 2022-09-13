@@ -17,24 +17,24 @@ interface MapInterface extends \IteratorAggregate, \Countable, \JsonSerializable
      * @param K $key
      * @param V $element
      */
-    public function set($key, $element): void;
+    public function set(int|string $key, mixed $element): void;
 
     /**
      * @param K $key
      */
-    public function unset($key): void;
+    public function unset(int|string $key): void;
 
     /**
      * @param K $key
      * @return bool
      */
-    public function has($key): bool;
+    public function has(int|string $key): bool;
 
     /**
      * @param K $key
      * @return V|null
      */
-    public function get($key);
+    public function get(int|string $key);
 
     /**
      * @template T

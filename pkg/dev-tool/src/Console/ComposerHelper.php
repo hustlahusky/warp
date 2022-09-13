@@ -11,13 +11,11 @@ final class ComposerHelper extends Helper
 {
     public const NAME = 'composer';
 
-    private string $composerJsonPath;
-
     private ?ComposerJson $composerJson = null;
 
-    public function __construct(string $composerJsonPath)
-    {
-        $this->composerJsonPath = $composerJsonPath;
+    public function __construct(
+        private readonly string $composerJsonPath,
+    ) {
     }
 
     public function getComposerJson(): ComposerJson

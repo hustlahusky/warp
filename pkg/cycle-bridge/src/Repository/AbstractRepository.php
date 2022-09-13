@@ -10,6 +10,7 @@ use Cycle\ORM\TransactionInterface;
 use Warp\Bridge\Cycle\CycleEntityManager;
 use Warp\Collection\CollectionInterface;
 use Warp\Criteria\CriteriaInterface;
+use Warp\DataSource\DefaultEntityNotFoundExceptionFactory;
 use Warp\DataSource\EntityNotFoundExceptionFactoryInterface;
 use Warp\DataSource\RepositoryInterface;
 
@@ -20,31 +21,24 @@ use Warp\DataSource\RepositoryInterface;
 abstract class AbstractRepository implements RepositoryInterface
 {
     /**
-     * @var string|class-string<E>
-     * @phpstan-var class-string<E>
-     */
-    protected string $role;
-
-    protected ORMInterface $orm;
-
-    /**
      * @var CycleEntityManager<E>
      */
     protected CycleEntityManager $em;
 
+    /**
+     * @param string|class-string $role
+     * @phpstan-param class-string<E> $role
+     */
     public function __construct(
-        string $role,
-        ORMInterface $orm,
+        protected string $role,
+        protected ORMInterface $orm,
         int $transactionMode = TransactionInterface::MODE_CASCADE,
-        ?EntityNotFoundExceptionFactoryInterface $notFoundExceptionFactory = null
+        EntityNotFoundExceptionFactoryInterface $notFoundExceptionFactory = new DefaultEntityNotFoundExceptionFactory(),
     ) {
-        $this->orm = $orm;
-        // @phpstan-ignore-next-line
-        $this->role = $role;
         $this->em = new CycleEntityManager($this->orm, $transactionMode, $notFoundExceptionFactory);
     }
 
-    public function findByPrimary($primary, ?CriteriaInterface $criteria = null): object
+    public function findByPrimary(mixed $primary, ?CriteriaInterface $criteria = null): object
     {
         return $this->em->getReader($this->role)->findByPrimary($primary, $criteria);
     }

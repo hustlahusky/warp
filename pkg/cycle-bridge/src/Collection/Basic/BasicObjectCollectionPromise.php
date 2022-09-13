@@ -19,10 +19,6 @@ use Warp\Bridge\Cycle\Select\ScopeAggregate;
  */
 final class BasicObjectCollectionPromise implements ObjectCollectionPromiseInterface, \IteratorAggregate
 {
-    private ToManyRelationInterface $relation;
-
-    private ReferenceScope $promiseScope;
-
     private ScopeInterface $scope;
 
     /**
@@ -30,11 +26,11 @@ final class BasicObjectCollectionPromise implements ObjectCollectionPromiseInter
      */
     private ?ObjectCollectionInterface $collection = null;
 
-    public function __construct(ToManyRelationInterface $relation, ReferenceScope $scope)
-    {
-        $this->relation = $relation;
-        $this->promiseScope = $scope;
-        $this->scope = $scope;
+    public function __construct(
+        private readonly ToManyRelationInterface $relation,
+        private readonly ReferenceScope $promiseScope,
+    ) {
+        $this->scope = $promiseScope;
     }
 
     public function __id(): int
@@ -78,7 +74,6 @@ final class BasicObjectCollectionPromise implements ObjectCollectionPromiseInter
     }
 
     /**
-     * @param ScopeInterface $scope
      * @return self<T,P>
      */
     public function withScope(ScopeInterface $scope): self
@@ -103,7 +98,7 @@ final class BasicObjectCollectionPromise implements ObjectCollectionPromiseInter
         return $this->__resolve()->getPivot($element);
     }
 
-    public function setPivot(object $element, $pivot): void
+    public function setPivot(object $element, mixed $pivot): void
     {
         $this->__resolve()->setPivot($element, $pivot);
     }

@@ -11,20 +11,15 @@ final class PartialSupportTypeFactory implements TypeFactoryInterface
 {
     use TypeFactoryTrait;
 
-    private TypeFactoryInterface $factory;
-
     /**
      * @var callable
      */
     private $supportedPredicate;
 
-    /**
-     * @param TypeFactoryInterface $factory
-     * @param callable $supportedPredicate
-     */
-    public function __construct(TypeFactoryInterface $factory, callable $supportedPredicate)
-    {
-        $this->factory = $factory;
+    public function __construct(
+        private readonly TypeFactoryInterface $factory,
+        callable $supportedPredicate,
+    ) {
         $this->supportedPredicate = $supportedPredicate;
     }
 

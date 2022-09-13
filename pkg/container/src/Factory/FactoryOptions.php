@@ -53,9 +53,8 @@ final class FactoryOptions implements FactoryOptionsInterface, StaticConstructor
 
     /**
      * @param FactoryOptionsInterface|array<string,mixed>|null|mixed $options
-     * @return FactoryOptionsInterface|null
      */
-    public static function wrap($options): ?FactoryOptionsInterface
+    public static function wrap(mixed $options): ?FactoryOptionsInterface
     {
         if ($options instanceof FactoryOptionsInterface) {
             return $options;
@@ -113,7 +112,7 @@ final class FactoryOptions implements FactoryOptionsInterface, StaticConstructor
         return $this;
     }
 
-    public function addArgument(string $argument, $value): self
+    public function addArgument(string $argument, mixed $value): self
     {
         $this->arguments[$argument] = $value instanceof Option ? $value : new Some($value);
 

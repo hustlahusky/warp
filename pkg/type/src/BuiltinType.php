@@ -24,23 +24,14 @@ final class BuiltinType implements TypeInterface, StaticConstructorInterface
     use SingletonStorageTrait;
 
     public const INT = 'int';
-
     public const FLOAT = 'float';
-
     public const STRING = 'string';
-
     public const BOOL = 'bool';
-
     public const RESOURCE = 'resource';
-
     public const OBJECT = 'object';
-
     public const ARRAY = 'array';
-
     public const NULL = 'null';
-
     public const CALLABLE = 'callable';
-
     public const ITERABLE = 'iterable';
 
     public const ALL = [
@@ -56,12 +47,9 @@ final class BuiltinType implements TypeInterface, StaticConstructorInterface
         self::ITERABLE,
     ];
 
-    private string $type;
-
-    private function __construct(string $type)
-    {
-        $this->type = $type;
-
+    private function __construct(
+        private readonly string $type,
+    ) {
         self::singletonAttach($this);
     }
 
@@ -77,7 +65,6 @@ final class BuiltinType implements TypeInterface, StaticConstructorInterface
 
     /**
      * Magic factory.
-     * @param string $name
      * @param array{} $arguments
      * @return self
      */
@@ -99,48 +86,27 @@ final class BuiltinType implements TypeInterface, StaticConstructorInterface
         return self::singletonFetch($type) ?? new self($type);
     }
 
-    public function check($value): bool
+    public function check(mixed $value): bool
     {
-        switch ($this->type) {
-            case self::INT:
-                return \is_int($value);
-
-            case self::FLOAT:
-                return \is_float($value);
-
-            case self::STRING:
-                return \is_string($value);
-
-            case self::BOOL:
-                return \is_bool($value);
-
-            case self::RESOURCE:
-                return \is_resource($value);
-
-            case self::OBJECT:
-                return \is_object($value);
-
-            case self::ARRAY:
-                return \is_array($value);
-
-            case self::NULL:
-                return null === $value;
-
-            case self::CALLABLE:
-                return \is_callable($value);
-
-            case self::ITERABLE:
-                return \is_iterable($value);
-        }
-
-        return false;
+        return match ($this->type) {
+            self::INT => \is_int($value),
+            self::FLOAT => \is_float($value),
+            self::STRING => \is_string($value),
+            self::BOOL => \is_bool($value),
+            self::RESOURCE => \is_resource($value),
+            self::OBJECT => \is_object($value),
+            self::ARRAY => \is_array($value),
+            self::NULL => null === $value,
+            self::CALLABLE => \is_callable($value),
+            self::ITERABLE => \is_iterable($value),
+            default => false,
+        };
     }
 
     /**
      * @param string|self $value
-     * @return string
      */
-    protected static function singletonKey($value): string
+    protected static function singletonKey(mixed $value): string
     {
         return (string)$value;
     }

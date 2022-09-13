@@ -14,18 +14,13 @@ use Warp\Bridge\Cycle\Migrator\Handler;
 final class MigratorListCommand extends Command
 {
     protected static $defaultName = 'migrator:list';
-
     protected static $defaultDescription = 'List all available migrations with their statuses';
 
-    private string $dateFormat;
-
-    private ContainerInterface $container;
-
-    public function __construct(ContainerInterface $container, string $dateFormat = 'r', ?string $name = null)
-    {
-        $this->container = $container;
-        $this->dateFormat = $dateFormat;
-
+    public function __construct(
+        private readonly ContainerInterface $container,
+        private readonly string $dateFormat = 'r',
+        ?string $name = null,
+    ) {
         parent::__construct($name);
     }
 

@@ -21,9 +21,7 @@ class TodoItem implements BlamableInterface, EntityEventsInterface
     use EntityEventsTrait;
 
     private TodoItemId $id;
-
     private string $content;
-
     private bool $done;
 
     /**

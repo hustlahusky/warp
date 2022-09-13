@@ -9,8 +9,6 @@ use Warp\Common\Factory\StaticConstructorInterface;
 use Warp\Common\Field\FieldFactoryAggregate;
 use Warp\Common\Field\FieldFactoryInterface;
 use Warp\Common\Field\FieldInterface;
-use Webmozart\Expression\Constraint\Contains;
-use Webmozart\Expression\Constraint\EndsWith;
 use Webmozart\Expression\Constraint\Equals;
 use Webmozart\Expression\Constraint\GreaterThan;
 use Webmozart\Expression\Constraint\GreaterThanEqual;
@@ -25,7 +23,6 @@ use Webmozart\Expression\Constraint\Matches;
 use Webmozart\Expression\Constraint\NotEquals;
 use Webmozart\Expression\Constraint\NotSame;
 use Webmozart\Expression\Constraint\Same;
-use Webmozart\Expression\Constraint\StartsWith;
 use Webmozart\Expression\Expr;
 use Webmozart\Expression\Expression;
 use Webmozart\Expression\Logic\AlwaysFalse;
@@ -154,7 +151,6 @@ final class ExpressionFactory implements StaticConstructorInterface
     }
 
     /**
-     * @param string $name
      * @param mixed[] $arguments
      * @return Expression
      */
@@ -164,7 +160,7 @@ final class ExpressionFactory implements StaticConstructorInterface
             throw new \BadMethodCallException(\sprintf('Call to an undefined method %s::%s().', self::class, $name));
         }
 
-        return \call_user_func_array([Expr::class, $name], $arguments);
+        return Expr::{$name}(...$arguments);
     }
 
     public static function new(): self
@@ -177,34 +173,27 @@ final class ExpressionFactory implements StaticConstructorInterface
         $this->fieldFactory = $fieldFactory;
     }
 
-    /**
-     * @param string|FieldInterface $field
-     * @param Expression $expression
-     * @return Selector
-     */
-    public function selector($field, Expression $expression): Selector
+    public function selector(string|\Stringable|FieldInterface $field, Expression $expression): Selector
     {
         return new Selector($this->makeField($field), $expression);
     }
 
     /**
      * Check that the value of an array key matches an expression.
-     * @param array-key $key The array key.
+     * @param array-key|\Stringable $key The array key.
      * @param Expression $expr The evaluated expression.
-     * @return Selector
      */
-    public function key($key, Expression $expr): Selector
+    public function key(string|int|\Stringable $key, Expression $expr): Selector
     {
         return $this->selector('[' . $key . ']', $expr);
     }
 
     /**
-     * Check that the value of a object property/array key/mixed matches an expression.
-     * @param string|FieldInterface $propertyName The name of the property.
+     * Check that the value of an object property/array key/mixed matches an expression.
+     * @param string|\Stringable|FieldInterface $propertyName The name of the property.
      * @param Expression $expr The evaluated expression.
-     * @return Selector
      */
-    public function property($propertyName, Expression $expr): Selector
+    public function property(string|\Stringable|FieldInterface $propertyName, Expression $expr): Selector
     {
         return $this->selector($propertyName, $expr);
     }
@@ -226,18 +215,16 @@ final class ExpressionFactory implements StaticConstructorInterface
 
     /**
      * @param self $value
-     * @return string
      */
-    protected static function singletonKey($value = null): string
+    protected static function singletonKey(mixed $value = null): string
     {
         return self::class;
     }
 
     /**
      * @param FieldInterface|\Stringable|string|mixed $field
-     * @return FieldInterface
      */
-    private function makeField($field): FieldInterface
+    private function makeField(mixed $field): FieldInterface
     {
         if ($field instanceof FieldInterface) {
             return $field;

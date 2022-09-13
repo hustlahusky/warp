@@ -15,14 +15,9 @@ use Warp\Collection\OperationInterface;
  */
 abstract class AbstractOperation implements OperationInterface
 {
-    protected bool $preserveKeys;
-
-    /**
-     * @param bool $preserveKeys
-     */
-    public function __construct(bool $preserveKeys = false)
-    {
-        $this->preserveKeys = $preserveKeys;
+    public function __construct(
+        protected bool $preserveKeys = false,
+    ) {
     }
 
     /**

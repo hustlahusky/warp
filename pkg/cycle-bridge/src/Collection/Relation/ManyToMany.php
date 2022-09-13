@@ -32,9 +32,7 @@ use Warp\Bridge\Cycle\Select\ScopeAggregate;
 class ManyToMany extends AbstractToManyRelation
 {
     protected string $pivotEntity;
-
     protected string $throughInnerKey;
-
     protected string $throughOuterKey;
 
     public function __construct(
@@ -52,7 +50,6 @@ class ManyToMany extends AbstractToManyRelation
     }
 
     /**
-     * @param Node $node
      * @param mixed[] $data
      * @return array{ObjectCollectionInterface<object,mixed>,ObjectStorage<object,mixed>}
      */
@@ -64,7 +61,6 @@ class ManyToMany extends AbstractToManyRelation
     }
 
     /**
-     * @param Node $node
      * @return array{ObjectCollectionInterface<object,mixed>,ObjectCollectionPromiseInterface<object,mixed>|ObjectStorage<object,mixed>}
      */
     public function initPromise(Node $node): array
@@ -85,7 +81,7 @@ class ManyToMany extends AbstractToManyRelation
      * @param mixed $data
      * @return ObjectCollectionPromiseInterface<object,mixed>|ObjectStorage<object,mixed>
      */
-    public function extract($data)
+    public function extract(mixed $data): ObjectCollectionPromiseInterface|ObjectStorage
     {
         if ($data instanceof ObjectCollectionPromiseInterface && !$data->__loaded()) {
             return $data;
@@ -158,27 +154,23 @@ class ManyToMany extends AbstractToManyRelation
         }
 
         $loader = $this->makeCollectionLoader($collection->getScope());
-        $query = $this->makeQuery($loader, $innerKey);
 
         // @phpstan-ignore-next-line
-        return $query->count();
+        return $this->makeQuery($loader, $innerKey)->count();
     }
 
-    public function hasChanges($related, $original): bool
+    public function hasChanges(mixed $related, mixed $original): bool
     {
         return parent::hasChanges($related, $original)
             || ($related instanceof ChangesEnabledInterface && $related->hasChanges());
     }
 
     /**
-     * @param CC $store
      * @param object $entity
-     * @param Node $node
      * @param ObjectCollectionPromiseInterface<object,mixed>|ObjectStorage<object,mixed> $related
      * @param ObjectCollectionPromiseInterface<object,mixed>|ObjectStorage<object,mixed>|null $original
-     * @return CommandInterface
      */
-    public function queue(CC $store, $entity, Node $node, $related, $original): CommandInterface
+    public function queue(CC $store, mixed $entity, Node $node, mixed $related, mixed $original): CommandInterface
     {
         if ($related === $original && $related instanceof ChangesEnabledInterface) {
             return $this->queueCollectionChanges($node, $related);
@@ -188,13 +180,14 @@ class ManyToMany extends AbstractToManyRelation
     }
 
     /**
-     * @param Node $node
      * @param ObjectCollectionPromiseInterface<object,mixed>|ObjectStorage<object,mixed> $related
      * @param ObjectCollectionPromiseInterface<object,mixed>|ObjectStorage<object,mixed>|null $original
-     * @return CommandInterface
      */
-    protected function queueForceSync(Node $node, $related, $original): CommandInterface
-    {
+    protected function queueForceSync(
+        Node $node,
+        ObjectCollectionPromiseInterface|ObjectStorage $related,
+        ObjectCollectionPromiseInterface|ObjectStorage|null $original,
+    ): CommandInterface {
         $sequence = new Sequence();
 
         $pivotLoader = new ManyToManyPivotLoader(
@@ -235,9 +228,7 @@ class ManyToMany extends AbstractToManyRelation
     }
 
     /**
-     * @param Node $node
      * @param ChangesEnabledInterface<object,mixed> $related
-     * @return CommandInterface
      */
     protected function queueCollectionChanges(Node $node, ChangesEnabledInterface $related): CommandInterface
     {
@@ -391,11 +382,9 @@ class ManyToMany extends AbstractToManyRelation
     }
 
     /**
-     * @param ManyToManyLoader $loader
-     * @param mixed $innerKey
      * @return SelectQuery<mixed>
      */
-    private function makeQuery(ManyToManyLoader $loader, $innerKey): SelectQuery
+    private function makeQuery(ManyToManyLoader $loader, mixed $innerKey): SelectQuery
     {
         return $loader->configureQuery(
             (new RootLoader($this->orm, $this->target))->buildQuery(),

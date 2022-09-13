@@ -9,11 +9,9 @@ use Warp\Container\FactoryAggregateInterface;
 
 final class SpiralFactory implements FactoryInterface
 {
-    private FactoryAggregateInterface $factory;
-
-    public function __construct(FactoryAggregateInterface $factory)
-    {
-        $this->factory = $factory;
+    public function __construct(
+        private readonly FactoryAggregateInterface $factory,
+    ) {
     }
 
     /**

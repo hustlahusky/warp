@@ -9,18 +9,18 @@ final class ReplacementClassNameMapping implements ClassNameMappingInterface
     /**
      * @var string[]
      */
-    private array $search;
+    private readonly array $search;
 
     /**
      * @var string[]
      */
-    private array $replace;
+    private readonly array $replace;
 
     /**
-     * @param string|string[] $search
+     * @param string|string[]|array<string,string> $search
      * @param string|string[]|null $replace
      */
-    public function __construct($search, $replace = null)
+    public function __construct(string|array $search, string|array|null $replace = null)
     {
         if (null === $replace && \is_array($search)) {
             $replace = \array_values($search);

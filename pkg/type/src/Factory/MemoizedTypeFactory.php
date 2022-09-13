@@ -8,8 +8,6 @@ use Warp\Type\TypeInterface;
 
 final class MemoizedTypeFactory implements TypeFactoryInterface
 {
-    private TypeFactoryInterface $innerFactory;
-
     /**
      * @var array<string,bool>
      */
@@ -20,9 +18,9 @@ final class MemoizedTypeFactory implements TypeFactoryInterface
      */
     private array $cacheMake = [];
 
-    public function __construct(TypeFactoryInterface $innerFactory)
-    {
-        $this->innerFactory = $innerFactory;
+    public function __construct(
+        private readonly TypeFactoryInterface $innerFactory,
+    ) {
         $this->innerFactory->setParent($this);
     }
 

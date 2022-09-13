@@ -14,23 +14,15 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 final class QueueAfterEvent extends Event
 {
-    private object $entity;
-
-    private Node $node;
-
-    private State $state;
-
-    private CommandInterface $sourceCommand;
-
     private CommandInterface $command;
 
-    public function __construct(object $entity, Node $node, State $state, CommandInterface $command)
-    {
-        $this->entity = $entity;
-        $this->node = $node;
-        $this->state = $state;
-        $this->sourceCommand = $command;
-        $this->command = $command;
+    public function __construct(
+        private readonly object $entity,
+        private readonly Node $node,
+        private readonly State $state,
+        private readonly CommandInterface $sourceCommand,
+    ) {
+        $this->command = $sourceCommand;
     }
 
     public function getEntity(): object
@@ -69,7 +61,7 @@ final class QueueAfterEvent extends Event
     /**
      * @return Sequence<CommandInterface>|ContextSequence<CommandInterface>
      */
-    public function makeSequence(CommandInterface $command): CommandInterface
+    public function makeSequence(CommandInterface $command): Sequence|ContextSequence
     {
         if ($command instanceof ContextSequence || $command instanceof Sequence) {
             return $command;

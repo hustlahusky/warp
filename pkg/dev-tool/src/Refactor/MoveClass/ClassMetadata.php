@@ -4,30 +4,22 @@ declare(strict_types=1);
 
 namespace Warp\DevTool\Refactor\MoveClass;
 
-final class ClassMetadata
+final class ClassMetadata implements \Stringable
 {
     private const TYPE_CLASS = 0;
-
     private const TYPE_INTERFACE = 1;
-
     private const TYPE_TRAIT = 2;
 
-    private ?string $namespace;
-
-    private string $classname;
-
-    private string $filepath;
-
-    private ?int $type;
-
+    private readonly ?string $namespace;
+    private readonly string $classname;
     private ?string $content = null;
 
-    public function __construct(string $class, string $filepath, ?int $type = null)
-    {
+    public function __construct(
+        string $class,
+        private readonly string $filepath,
+        private ?int $type = null,
+    ) {
         [$this->namespace, $this->classname] = $this->splitNamespaceAndClassName($class);
-
-        $this->filepath = $filepath;
-        $this->type = $type;
     }
 
     public function __toString(): string
@@ -92,7 +84,6 @@ final class ClassMetadata
     }
 
     /**
-     * @param string $class
      * @return array{0: string|null, 1: string}
      */
     private function splitNamespaceAndClassName(string $class): array

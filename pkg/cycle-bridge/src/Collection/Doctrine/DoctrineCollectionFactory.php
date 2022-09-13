@@ -13,7 +13,7 @@ use Warp\Exception\PackageMissingException;
 
 final class DoctrineCollectionFactory implements CollectionFactoryInterface
 {
-    private BasicCollectionFactory $factory;
+    private readonly BasicCollectionFactory $factory;
 
     public function __construct()
     {

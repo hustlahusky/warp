@@ -17,19 +17,7 @@ use Warp\Bridge\Cycle\NodeHelper;
  */
 final class ManyToManyPivotLoader
 {
-    private ORMInterface $orm;
-
-    private string $role;
-
-    private string $innerKey;
-
-    private string $outerKey;
-
-    private string $throughInnerKey;
-
-    private string $throughOuterKey;
-
-    private Node $innerNode;
+    private readonly string $role;
 
     /**
      * @var Node[]
@@ -44,21 +32,15 @@ final class ManyToManyPivotLoader
     private array $loadedPivots = [];
 
     public function __construct(
-        ORMInterface $orm,
+        private readonly ORMInterface $orm,
         string $role,
-        string $innerKey,
-        string $outerKey,
-        string $throughInnerKey,
-        string $throughOuterKey,
-        Node $innerNode
+        private readonly string $innerKey,
+        private readonly string $outerKey,
+        private readonly string $throughInnerKey,
+        private readonly string $throughOuterKey,
+        private readonly Node $innerNode
     ) {
-        $this->orm = $orm;
         $this->role = $this->orm->resolveRole($role);
-        $this->innerKey = $innerKey;
-        $this->outerKey = $outerKey;
-        $this->throughInnerKey = $throughInnerKey;
-        $this->throughOuterKey = $throughOuterKey;
-        $this->innerNode = $innerNode;
     }
 
     public function addOuterNode(Node $node): void
@@ -70,12 +52,7 @@ final class ManyToManyPivotLoader
         $this->outerNodes[] = $node;
     }
 
-    /**
-     * @param Node $outerNode
-     * @param mixed $pivot
-     * @return object
-     */
-    public function getPivot(Node $outerNode, $pivot = null): object
+    public function getPivot(Node $outerNode, mixed $pivot = null): object
     {
         $this->loadPivotContext();
 
@@ -158,12 +135,7 @@ final class ManyToManyPivotLoader
         return $output;
     }
 
-    /**
-     * @param Node $node
-     * @param string $key
-     * @return mixed
-     */
-    private function fetchKey(Node $node, string $key)
+    private function fetchKey(Node $node, string $key): mixed
     {
         return $node->getData()[$key] ?? null;
     }
@@ -171,11 +143,8 @@ final class ManyToManyPivotLoader
     /**
      * Since many-to-many relation can overlap from two directions we have to properly resolve the pivot entity upon
      * its generation. This is achieved using temporary mapping associated with each of the entity states.
-     * @param Node $outerNode
-     * @param mixed $pivot
-     * @return object
      */
-    private function initPivot(Node $outerNode, $pivot): object
+    private function initPivot(Node $outerNode, mixed $pivot): object
     {
         [$source, $target] = $this->sortRelation($this->innerNode, $outerNode);
 
@@ -199,8 +168,6 @@ final class ManyToManyPivotLoader
 
     /**
      * Keep only one relation branch as primary branch.
-     * @param Node $node
-     * @param Node $related
      * @return array{Node,Node}
      */
     private function sortRelation(Node $node, Node $related): array
@@ -213,11 +180,7 @@ final class ManyToManyPivotLoader
         return [$node, $related];
     }
 
-    /**
-     * @param mixed $pivot
-     * @return object
-     */
-    private function makePivot($pivot): object
+    private function makePivot(mixed $pivot): object
     {
         if (\is_array($pivot) || null === $pivot) {
             $pivot = $this->orm->make($this->role, $pivot ?? []);
@@ -232,12 +195,7 @@ final class ManyToManyPivotLoader
         return $pivot;
     }
 
-    /**
-     * @param object $pivot
-     * @param mixed $data
-     * @return object
-     */
-    private function hydratePivot(object $pivot, $data): object
+    private function hydratePivot(object $pivot, mixed $data): object
     {
         if (null === $data) {
             return $pivot;

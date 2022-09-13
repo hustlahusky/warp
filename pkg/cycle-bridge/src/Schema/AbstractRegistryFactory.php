@@ -14,21 +14,19 @@ use Warp\Bridge\Cycle\Mapper\StdClassMapper;
 
 abstract class AbstractRegistryFactory
 {
-    protected DatabaseProviderInterface $dbal;
-
     /**
      * @var GeneratorInterface[]
      */
     protected array $generators;
 
     /**
-     * @param DatabaseProviderInterface $dbal
      * @param GeneratorInterface[] $generators
      */
-    public function __construct(DatabaseProviderInterface $dbal, iterable $generators = [])
-    {
-        $this->dbal = $dbal;
-        $this->generators = [...$generators];
+    public function __construct(
+        protected DatabaseProviderInterface $dbal,
+        iterable $generators = [],
+    ) {
+        $this->generators = \is_array($generators) ? $generators : \iterator_to_array($generators, false);
     }
 
     public function addGenerator(GeneratorInterface $generator, GeneratorInterface ...$generators): void
@@ -41,7 +39,6 @@ abstract class AbstractRegistryFactory
     abstract public function make(): Registry;
 
     /**
-     * @param Registry|null $registry
      * @param array<array-key,mixed> $defaults
      * @return mixed[]
      */

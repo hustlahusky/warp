@@ -13,8 +13,6 @@ use Cycle\ORM\SchemaInterface;
 final class EntityReferenceFactory implements PromiseFactoryInterface
 {
     /**
-     * @param ORMInterface $orm
-     * @param string $role
      * @param array<array-key,mixed> $scope
      * @return EntityReference<object>
      */
@@ -28,7 +26,6 @@ final class EntityReferenceFactory implements PromiseFactoryInterface
 
     /**
      * @template T of object
-     * @param ORMInterface $orm
      * @param T $entity
      * @return EntityReference<T>
      */

@@ -11,6 +11,8 @@ use Cycle\ORM\Command\Database\Insert;
 use Cycle\ORM\Command\Database\Update;
 use Cycle\ORM\Heap\Node;
 use Cycle\ORM\Schema;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Warp\Bridge\Cycle\AbstractTestCase;
 use Warp\Bridge\Cycle\Fixtures\OrmCapsule;
 use Warp\Bridge\Cycle\Fixtures\Todo\TodoItem;
@@ -19,8 +21,6 @@ use Warp\Bridge\Cycle\Fixtures\Todo\TodoItemDoneEvent;
 use Warp\Bridge\Cycle\Fixtures\Todo\TodoItemId;
 use Warp\Bridge\Cycle\Mapper\Plugin\DispatcherMapperPlugin;
 use Warp\Bridge\Cycle\Mapper\Plugin\QueueAfterEvent;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class EntityEventsPluginTest extends AbstractTestCase
 {

@@ -15,14 +15,10 @@ use Warp\Criteria\CriteriaInterface;
 
 final class CriteriaScope implements ScopeInterface, PrepareSelectScopeInterface, PrepareLoaderScopeInterface
 {
-    private CriteriaInterface $criteria;
-
-    private ?ORMInterface $orm;
-
-    public function __construct(CriteriaInterface $criteria, ?ORMInterface $orm = null)
-    {
-        $this->criteria = $criteria;
-        $this->orm = $orm;
+    public function __construct(
+        private readonly CriteriaInterface $criteria,
+        private ORMInterface|null $orm = null,
+    ) {
     }
 
     public function prepareSelect(Select $select): void

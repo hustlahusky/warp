@@ -10,11 +10,9 @@ use Warp\Bridge\Cycle\Mapper\Plugin\HydrateBeforeEvent;
 
 final class GroupDataPlugin implements EventSubscriberInterface
 {
-    private GroupDataHandler $handler;
-
-    public function __construct(GroupDataHandler $handler)
-    {
-        $this->handler = $handler;
+    public function __construct(
+        private readonly GroupDataHandler $handler,
+    ) {
     }
 
     public function onHydrate(HydrateBeforeEvent $event): void

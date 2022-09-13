@@ -6,15 +6,7 @@ namespace Warp\Type\Cast;
 
 interface CasterInterface
 {
-    /**
-     * @param mixed $value
-     * @return bool
-     */
-    public function accepts($value): bool;
+    public function accepts(mixed $value): bool;
 
-    /**
-     * @param mixed $value
-     * @return mixed
-     */
-    public function cast($value);
+    public function cast(mixed $value): mixed;
 }

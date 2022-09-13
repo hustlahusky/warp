@@ -9,9 +9,7 @@ use Cycle\ORM\Promise\PromiseInterface;
 class Post
 {
     public ?string $id = null;
-
     public ?string $title = null;
-
     public \DateTimeImmutable $createdAt;
 
     /**

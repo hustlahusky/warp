@@ -6,11 +6,9 @@ namespace Warp\Clock;
 
 final class SystemClock implements ClockInterface
 {
-    private \DateTimeZone $timezone;
-
-    public function __construct(\DateTimeZone $timezone)
-    {
-        $this->timezone = $timezone;
+    public function __construct(
+        private readonly \DateTimeZone $timezone,
+    ) {
     }
 
     public static function fromUTC(): self

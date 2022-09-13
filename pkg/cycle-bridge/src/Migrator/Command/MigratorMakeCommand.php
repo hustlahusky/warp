@@ -16,25 +16,22 @@ use Warp\Bridge\Cycle\Migrator\Input\InputOption;
 final class MigratorMakeCommand extends Command
 {
     protected static $defaultName = 'migrator:make';
-
     protected static $defaultDescription = 'Create a new migration file';
 
     /**
      * @var InputArgument<string>
      */
-    private InputArgument $name;
+    private readonly InputArgument $name;
 
     /**
      * @var InputOption<string>
      */
-    private InputOption $database;
+    private readonly InputOption $database;
 
-    private ContainerInterface $container;
-
-    public function __construct(ContainerInterface $container, ?string $name = null)
-    {
-        $this->container = $container;
-
+    public function __construct(
+        private readonly ContainerInterface $container,
+        ?string $name = null,
+    ) {
         parent::__construct($name);
 
         $this->name = new InputArgument('name', InputArgument::REQUIRED, 'A migration filename');

@@ -17,36 +17,25 @@ use Warp\Type\UnionType;
  */
 abstract class AbstractMap implements MapInterface
 {
-    /**
-     * @var ArrayIterator<K,V>
-     */
-    protected ArrayIterator $source;
-
-    protected TypeInterface $valueType;
-
     private static ?TypeInterface $keyType = null;
 
     /**
      * @param ArrayIterator<K,V> $source
-     * @param TypeInterface $valueType
      */
-    protected function __construct(ArrayIterator $source, TypeInterface $valueType)
-    {
-        $this->source = $source;
-        $this->valueType = $valueType;
+    protected function __construct(
+        protected ArrayIterator $source,
+        protected TypeInterface $valueType
+    ) {
     }
 
-    public function set($key, $element): void
+    public function set(int|string $key, mixed $element): void
     {
-        $this->assertKeyType($key);
         $this->assertValueType($element);
         $this->source->offsetSet($key, $element);
     }
 
-    public function unset($key): void
+    public function unset(int|string $key): void
     {
-        $this->assertKeyType($key);
-
         if (!$this->source->offsetExists($key)) {
             return;
         }
@@ -54,16 +43,13 @@ abstract class AbstractMap implements MapInterface
         $this->source->offsetUnset($key);
     }
 
-    public function has($key): bool
+    public function has(int|string $key): bool
     {
-        $this->assertKeyType($key);
         return $this->source->offsetExists($key);
     }
 
-    public function get($key)
+    public function get(int|string $key)
     {
-        $this->assertKeyType($key);
-
         if (!$this->source->offsetExists($key)) {
             return null;
         }
@@ -125,7 +111,6 @@ abstract class AbstractMap implements MapInterface
     /**
      * @template T
      * @param ArrayIterator<K,T> $source
-     * @param TypeInterface|null $valueType
      * @return static<K,T>
      */
     abstract protected function withSource(ArrayIterator $source, ?TypeInterface $valueType = null): MapInterface;
@@ -133,7 +118,6 @@ abstract class AbstractMap implements MapInterface
     /**
      * @template T
      * @param iterable<int,T> $elements
-     * @param TypeInterface|null $valueType
      * @return CollectionInterface<T>
      */
     abstract protected function makeCollection(
@@ -155,26 +139,6 @@ abstract class AbstractMap implements MapInterface
                 'Map accepts only elements of type %s. Got: %s.',
                 $this->valueType,
                 \get_debug_type($value)
-            ));
-        }
-    }
-
-    /**
-     * @param K ...$keys
-     */
-    protected function assertKeyType(...$keys): void
-    {
-        $keyType = self::getKeyType();
-
-        foreach ($keys as $key) {
-            if ($keyType->check($key)) {
-                continue;
-            }
-
-            throw new \LogicException(\sprintf(
-                'Map accepts only keys of type %s. Got: %s.',
-                $keyType,
-                \get_debug_type($key)
             ));
         }
     }

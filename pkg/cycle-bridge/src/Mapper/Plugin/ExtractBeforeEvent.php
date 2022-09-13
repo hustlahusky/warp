@@ -8,11 +8,9 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 final class ExtractBeforeEvent extends Event
 {
-    private object $entity;
-
-    public function __construct(object $entity)
-    {
-        $this->entity = $entity;
+    public function __construct(
+        private readonly object $entity,
+    ) {
     }
 
     public function getEntity(): object

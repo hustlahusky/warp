@@ -6,11 +6,9 @@ namespace Warp\Clock;
 
 final class InstantClock implements ClockInterface
 {
-    private DateTimeImmutableValue $now;
-
-    public function __construct(DateTimeImmutableValue $now)
-    {
-        $this->now = $now;
+    public function __construct(
+        private readonly DateTimeImmutableValue $now,
+    ) {
     }
 
     public function now(): DateTimeImmutableValue

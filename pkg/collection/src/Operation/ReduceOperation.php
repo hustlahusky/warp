@@ -21,20 +21,16 @@ final class ReduceOperation extends AbstractOperation implements AlterValueTypeO
     private $callback;
 
     /**
-     * @var R|null
-     */
-    private $initialValue;
-
-    /**
      * @param callable(R|null,V):R $callback
      * @param R|null $initialValue
      */
-    public function __construct(callable $callback, $initialValue = null)
-    {
+    public function __construct(
+        callable $callback,
+        private readonly mixed $initialValue = null,
+    ) {
         parent::__construct();
 
         $this->callback = $callback;
-        $this->initialValue = $initialValue;
     }
 
     protected function generator(\Traversable $iterator): \Generator

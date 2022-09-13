@@ -6,6 +6,7 @@ namespace Warp\Bridge\Cycle;
 
 use Cycle\ORM\ORMInterface;
 use Cycle\ORM\TransactionInterface;
+use Warp\DataSource\DefaultEntityNotFoundExceptionFactory;
 use Warp\DataSource\EntityNotFoundExceptionFactoryInterface;
 use Warp\DataSource\EntityPersisterAggregateInterface;
 use Warp\DataSource\EntityPersisterInterface;
@@ -21,20 +22,11 @@ final class CycleEntityManager implements
     EntityPersisterAggregateInterface,
     EntityPersisterInterface
 {
-    private ORMInterface $orm;
-
-    private int $transactionMode;
-
-    private ?EntityNotFoundExceptionFactoryInterface $notFoundExceptionFactory;
-
     public function __construct(
-        ORMInterface $orm,
-        int $transactionMode = TransactionInterface::MODE_CASCADE,
-        ?EntityNotFoundExceptionFactoryInterface $notFoundExceptionFactory = null
+        private readonly ORMInterface $orm,
+        private readonly int $transactionMode = TransactionInterface::MODE_CASCADE,
+        private readonly EntityNotFoundExceptionFactoryInterface $notFoundExceptionFactory = new DefaultEntityNotFoundExceptionFactory(),
     ) {
-        $this->orm = $orm;
-        $this->transactionMode = $transactionMode;
-        $this->notFoundExceptionFactory = $notFoundExceptionFactory;
     }
 
     public function getReader(string $entity): EntityReaderInterface

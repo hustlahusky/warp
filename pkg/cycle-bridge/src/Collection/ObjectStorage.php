@@ -15,7 +15,7 @@ final class ObjectStorage implements ObjectCollectionInterface, \IteratorAggrega
     /**
      * @var \SplObjectStorage<V,P|null>
      */
-    private \SplObjectStorage $storage;
+    private readonly \SplObjectStorage $storage;
 
     /**
      * @param \SplObjectStorage<V,P|null>|null $storage
@@ -39,7 +39,7 @@ final class ObjectStorage implements ObjectCollectionInterface, \IteratorAggrega
         return $this->storage[$element] ?? null;
     }
 
-    public function setPivot(object $element, $pivot): void
+    public function setPivot(object $element, mixed $pivot): void
     {
         if (!$this->storage->offsetExists($element)) {
             return;
@@ -57,7 +57,7 @@ final class ObjectStorage implements ObjectCollectionInterface, \IteratorAggrega
      * @param V $element
      * @param P|null $pivot
      */
-    public function attach(object $element, $pivot = null): void
+    public function attach(object $element, mixed $pivot = null): void
     {
         $this->storage->attach($element, $pivot ?? $this->storage[$element] ?? null);
     }

@@ -10,12 +10,10 @@ class CannotResolveArgumentException extends ContainerException
 {
     /**
      * @param Argument<mixed> $argument
-     * @param \Throwable|null $previous
-     * @param string|null $reason
      */
     public function __construct(Argument $argument, ?\Throwable $previous = null, ?string $reason = null)
     {
-        $reason ??= $previous ? $previous->getMessage() : null;
+        $reason ??= $previous?->getMessage();
 
         $message = \sprintf('Unable to resolve argument $%s in %s.', $argument->getName(), $argument->getLocation());
 

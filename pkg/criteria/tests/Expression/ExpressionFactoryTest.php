@@ -42,18 +42,6 @@ class ExpressionFactoryTest extends TestCase
         self::assertSame($expr, $selector->getExpression());
     }
 
-    public function testSelectorFromInvalidField(): void
-    {
-        $ef = ExpressionFactory::new();
-
-        $field = null;
-        $expr = $ef->null();
-
-        $this->expectException(\InvalidArgumentException::class);
-
-        $ef->selector($field, $expr);
-    }
-
     public function testKey(): void
     {
         $ef = ExpressionFactory::new();

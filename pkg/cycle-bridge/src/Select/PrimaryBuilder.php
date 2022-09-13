@@ -17,18 +17,17 @@ use Warp\Criteria\Expression\ExpressionFactory;
  */
 final class PrimaryBuilder
 {
-    private string $role;
+    private readonly string $role;
 
     /**
      * @var string[]
      */
-    private array $primaryKey;
+    private readonly array $primaryKey;
 
     /**
      * @var array<string,mixed>|null
      */
     private ?array $scope = null;
-
     private ?ReferenceInterface $reference = null;
 
     public function __construct(ORMInterface $orm, string $role)
@@ -38,10 +37,9 @@ final class PrimaryBuilder
     }
 
     /**
-     * @param mixed $scope
      * @return $this
      */
-    public function withScope($scope): self
+    public function withScope(mixed $scope): self
     {
         [$scope, $ref] = $this->prepareScope($scope);
         $clone = clone $this;
@@ -76,10 +74,9 @@ final class PrimaryBuilder
     }
 
     /**
-     * @param mixed $scope
      * @return array{array<string,mixed>,ReferenceInterface|null}
      */
-    private function prepareScope($scope): array
+    private function prepareScope(mixed $scope): array
     {
         if ($scope instanceof ReferenceInterface) {
             if ($this->role !== $scope->__role()) {
@@ -117,8 +114,6 @@ final class PrimaryBuilder
     }
 
     /**
-     * @param ORMInterface $orm
-     * @param string $role
      * @return string[]
      */
     private static function getPrimaryKeys(ORMInterface $orm, string $role): array

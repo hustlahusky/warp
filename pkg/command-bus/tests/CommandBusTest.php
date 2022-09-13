@@ -30,7 +30,7 @@ class CommandBusTest extends TestCase
         $middleware = new class implements MiddlewareInterface {
             public int $times = 0;
 
-            public function execute(object $command, callable $next)
+            public function execute(object $command, callable $next): mixed
             {
                 ++$this->times;
                 return $next($command);
@@ -60,7 +60,7 @@ class CommandBusTest extends TestCase
                 $this->stack = $stack;
             }
 
-            public function execute(object $command, callable $next)
+            public function execute(object $command, callable $next): mixed
             {
                 $this->stack->append($this);
                 return $next($command);
@@ -75,7 +75,7 @@ class CommandBusTest extends TestCase
                 $this->stack = $stack;
             }
 
-            public function execute(object $command, callable $next)
+            public function execute(object $command, callable $next): mixed
             {
                 $this->stack->append($this);
                 return $next($command);
@@ -90,7 +90,7 @@ class CommandBusTest extends TestCase
                 $this->stack = $stack;
             }
 
-            public function execute(object $command, callable $next)
+            public function execute(object $command, callable $next): mixed
             {
                 $this->stack->append($this);
                 return $next($command);
@@ -136,7 +136,7 @@ class CommandBusTest extends TestCase
                 $this->stack = $stack;
             }
 
-            public function execute(object $command, callable $next)
+            public function execute(object $command, callable $next): mixed
             {
                 $this->stack->append($this);
                 return $next($command);

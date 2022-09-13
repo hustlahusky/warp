@@ -12,19 +12,14 @@ namespace Warp\Collection\Operation;
 final class MergeOperation extends AbstractOperation
 {
     /**
-     * @var array<iterable<K,V>>
-     */
-    private array $others;
-
-    /**
      * @param array<iterable<K,V>> $others
      * @param bool $preserveKeys
      */
-    public function __construct(array $others, bool $preserveKeys = false)
-    {
+    public function __construct(
+        private readonly array $others,
+        bool $preserveKeys = false,
+    ) {
         parent::__construct($preserveKeys);
-
-        $this->others = $others;
     }
 
     protected function generator(\Traversable $iterator): \Generator

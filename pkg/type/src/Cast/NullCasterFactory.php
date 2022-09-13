@@ -10,16 +10,11 @@ use Warp\Type\TypeInterface;
 final class NullCasterFactory implements CasterFactoryInterface
 {
     /**
-     * @phpstan-var NullCaster::ACCEPT_*
-     */
-    private string $accept;
-
-    /**
      * @phpstan-param NullCaster::ACCEPT_* $accept
      */
-    public function __construct(string $accept = NullCaster::ACCEPT_EMPTY)
-    {
-        $this->accept = $accept;
+    public function __construct(
+        private readonly string $accept = NullCaster::ACCEPT_EMPTY,
+    ) {
     }
 
     public function make(TypeInterface $type): ?CasterInterface

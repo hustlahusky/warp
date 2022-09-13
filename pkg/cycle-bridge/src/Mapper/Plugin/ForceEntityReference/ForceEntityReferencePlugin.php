@@ -9,11 +9,9 @@ use Warp\Bridge\Cycle\Mapper\Plugin\HydrateBeforeEvent;
 
 final class ForceEntityReferencePlugin implements EventSubscriberInterface
 {
-    private ForceEntityReferenceHandler $handler;
-
-    public function __construct(ForceEntityReferenceHandler $handler)
-    {
-        $this->handler = $handler;
+    public function __construct(
+        private readonly ForceEntityReferenceHandler $handler,
+    ) {
     }
 
     public function onHydrate(HydrateBeforeEvent $event): void

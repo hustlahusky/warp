@@ -16,7 +16,7 @@ final class ScalarCaster implements CasterInterface
         BuiltinType::BOOL => BuiltinType::BOOL,
     ];
 
-    private BuiltinType $type;
+    private readonly BuiltinType $type;
 
     public function __construct(TypeInterface $type)
     {
@@ -33,25 +33,20 @@ final class ScalarCaster implements CasterInterface
         return $type instanceof BuiltinType && isset(self::SCALAR_TYPES[(string)$type]);
     }
 
-    public function accepts($value): bool
+    public function accepts(mixed $value): bool
     {
-        switch ((string)$this->type) {
-            case BuiltinType::INT:
-                return false !== \filter_var($value, \FILTER_VALIDATE_INT);
-            case BuiltinType::FLOAT:
-                return false !== \filter_var($value, \FILTER_VALIDATE_FLOAT);
-            case BuiltinType::STRING:
-                return \is_string($value)
-                    || \is_numeric($value)
-                    || (\is_object($value) && \method_exists($value, '__toString'));
-            case BuiltinType::BOOL:
-                return null !== \filter_var($value, \FILTER_VALIDATE_BOOL, \FILTER_NULL_ON_FAILURE);
-        }
-
-        return false;
+        return match ((string)$this->type) {
+            BuiltinType::INT => false !== \filter_var($value, \FILTER_VALIDATE_INT),
+            BuiltinType::FLOAT => false !== \filter_var($value, \FILTER_VALIDATE_FLOAT),
+            BuiltinType::STRING => \is_string($value) || \is_numeric($value) || (
+                \is_object($value) && \method_exists($value, '__toString')
+            ),
+            BuiltinType::BOOL => null !== \filter_var($value, \FILTER_VALIDATE_BOOL, \FILTER_NULL_ON_FAILURE),
+            default => false,
+        };
     }
 
-    public function cast($value)
+    public function cast(mixed $value): mixed
     {
         if (!$this->accepts($value)) {
             throw new \InvalidArgumentException(\sprintf(
@@ -61,17 +56,12 @@ final class ScalarCaster implements CasterInterface
             ));
         }
 
-        switch ((string)$this->type) {
-            case BuiltinType::INT:
-                return \filter_var($value, \FILTER_VALIDATE_INT);
-            case BuiltinType::FLOAT:
-                return \filter_var($value, \FILTER_VALIDATE_FLOAT);
-            case BuiltinType::STRING:
-                return (string)$value;
-            case BuiltinType::BOOL:
-                return \filter_var($value, \FILTER_VALIDATE_BOOL);
-        }
-
-        return $value;
+        return match ((string)$this->type) {
+            BuiltinType::INT => \filter_var($value, \FILTER_VALIDATE_INT),
+            BuiltinType::FLOAT => \filter_var($value, \FILTER_VALIDATE_FLOAT),
+            BuiltinType::STRING => (string)$value,
+            BuiltinType::BOOL => \filter_var($value, \FILTER_VALIDATE_BOOL),
+            default => $value,
+        };
     }
 }

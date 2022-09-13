@@ -8,11 +8,9 @@ use Warp\CommandBus\CommandBus as MessageBus;
 
 abstract class AbstractQueryBus implements QueryBusInterface
 {
-    private MessageBus $bus;
-
-    public function __construct(MessageBus $bus)
-    {
-        $this->bus = $bus;
+    public function __construct(
+        private readonly MessageBus $bus
+    ) {
     }
 
     public function ask(QueryInterface $query): ?ResponseInterface

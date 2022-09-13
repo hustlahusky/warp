@@ -13,11 +13,9 @@ use Warp\Bridge\Cycle\Migrator\Command\MigratorMakeCommand;
 
 final class MigratorMakeCommandHandler extends AbstractCommandHandler
 {
-    private Migrator $migrator;
-
-    public function __construct(Migrator $migrator)
-    {
-        $this->migrator = $migrator;
+    public function __construct(
+        private readonly Migrator $migrator,
+    ) {
     }
 
     public function handle(Command $command, InputInterface $input, OutputStyle $style): int

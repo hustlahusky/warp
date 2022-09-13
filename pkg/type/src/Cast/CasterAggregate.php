@@ -12,14 +12,14 @@ final class CasterAggregate implements CasterInterface, \IteratorAggregate
     /**
      * @var CasterInterface[]
      */
-    private array $casters;
+    private readonly array $casters;
 
     public function __construct(CasterInterface ...$casters)
     {
         $this->casters = $casters;
     }
 
-    public function accepts($value): bool
+    public function accepts(mixed $value): bool
     {
         foreach ($this->casters as $caster) {
             if ($caster->accepts($value)) {
@@ -30,7 +30,7 @@ final class CasterAggregate implements CasterInterface, \IteratorAggregate
         return false;
     }
 
-    public function cast($value)
+    public function cast(mixed $value): mixed
     {
         foreach ($this->casters as $caster) {
             if ($caster->accepts($value)) {

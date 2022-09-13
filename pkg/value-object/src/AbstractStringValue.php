@@ -14,7 +14,7 @@ abstract class AbstractStringValue extends AbstractValueObject
         return (string)$this->value;
     }
 
-    protected static function validate($value): void
+    protected static function validate(mixed $value): void
     {
         if (!\is_scalar($value) && !(\is_object($value) && \method_exists($value, '__toString'))) {
             throw new \InvalidArgumentException(\sprintf(
@@ -25,7 +25,7 @@ abstract class AbstractStringValue extends AbstractValueObject
         }
     }
 
-    protected static function cast($value): string
+    protected static function cast(mixed $value): string
     {
         return (string)$value;
     }

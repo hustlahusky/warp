@@ -30,7 +30,6 @@ abstract class AbstractExpressionVisitor
 
     /**
      * Generates Query Builder scope for given expression
-     * @param Expression $expression
      * @return callable(I):O
      */
     public function dispatch(Expression $expression): callable
@@ -64,7 +63,6 @@ abstract class AbstractExpressionVisitor
 
     /**
      * Visit inner expression for expression adapter
-     * @param AbstractExpressionDecorator $expr
      * @return callable(I):O
      */
     public function visitExpressionAdapter(AbstractExpressionDecorator $expr): callable
@@ -74,14 +72,12 @@ abstract class AbstractExpressionVisitor
 
     /**
      * Generates Query Builder scope for conjunction expression
-     * @param Logic\AndX $expression
      * @return callable(I):O
      */
     abstract public function visitConjunction(Logic\AndX $expression): callable;
 
     /**
      * Generates Query Builder scope for disjunction expression
-     * @param Logic\OrX $expression
      * @return callable(I):O
      */
     abstract public function visitDisjunction(Logic\OrX $expression): callable;
@@ -122,9 +118,6 @@ abstract class AbstractExpressionVisitor
 
     /**
      * Generates Query Builder scope for comparison expression on given field
-     * @param FieldInterface $field
-     * @param Expression $expression
-     * @param bool $isNegated
      * @return callable(I):O
      */
     abstract public function visitComparison(
@@ -134,7 +127,6 @@ abstract class AbstractExpressionVisitor
     ): callable;
 
     /**
-     * @param Expression $expression
      * @return array{Expression,bool}
      */
     private function prepareNegatedExpression(Expression $expression): array

@@ -12,23 +12,14 @@ final class MessageTemplate implements \Stringable, TranslatableInterface
 {
     private static ?TranslatorInterface $defaultTranslator = null;
 
-    private string $template;
-
-    /**
-     * @var array<string,scalar|\Stringable>
-     */
-    private array $parameters;
-
-    private ?string $domain;
-
     /**
      * @param array<string,scalar|\Stringable> $parameters
      */
-    private function __construct(string $template, array $parameters = [], ?string $domain = null)
-    {
-        $this->template = $template;
-        $this->parameters = $parameters;
-        $this->domain = $domain;
+    private function __construct(
+        private readonly string $template,
+        private readonly array $parameters = [],
+        private ?string $domain = null,
+    ) {
     }
 
     public function __toString()
@@ -37,10 +28,7 @@ final class MessageTemplate implements \Stringable, TranslatableInterface
     }
 
     /**
-     * @param string $template
      * @param array<string,scalar|\Stringable> $parameters
-     * @param string|null $domain
-     * @return static
      */
     public static function new(string $template, array $parameters = [], ?string $domain = null): self
     {
@@ -49,9 +37,8 @@ final class MessageTemplate implements \Stringable, TranslatableInterface
 
     /**
      * @param self|scalar|\Stringable $template
-     * @return self
      */
-    public static function wrap($template): self
+    public static function wrap(mixed $template): self
     {
         if ($template instanceof self) {
             return $template;

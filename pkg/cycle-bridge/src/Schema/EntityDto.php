@@ -16,34 +16,21 @@ use Cycle\Schema\Definition\Entity;
 final class EntityDto
 {
     public const ROLE = 'role';
-
     public const DATABASE = 'database';
-
     public const TABLE = 'table';
-
     public const CLASS_NAME = 'class';
-
     public const MAPPER = 'mapper';
-
     public const SOURCE = 'source';
-
     public const SCOPE = 'scope';
-
     public const REPOSITORY = 'repository';
-
     public const FIELDS = 'fields';
-
     public const RELATIONS = 'relations';
-
     public const SCHEMA = 'schema';
-
     public const OPTIONS = 'options';
-
     public const CHILDREN = 'children';
 
     /**
      * @param EntityShape $data
-     * @return Entity
      */
     public static function makeSchema(array $data): Entity
     {

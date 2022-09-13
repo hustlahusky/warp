@@ -22,11 +22,9 @@ final class ForceEntityReferenceHandler
         Relation::MORPHED_HAS_ONE,
     ];
 
-    private ORMInterface $orm;
-
-    public function __construct(ORMInterface $orm)
-    {
-        $this->orm = $orm;
+    public function __construct(
+        private readonly ORMInterface $orm,
+    ) {
     }
 
     public function onHydrate(HydrateBeforeEvent $event): void

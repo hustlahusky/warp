@@ -10,11 +10,9 @@ use Warp\DataSource\EntityEventsInterface;
 
 final class EntityEventsHandler
 {
-    private EventDispatcherInterface $dispatcher;
-
-    public function __construct(EventDispatcherInterface $dispatcher)
-    {
-        $this->dispatcher = $dispatcher;
+    public function __construct(
+        private readonly EventDispatcherInterface $dispatcher,
+    ) {
     }
 
     public function handle(QueueAfterEvent $event): void

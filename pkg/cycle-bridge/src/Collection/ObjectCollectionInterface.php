@@ -33,7 +33,7 @@ interface ObjectCollectionInterface extends \Traversable
      * @param T $element
      * @param P|null $pivot
      */
-    public function setPivot(object $element, $pivot): void;
+    public function setPivot(object $element, mixed $pivot): void;
 
     /**
      * Get all associated pivot data.

@@ -9,11 +9,6 @@ use Warp\CommandBus\Exception\FailedToMapCommandException;
 final class MapByStaticList implements CommandToHandlerMappingInterface
 {
     /**
-     * @var array<class-string,array{class-string,string}>
-     */
-    private array $mapping;
-
-    /**
      * @param array<class-string,array{class-string,string}> $mapping
      * @example
      *     ```php
@@ -24,9 +19,9 @@ final class MapByStaticList implements CommandToHandlerMappingInterface
      *     ])
      *     ```
      */
-    public function __construct(array $mapping)
-    {
-        $this->mapping = $mapping;
+    public function __construct(
+        private readonly array $mapping,
+    ) {
     }
 
     public function getClassName(string $commandClass): string

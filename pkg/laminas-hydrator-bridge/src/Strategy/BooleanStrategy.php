@@ -11,28 +11,27 @@ final class BooleanStrategy implements StrategyInterface
     /**
      * @var array<int|string>
      */
-    private array $trueValue;
+    private readonly array $trueValue;
 
     /**
      * @var array<int|string>
      */
-    private array $falseValue;
-
-    private bool $strict;
+    private readonly array $falseValue;
 
     /**
      * @param int|string|array<int|string> $trueValue
      * @param int|string|array<int|string> $falseValue
-     * @param bool $strict
      */
-    public function __construct($trueValue, $falseValue, bool $strict = true)
-    {
+    public function __construct(
+        mixed $trueValue,
+        mixed $falseValue,
+        private readonly bool $strict = true
+    ) {
         $this->trueValue = self::prepareInputValue($trueValue, '$trueValue');
         $this->falseValue = self::prepareInputValue($falseValue, '$falseValue');
-        $this->strict = $strict;
     }
 
-    public function extract($value, ?object $object = null)
+    public function extract(mixed $value, ?object $object = null)
     {
         if (!\is_bool($value)) {
             throw new \InvalidArgumentException(\sprintf(
@@ -48,7 +47,7 @@ final class BooleanStrategy implements StrategyInterface
      * @inheritDoc
      * @param array<string,mixed>|null $data
      */
-    public function hydrate($value, ?array $data = null): bool
+    public function hydrate(mixed $value, ?array $data = null): bool
     {
         if (\is_bool($value)) {
             return $value;
@@ -65,11 +64,9 @@ final class BooleanStrategy implements StrategyInterface
     }
 
     /**
-     * @param mixed $inputValue
-     * @param string $argument
      * @return array<int|string>
      */
-    private static function prepareInputValue($inputValue, string $argument): array
+    private static function prepareInputValue(mixed $inputValue, string $argument): array
     {
         $result = [];
 
@@ -78,7 +75,7 @@ final class BooleanStrategy implements StrategyInterface
                 throw new \InvalidArgumentException(\sprintf(
                     'Argument %s expected to be int, string or iterator of int or string. Got: %s',
                     $argument,
-                    \is_object($value) ? \get_class($value) : \gettype($value)
+                    \get_debug_type($value)
                 ));
             }
 

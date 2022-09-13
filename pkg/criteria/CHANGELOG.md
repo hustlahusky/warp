@@ -4,6 +4,16 @@ All notable changes to `getwarp/criteria` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## [4.0.0] - XXXX-XX-XX
+
+### Changed
+
+- Minimal supported PHP version bumped up to 8.1.
+
+### Removed
+
+- Class `JsonApiCriteriaBuilder` was removed.
+
 ## [3.1.0] - 2022-08-22
 
 ### Added
@@ -27,7 +37,6 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 - Criteria decorators.
 - Doctrine expression converter.
-- `JsonApiCriteriaBuilder` class.
 
 ## [2.5.4] - 2022-06-12
 

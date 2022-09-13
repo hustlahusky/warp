@@ -11,21 +11,6 @@ parameters:
 			path: pkg/command-bus/src/Mapping/ClassName/SuffixClassNameMapping.php
 
 		-
-			message: "#^Parameter \\#1 \\$callable of method Warp\\\\Container\\\\InvokerInterface\\:\\:invoke\\(\\) expects callable\\(\\)\\: mixed, array\\{T of object, string\\} given\\.$#"
-			count: 1
-			path: pkg/container/src/Factory/Reflection/ReflectionFactory.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func_array expects callable\\(\\)\\: mixed, array\\{Warp\\\\Criteria\\\\Expression\\\\ExpressionFactory, string\\} given\\.$#"
-			count: 1
-			path: pkg/criteria/src/Expression/AbstractExpressionDecorator.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func_array expects callable\\(\\)\\: mixed, array\\{'Webmozart\\\\\\\\Expression\\\\\\\\Expr', string\\} given\\.$#"
-			count: 1
-			path: pkg/criteria/src/Expression/ExpressionFactory.php
-
-		-
 			message: "#^Method Warp\\\\Bridge\\\\Cycle\\\\CycleEntityManager\\:\\:getPersister\\(\\) should return Warp\\\\DataSource\\\\EntityPersisterInterface\\<E of object\\> but returns Warp\\\\Bridge\\\\Cycle\\\\CycleEntityPersister\\<object\\>\\.$#"
 			count: 1
 			path: pkg/cycle-bridge/src/CycleEntityManager.php

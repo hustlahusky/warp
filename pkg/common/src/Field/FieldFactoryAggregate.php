@@ -12,7 +12,7 @@ final class FieldFactoryAggregate implements FieldFactoryInterface, \IteratorAgg
     /**
      * @var FieldFactoryInterface[]
      */
-    private array $factories;
+    private readonly array $factories;
 
     public function __construct(FieldFactoryInterface ...$factories)
     {

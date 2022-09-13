@@ -19,7 +19,6 @@ abstract class AbstractEnumValue extends AbstractValueObject
 
     /**
      * Magic factory.
-     * @param string $name
      * @param array{} $args
      * @return static<T>
      */
@@ -63,7 +62,7 @@ abstract class AbstractEnumValue extends AbstractValueObject
                     self::$cache[$class][self::keysFormatter($constant->getName())] = $value;
                 }
             }
-        } catch (\ReflectionException $e) {
+        } catch (\ReflectionException) {
             return [];
         }
 
@@ -98,7 +97,7 @@ abstract class AbstractEnumValue extends AbstractValueObject
         return static::new(static::randomValue());
     }
 
-    protected static function validate($value): void
+    protected static function validate(mixed $value): void
     {
         if (!\is_scalar($value)) {
             throw new \InvalidArgumentException('%s enum accepts only scalar values.');

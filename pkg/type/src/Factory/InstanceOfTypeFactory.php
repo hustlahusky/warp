@@ -12,11 +12,9 @@ final class InstanceOfTypeFactory implements TypeFactoryInterface
 {
     use TypeFactoryTrait;
 
-    private bool $autoload;
-
-    public function __construct(bool $autoload = true)
-    {
-        $this->autoload = $autoload;
+    public function __construct(
+        private readonly bool $autoload = true,
+    ) {
     }
 
     public function supports(string $type): bool

@@ -17,25 +17,16 @@ use Warp\Type\TypeInterface;
  */
 abstract class AbstractCollection implements CollectionInterface
 {
-    /**
-     * @var \Traversable<int,V>
-     */
-    protected \Traversable $source;
-
-    protected TypeInterface $valueType;
-
     private bool $sourcePrepared = false;
-
     private ?FieldFactoryInterface $fieldFactory = null;
 
     /**
      * @param \Traversable<int,V> $source
-     * @param TypeInterface $valueType
      */
-    protected function __construct(\Traversable $source, TypeInterface $valueType)
-    {
-        $this->source = $source;
-        $this->valueType = $valueType;
+    protected function __construct(
+        protected \Traversable $source,
+        protected TypeInterface $valueType,
+    ) {
     }
 
     public function clear(): void
@@ -44,21 +35,21 @@ abstract class AbstractCollection implements CollectionInterface
         $this->source->clear();
     }
 
-    public function add($element, ...$elements): void
+    public function add(mixed $element, mixed ...$elements): void
     {
         $this->assertElementsType($element, ...$elements);
         $this->source = $this->getMutableSource();
         $this->source->add($element, ...$elements);
     }
 
-    public function remove($element, ...$elements): void
+    public function remove(mixed $element, mixed ...$elements): void
     {
         $this->assertElementsType($element, ...$elements);
         $this->source = $this->getMutableSource();
         $this->source->remove($element, ...$elements);
     }
 
-    public function replace($element, $replacement): void
+    public function replace(mixed $element, mixed $replacement): void
     {
         $this->assertElementsType($element, $replacement);
         $this->source = $this->getMutableSource();
@@ -127,7 +118,7 @@ abstract class AbstractCollection implements CollectionInterface
             : null;
     }
 
-    public function contains($element): bool
+    public function contains(mixed $element): bool
     {
         return null !== $this->find(static fn ($v) => $element === $v);
     }
@@ -150,7 +141,7 @@ abstract class AbstractCollection implements CollectionInterface
             : null;
     }
 
-    public function reduce(callable $callback, $initialValue = null)
+    public function reduce(callable $callback, mixed $initialValue = null)
     {
         $iter = (new Operation\ReduceOperation($callback, $initialValue))->apply($this->getIterator());
 
@@ -159,7 +150,7 @@ abstract class AbstractCollection implements CollectionInterface
             : $initialValue;
     }
 
-    public function implode(?string $glue = null, ?FieldInterface $field = null): string
+    public function implode(string $glue = '', ?FieldInterface $field = null): string
     {
         $iter = (new Operation\ImplodeOperation($glue, $field))->apply($this->getIterator());
 
@@ -168,7 +159,7 @@ abstract class AbstractCollection implements CollectionInterface
             : '';
     }
 
-    public function sum(?FieldInterface $field = null)
+    public function sum(?FieldInterface $field = null): int|float
     {
         $iter = (new Operation\SumOperation($field))->apply($this->getIterator());
 
@@ -177,7 +168,7 @@ abstract class AbstractCollection implements CollectionInterface
             : 0;
     }
 
-    public function average(?FieldInterface $field = null)
+    public function average(?FieldInterface $field = null): int|float|null
     {
         $iter = (new Operation\AverageOperation($field))->apply($this->getIterator());
 
@@ -186,7 +177,7 @@ abstract class AbstractCollection implements CollectionInterface
             : null;
     }
 
-    public function median(?FieldInterface $field = null)
+    public function median(?FieldInterface $field = null): int|float|null
     {
         $iter = (new Operation\MedianOperation($field))->apply($this->getIterator());
 
@@ -195,7 +186,7 @@ abstract class AbstractCollection implements CollectionInterface
             : null;
     }
 
-    public function max(?FieldInterface $field = null)
+    public function max(?FieldInterface $field = null): int|float|null
     {
         $iter = (new Operation\MaximumOperation($field))->apply($this->getIterator());
 
@@ -204,7 +195,7 @@ abstract class AbstractCollection implements CollectionInterface
             : null;
     }
 
-    public function min(?FieldInterface $field = null)
+    public function min(?FieldInterface $field = null): int|float|null
     {
         $iter = (new Operation\MinimumOperation($field))->apply($this->getIterator());
 
@@ -213,7 +204,7 @@ abstract class AbstractCollection implements CollectionInterface
             : null;
     }
 
-    public function indexBy($keyExtractor): MapInterface
+    public function indexBy(FieldInterface|callable $keyExtractor): MapInterface
     {
         return $this->makeMap(
             (new Operation\IndexByOperation($keyExtractor))->apply($this->getIterator()),
@@ -221,7 +212,7 @@ abstract class AbstractCollection implements CollectionInterface
         );
     }
 
-    public function groupBy($keyExtractor): MapInterface
+    public function groupBy(FieldInterface|callable $keyExtractor): MapInterface
     {
         /** @var array<array-key,CollectionInterface<V>> $map */
         $map = [];
@@ -265,22 +256,19 @@ abstract class AbstractCollection implements CollectionInterface
     /**
      * @template T
      * @param \Traversable<int,T> $source
-     * @param TypeInterface|null $valueType
      * @return static<T>
      */
     abstract protected function withSource(\Traversable $source, ?TypeInterface $valueType = null): CollectionInterface;
 
     /**
-     * @return \Traversable|MutableInterface
-     * @phpstan-return MutableInterface<V>&\Traversable<int,V>
+     * @phpstan-return \Traversable<int,V>&MutableInterface<V>
      */
-    abstract protected function getMutableSource(): MutableInterface;
+    abstract protected function getMutableSource(): \Traversable&MutableInterface;
 
     /**
      * @template MapK of array-key
      * @template MapV
      * @param iterable<MapK,MapV> $elements
-     * @param TypeInterface|null $valueType
      * @return MapInterface<MapK,MapV>
      */
     abstract protected function makeMap(iterable $elements = [], ?TypeInterface $valueType = null): MapInterface;

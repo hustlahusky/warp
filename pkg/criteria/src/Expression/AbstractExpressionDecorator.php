@@ -74,16 +74,13 @@ use Webmozart\Expression\Logic;
  */
 abstract class AbstractExpressionDecorator implements Expression
 {
-    private Expression $expr;
-
-    public function __construct(Expression $expr)
-    {
-        $this->expr = $expr;
+    public function __construct(
+        private readonly Expression $expr,
+    ) {
     }
 
     /**
      * Magic logical chaining.
-     * @param string $name
      * @param mixed[] $arguments
      * @return Expression
      * @see ExpressionFactory
@@ -103,7 +100,7 @@ abstract class AbstractExpressionDecorator implements Expression
             throw new \BadMethodCallException(\sprintf('Call to an undefined method %s::%s()', static::class, $name));
         }
 
-        $expr = \call_user_func_array([ExpressionFactory::new(), $factoryMethod], $arguments);
+        $expr = ExpressionFactory::new()->{$factoryMethod}(...$arguments);
 
         return $isAnd ? $this->andX($expr) : $this->orX($expr);
     }
@@ -117,7 +114,7 @@ abstract class AbstractExpressionDecorator implements Expression
         return $this->expr;
     }
 
-    public function evaluate($value): bool
+    public function evaluate(mixed $value): bool
     {
         return $this->expr->evaluate($value);
     }

@@ -22,11 +22,9 @@ final class ReflectionFactory implements FactoryInterface
     /**
      * @var \ReflectionClass<T>
      */
-    private \ReflectionClass $reflection;
-
-    private ReflectionDependencyResolver $dependencyResolver;
-
-    private InvokerInterface $invoker;
+    private readonly \ReflectionClass $reflection;
+    private readonly ReflectionDependencyResolver $dependencyResolver;
+    private readonly InvokerInterface $invoker;
 
     /**
      * @param class-string<T> $class
@@ -63,14 +61,13 @@ final class ReflectionFactory implements FactoryInterface
     }
 
     /**
-     * @param FactoryOptionsInterface|null $options
      * @return T|null
      * @throws \ReflectionException
      */
     private function makeWithStaticConstructor(?FactoryOptionsInterface $options)
     {
         $className = $this->reflection->getName();
-        $staticConstructorName = null === $options ? null : $options->getStaticConstructor();
+        $staticConstructorName = $options?->getStaticConstructor();
 
         if ($this->reflection->implementsInterface(StaticConstructorInterface::class)) {
             $staticConstructorName ??= 'new';
@@ -117,7 +114,6 @@ final class ReflectionFactory implements FactoryInterface
     }
 
     /**
-     * @param FactoryOptionsInterface|null $options
      * @return T
      * @throws \ReflectionException
      */
@@ -136,10 +132,9 @@ final class ReflectionFactory implements FactoryInterface
 
     /**
      * @param T $instance
-     * @param FactoryOptionsInterface|null $options
      * @return T
      */
-    private function invokeMethods($instance, ?FactoryOptionsInterface $options)
+    private function invokeMethods(object $instance, ?FactoryOptionsInterface $options)
     {
         if (null === $options) {
             return $instance;
@@ -148,7 +143,7 @@ final class ReflectionFactory implements FactoryInterface
         $className = $this->reflection->getName();
 
         foreach ($options->getMethodCalls() as [$methodName, $methodOptions]) {
-            $result = $this->invoker->invoke([$instance, $methodName], $methodOptions);
+            $result = $this->invoker->invoke($instance->{$methodName}(...), $methodOptions);
 
             if ($result instanceof $className) {
                 $instance = $result;

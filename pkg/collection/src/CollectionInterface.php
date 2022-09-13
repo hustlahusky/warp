@@ -82,7 +82,7 @@ interface CollectionInterface extends MutableInterface, FilterableInterface, \It
     public function all(): array;
 
     /**
-     * @param callable $callback
+     * @param callable(V,int,\Traversable<int,V>):bool $callback
      * @return V|null
      */
     public function find(callable $callback);
@@ -91,7 +91,7 @@ interface CollectionInterface extends MutableInterface, FilterableInterface, \It
      * @param V $element
      * @return bool
      */
-    public function contains($element): bool;
+    public function contains(mixed $element): bool;
 
     /**
      * @return V|null
@@ -109,56 +109,36 @@ interface CollectionInterface extends MutableInterface, FilterableInterface, \It
      * @param R|null $initialValue
      * @return R|null
      */
-    public function reduce(callable $callback, $initialValue = null);
+    public function reduce(callable $callback, mixed $initialValue = null);
 
     /**
-     * @param string|null $glue
+     * @param string $glue
      * @param FieldInterface|null $field
      * @return string
      */
-    public function implode(?string $glue = null, ?FieldInterface $field = null): string;
+    public function implode(string $glue = '', ?FieldInterface $field = null): string;
 
-    /**
-     * @param FieldInterface|null $field
-     * @return int|float
-     */
-    public function sum(?FieldInterface $field = null);
+    public function sum(?FieldInterface $field = null): int|float;
 
-    /**
-     * @param FieldInterface|null $field
-     * @return int|float|null
-     */
-    public function average(?FieldInterface $field = null);
+    public function average(?FieldInterface $field = null): int|float|null;
 
-    /**
-     * @param FieldInterface|null $field
-     * @return int|float|null
-     */
-    public function median(?FieldInterface $field = null);
+    public function median(?FieldInterface $field = null): int|float|null;
 
-    /**
-     * @param FieldInterface|null $field
-     * @return int|float|null
-     */
-    public function max(?FieldInterface $field = null);
+    public function max(?FieldInterface $field = null): int|float|null;
 
-    /**
-     * @param FieldInterface|null $field
-     * @return int|float|null
-     */
-    public function min(?FieldInterface $field = null);
+    public function min(?FieldInterface $field = null): int|float|null;
 
     /**
      * @param FieldInterface|callable(V):array-key $keyExtractor
      * @return MapInterface<array-key,V>
      */
-    public function indexBy($keyExtractor): MapInterface;
+    public function indexBy(FieldInterface|callable $keyExtractor): MapInterface;
 
     /**
      * @param FieldInterface|callable(V):array-key $keyExtractor
      * @return MapInterface<array-key,CollectionInterface<V>>
      */
-    public function groupBy($keyExtractor): MapInterface;
+    public function groupBy(FieldInterface|callable $keyExtractor): MapInterface;
 
     /**
      * @return \Traversable<array-key,V>

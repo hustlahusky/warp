@@ -6,6 +6,7 @@ namespace Warp;
 
 use PhpCsFixer\Fixer\ClassNotation\VisibilityRequiredFixer;
 use PhpCsFixer\Fixer\Strict\StrictComparisonFixer;
+use Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Option;
 
@@ -32,6 +33,9 @@ return static function (ECSConfig $containerConfigurator): void {
         ],
         VisibilityRequiredFixer::class => [
             __DIR__ . '/pkg/common/src/Kernel/ConsoleApplicationConfiguratorTrait.php',
+        ],
+        LineLengthFixer::class => [
+            __DIR__ . '/pkg/common/src/Kernel/AbstractKernel.php',
         ],
     ]);
 

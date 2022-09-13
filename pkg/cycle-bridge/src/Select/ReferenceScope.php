@@ -13,28 +13,19 @@ final class ReferenceScope implements ScopeInterface
     /**
      * @var array<string,mixed>
      */
-    private array $scope;
-
-    /**
-     * @var array<string,mixed>
-     */
-    private array $where;
-
-    /**
-     * @var array<string,SelectQuery::SORT_*>
-     */
-    private array $orderBy;
+    private readonly array $where;
 
     /**
      * @param array<string,mixed> $scope
      * @param array<string,mixed>|null $where
      * @param array<string,SelectQuery::SORT_*> $orderBy
      */
-    public function __construct(array $scope, ?array $where = null, array $orderBy = [])
-    {
-        $this->scope = $scope;
+    public function __construct(
+        private readonly array $scope,
+        ?array $where = null,
+        private readonly array $orderBy = [],
+    ) {
         $this->where = $where ?? $scope;
-        $this->orderBy = $orderBy;
     }
 
     /**

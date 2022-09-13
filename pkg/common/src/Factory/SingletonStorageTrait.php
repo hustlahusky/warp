@@ -11,33 +11,23 @@ trait SingletonStorageTrait
      */
     private static array $storage = [];
 
-    abstract protected static function singletonKey($value): string;
+    abstract protected static function singletonKey(mixed $value): string;
 
-    /**
-     * @param string $key
-     * @return static|null
-     */
-    private static function singletonFetch(string $key): ?self
+    private static function singletonFetch(string $key): ?static
     {
-        $ref = self::$storage[static::class][$key] ?? null;
-
-        if (null === $ref) {
-            return null;
-        }
-
-        return $ref->get();
+        return (self::$storage[static::class][$key] ?? null)?->get();
     }
 
     private static function singletonAttach(self $item): void
     {
         $key = static::singletonKey($item);
         // @phpstan-ignore-next-line
-        self::$storage[\get_class($item)][$key] = \WeakReference::create($item);
+        self::$storage[$item::class][$key] = \WeakReference::create($item);
     }
 
     private static function singletonDetach(self $item): void
     {
         $key = static::singletonKey($item);
-        unset(self::$storage[\get_class($item)][$key]);
+        unset(self::$storage[$item::class][$key]);
     }
 }

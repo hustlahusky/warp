@@ -14,11 +14,9 @@ use Warp\Common\Field\FieldInterface;
  */
 final class MinimumOperation implements AlterValueTypeOperationInterface
 {
-    private ?FieldInterface $field;
-
-    public function __construct(?FieldInterface $field = null)
-    {
-        $this->field = $field;
+    public function __construct(
+        private readonly ?FieldInterface $field = null,
+    ) {
     }
 
     /**
@@ -44,7 +42,7 @@ final class MinimumOperation implements AlterValueTypeOperationInterface
                 return $value;
             }
 
-            return $value < $accum ? $value : $accum;
+            return \min($value, $accum);
         };
     }
 }

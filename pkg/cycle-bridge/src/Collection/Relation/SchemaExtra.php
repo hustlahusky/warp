@@ -10,9 +10,8 @@ use Cycle\ORM\Select\Loader;
 
 abstract class SchemaExtra
 {
-    public const RELATION_EXTRA = 'RELATION_EXTRA';
-
-    public const COLLECTION_FACTORY = 'COLLECTION_FACTORY';
+    final public const RELATION_EXTRA = 'RELATION_EXTRA';
+    final public const COLLECTION_FACTORY = 'COLLECTION_FACTORY';
 
     /**
      * @return RelationConfig<array-key,array<array-key,class-string>>

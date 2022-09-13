@@ -9,18 +9,15 @@ use Warp\DevTool\Shared\AbstractConfig;
 final class MonorepoConfig extends AbstractConfig
 {
     public const PROJECTS = 'projects';
-
     public const REQUIRE = 'require';
-
     public const REQUIRE_DEV = 'require-dev';
+    public const REPLACE = 'replace';
 
-    private string $filename;
-
-    protected function __construct(array $source, string $filename)
-    {
+    protected function __construct(
+        array $source,
+        private readonly string $filename,
+    ) {
         parent::__construct($source);
-
-        $this->filename = $filename;
     }
 
     public static function fromComposer(ComposerJson $composerJson): self

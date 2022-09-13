@@ -37,21 +37,21 @@ final class ObjectIterator implements ObjectCollectionInterface, MutableInterfac
         $this->storage = new ObjectStorage();
     }
 
-    public function add($element, ...$elements): void
+    public function add(mixed $element, mixed ...$elements): void
     {
         foreach ([$element, ...$elements] as $e) {
             $this->storage->attach($e);
         }
     }
 
-    public function remove($element, ...$elements): void
+    public function remove(mixed $element, mixed ...$elements): void
     {
         foreach ([$element, ...$elements] as $e) {
             $this->storage->detach($e);
         }
     }
 
-    public function replace($element, $replacement): void
+    public function replace(mixed $element, mixed $replacement): void
     {
         if ($element === $replacement) {
             return;
@@ -71,7 +71,7 @@ final class ObjectIterator implements ObjectCollectionInterface, MutableInterfac
         return $this->storage->getPivot($element);
     }
 
-    public function setPivot(object $element, $pivot): void
+    public function setPivot(object $element, mixed $pivot): void
     {
         $this->storage->setPivot($element, $pivot);
     }

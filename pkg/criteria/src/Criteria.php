@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Warp\Criteria;
 
 use Warp\Common\Factory\StaticConstructorInterface;
-use Warp\Criteria\Expression\ExpressionFactory;
 use Webmozart\Expression\Expression;
 use Webmozart\Expression\Logic\AndX;
 use Webmozart\Expression\Logic\OrX;
@@ -13,15 +12,13 @@ use Webmozart\Expression\Logic\OrX;
 final class Criteria implements CriteriaInterface, StaticConstructorInterface
 {
     private ?Expression $expression = null;
+    private ?int $offset = null;
+    private ?int $limit = null;
 
     /**
      * @var array<string,int>
      */
     private array $orderBy = [];
-
-    private ?int $offset = null;
-
-    private ?int $limit = null;
 
     /**
      * @var mixed[]
@@ -33,12 +30,8 @@ final class Criteria implements CriteriaInterface, StaticConstructorInterface
     }
 
     /**
-     * @param Expression|null $where
      * @param array<string,int> $orderBy
-     * @param int|null $offset
-     * @param int|null $limit
      * @param mixed[] $include
-     * @return static
      */
     public static function new(
         ?Expression $where = null,
@@ -165,13 +158,5 @@ final class Criteria implements CriteriaInterface, StaticConstructorInterface
         }
 
         return $clone;
-    }
-
-    /**
-     * @deprecated use {@see ExpressionFactory::new()} instead.
-     */
-    public static function expr(): ExpressionFactory
-    {
-        return ExpressionFactory::new();
     }
 }

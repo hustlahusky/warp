@@ -7,7 +7,6 @@ namespace Warp\CommandBus\Middleware\Profiler;
 trait MayBeProfiledMessageTrait
 {
     protected ?string $profilingEventName = null;
-
     protected ?string $profilingCategory = null;
 
     public function getProfilingEventName(): ?string

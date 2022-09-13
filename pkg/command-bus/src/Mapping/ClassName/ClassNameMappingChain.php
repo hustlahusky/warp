@@ -9,7 +9,7 @@ final class ClassNameMappingChain implements ClassNameMappingInterface
     /**
      * @var ClassNameMappingInterface[]
      */
-    private array $mappings;
+    private readonly array $mappings;
 
     public function __construct(ClassNameMappingInterface ...$mappings)
     {

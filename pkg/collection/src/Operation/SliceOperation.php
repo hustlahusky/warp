@@ -11,16 +11,17 @@ namespace Warp\Collection\Operation;
  */
 final class SliceOperation extends AbstractOperation
 {
-    private int $offset;
-
-    private ?int $limit;
+    /**
+     * @var positive-int|0
+     */
+    private readonly int $offset;
 
     /**
-     * @param int $offset
-     * @param int|null $limit
-     * @param bool $preserveKeys
+     * @var positive-int|null
      */
-    public function __construct(int $offset, ?int $limit, bool $preserveKeys = false)
+    private readonly int|null $limit;
+
+    public function __construct(int $offset, int|null $limit, bool $preserveKeys = false)
     {
         parent::__construct($preserveKeys);
 

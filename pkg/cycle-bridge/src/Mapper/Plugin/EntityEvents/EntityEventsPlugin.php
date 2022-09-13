@@ -9,11 +9,9 @@ use Warp\Bridge\Cycle\Mapper\Plugin\QueueAfterEvent;
 
 final class EntityEventsPlugin implements EventSubscriberInterface
 {
-    private EntityEventsHandler $handler;
-
-    public function __construct(EntityEventsHandler $handler)
-    {
-        $this->handler = $handler;
+    public function __construct(
+        private readonly EntityEventsHandler $handler,
+    ) {
     }
 
     public function handle(QueueAfterEvent $event): void

@@ -18,7 +18,7 @@ trait TranslatableExceptionTrait
     /**
      * @param MessageTemplate|scalar|\Stringable $message
      */
-    protected function construct($message = '', int $code = 0, ?\Throwable $previous = null): void
+    protected function construct(mixed $message = '', int $code = 0, ?\Throwable $previous = null): void
     {
         $this->template = MessageTemplate::wrap($message);
 

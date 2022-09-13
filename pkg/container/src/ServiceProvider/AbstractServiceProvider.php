@@ -11,7 +11,6 @@ use Warp\Container\Exception\ContainerException;
 abstract class AbstractServiceProvider implements ServiceProviderInterface
 {
     protected ?string $identifier = null;
-
     protected ?ContainerInterface $container = null;
 
     public function setContainer(ContainerInterface $container): void

@@ -20,7 +20,7 @@ class UuidValue extends AbstractStringValue
         return static::new(Uuid::v4());
     }
 
-    protected static function validate($value): void
+    protected static function validate(mixed $value): void
     {
         self::checkDependency();
 

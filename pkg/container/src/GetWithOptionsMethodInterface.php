@@ -12,5 +12,5 @@ interface GetWithOptionsMethodInterface extends ContainerInterface
      * @inheritDoc
      * @param FactoryOptionsInterface|array<string,mixed>|null $options
      */
-    public function get(string $id, $options = null);
+    public function get(string $id, array|FactoryOptionsInterface|null $options = null): mixed;
 }

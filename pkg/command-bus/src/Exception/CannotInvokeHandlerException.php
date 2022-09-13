@@ -16,13 +16,13 @@ final class CannotInvokeHandlerException extends \BadMethodCallException impleme
 {
     use FriendlyExceptionTrait;
 
-    private object $command;
-
-    private function __construct(object $command, string $message, ?string $solution = null)
-    {
+    private function __construct(
+        private readonly object $command,
+        string $message,
+        ?string $solution = null,
+    ) {
         parent::__construct($message);
 
-        $this->command = $command;
         $this->solution = $solution;
     }
 
@@ -34,7 +34,7 @@ final class CannotInvokeHandlerException extends \BadMethodCallException impleme
                 'Handler %s::%s() matched for command %s is not exists.',
                 $handlerClass,
                 $handlerMethod,
-                \get_class($command),
+                $command::class,
             ),
             'Check handler method existence or mapping correctness.',
         );

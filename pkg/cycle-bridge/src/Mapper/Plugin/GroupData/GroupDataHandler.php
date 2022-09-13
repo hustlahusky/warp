@@ -12,11 +12,9 @@ use Warp\Common\ArrayHelper;
 
 final class GroupDataHandler
 {
-    private ORMInterface $orm;
-
-    public function __construct(ORMInterface $orm)
-    {
-        $this->orm = $orm;
+    public function __construct(
+        private readonly ORMInterface $orm,
+    ) {
     }
 
     public function onHydrate(HydrateBeforeEvent $event): void
@@ -28,7 +26,7 @@ final class GroupDataHandler
         // Also, some hydrators can throw exception, if it is just instantiated empty entity.
         try {
             $extractedData = $mapper->extract($entity);
-        } catch (\Throwable $exception) {
+        } catch (\Throwable) {
             $extractedData = [];
         }
 

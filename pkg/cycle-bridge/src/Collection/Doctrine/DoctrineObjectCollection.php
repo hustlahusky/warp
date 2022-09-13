@@ -41,7 +41,7 @@ final class DoctrineObjectCollection extends AbstractLazyCollection implements O
         $this->storage = new ObjectStorage();
     }
 
-    public function remove($key)
+    public function remove(mixed $key)
     {
         $element = parent::remove($key);
 
@@ -52,20 +52,20 @@ final class DoctrineObjectCollection extends AbstractLazyCollection implements O
         return $element;
     }
 
-    public function removeElement($element)
+    public function removeElement(mixed $element): bool
     {
         $this->storage->detach($element);
 
         return parent::removeElement($element);
     }
 
-    public function add($element)
+    public function add(mixed $element): bool
     {
         $this->storage->attach($element);
         return parent::add($element);
     }
 
-    public function set($key, $value): void
+    public function set(mixed $key, mixed $value): void
     {
         $oldValue = $this->get($key);
 
@@ -91,7 +91,7 @@ final class DoctrineObjectCollection extends AbstractLazyCollection implements O
         return $this->storage->getPivot($element);
     }
 
-    public function setPivot(object $element, $pivot): void
+    public function setPivot(object $element, mixed $pivot): void
     {
         $this->storage->setPivot($element, $pivot);
     }

@@ -18,9 +18,6 @@ trait ConsoleApplicationConfiguratorTrait
 {
     /**
      * Configure symfony/console application
-     * @param Application $app
-     * @param InputInterface $input
-     * @param OutputInterface $output
      */
     public function configureConsoleApplication(
         Application $app,
@@ -30,7 +27,7 @@ trait ConsoleApplicationConfiguratorTrait
         if (\PHP_SAPI !== 'cli') {
             // @codeCoverageIgnoreStart
             \trigger_error(\sprintf(
-                'Method %s::configureConsoleApplication() called in not CLI environment.',
+                'Method %s::configureConsoleApplication() called in non-CLI environment.',
                 static::class
             ));
             return;

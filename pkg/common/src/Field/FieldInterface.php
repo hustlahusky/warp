@@ -11,9 +11,5 @@ interface FieldInterface extends \Stringable
      */
     public function getElements(): array;
 
-    /**
-     * @param mixed $element
-     * @return mixed|null
-     */
-    public function extract($element);
+    public function extract(mixed $element): mixed;
 }

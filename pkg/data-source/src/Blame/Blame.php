@@ -17,44 +17,33 @@ use Warp\DataSource\EntityReferenceInterface;
  */
 final class Blame implements BlameInterface, StaticConstructorInterface
 {
-    private ClockInterface $clock;
-
-    private DateTimeImmutableValue $createdAt;
-
+    private readonly ClockInterface $clock;
+    private readonly DateTimeImmutableValue $createdAt;
     private DateTimeImmutableValue $updatedAt;
 
     /**
-     * @var class-string<T>|null
+     * @var T|EntityReferenceInterface<T>|null
      */
-    private ?string $actorClass;
+    private mixed $createdBy;
 
     /**
      * @var T|EntityReferenceInterface<T>|null
      */
-    private $createdBy;
-
-    /**
-     * @var T|EntityReferenceInterface<T>|null
-     */
-    private $updatedBy;
+    private mixed $updatedBy;
 
     /**
      * @param class-string<T>|null $actorClass
-     * @param DateTimeImmutableValue|null $createdAt
-     * @param DateTimeImmutableValue|null $updatedAt
      * @param T|EntityReferenceInterface<T>|null $createdBy
      * @param T|EntityReferenceInterface<T>|null $updatedBy
-     * @param ClockInterface|null $clock
      */
     private function __construct(
-        ?string $actorClass = null,
+        private readonly ?string $actorClass = null,
         ?DateTimeImmutableValue $createdAt = null,
         ?DateTimeImmutableValue $updatedAt = null,
         ?object $createdBy = null,
         ?object $updatedBy = null,
         ?ClockInterface $clock = null
     ) {
-        $this->actorClass = $actorClass;
         $this->clock = $clock ?? new FrozenClock(SystemClock::fromUTC());
         $this->createdAt = $createdAt ?? $this->clock->now();
         $this->updatedAt = $updatedAt ?? $this->createdAt;
@@ -68,9 +57,7 @@ final class Blame implements BlameInterface, StaticConstructorInterface
 
     /**
      * @param class-string<T>|null $actorClass
-     * @param DateTimeImmutableValue|null $createdAt
      * @param T|null $createdBy
-     * @param ClockInterface|null $clock
      * @return self<T>
      */
     public static function new(
@@ -85,7 +72,6 @@ final class Blame implements BlameInterface, StaticConstructorInterface
     /**
      * @param array{createdAt?:DateTimeImmutableValue,createdBy?:T|EntityReferenceInterface<T>|null,updatedAt?:DateTimeImmutableValue,updatedBy?:T|EntityReferenceInterface<T>|null} $data
      * @param class-string<T>|null $actorClass
-     * @param ClockInterface|null $clock
      * @return self<T|object>
      */
     public static function fromArray(array $data, ?string $actorClass = null, ?ClockInterface $clock = null): self
@@ -175,9 +161,8 @@ final class Blame implements BlameInterface, StaticConstructorInterface
 
     /**
      * @param T|EntityReferenceInterface<T>|null $actor
-     * @param bool $acceptReference
      */
-    private function assertActor($actor, bool $acceptReference): void
+    private function assertActor(mixed $actor, bool $acceptReference): void
     {
         if (null === $actor) {
             return;
@@ -202,7 +187,7 @@ final class Blame implements BlameInterface, StaticConstructorInterface
      * @param T|EntityReferenceInterface<T>|null $actor
      * @return T|null
      */
-    private function resolveActor($actor): ?object
+    private function resolveActor(mixed $actor): ?object
     {
         if ($actor instanceof EntityReferenceInterface) {
             $actor = $actor->getEntity();

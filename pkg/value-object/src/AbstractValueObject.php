@@ -17,12 +17,12 @@ abstract class AbstractValueObject implements \Stringable, \JsonSerializable, St
     /**
      * @var T
      */
-    protected $value;
+    protected mixed $value;
 
     /**
      * @param T $value
      */
-    final private function __construct($value)
+    final private function __construct(mixed $value)
     {
         if (!self::checkValueType($value)) {
             throw new \InvalidArgumentException(
@@ -46,11 +46,10 @@ abstract class AbstractValueObject implements \Stringable, \JsonSerializable, St
     }
 
     /**
-     * VO Constructor.
-     * @param mixed $value
+     * Value object constructor.
      * @return static
      */
-    final public static function new($value): self
+    final public static function new(mixed $value): self
     {
         static::validate($value);
 
@@ -73,7 +72,7 @@ abstract class AbstractValueObject implements \Stringable, \JsonSerializable, St
      * @param static<T> $other
      * @return bool
      */
-    public function equals($other): bool
+    public function equals(self $other): bool
     {
         return $this === $other;
     }
@@ -82,23 +81,22 @@ abstract class AbstractValueObject implements \Stringable, \JsonSerializable, St
      * Validate input value
      * @param mixed $value
      */
-    abstract protected static function validate($value): void;
+    abstract protected static function validate(mixed $value): void;
 
     /**
      * Cast input value to supported type by class
      * @param mixed $value input value
      * @return T casted value
      */
-    protected static function cast($value)
+    protected static function cast(mixed $value)
     {
         return $value;
     }
 
     /**
-     * @param mixed $value
      * @return bool
      */
-    final protected static function checkValueType($value): bool
+    final protected static function checkValueType(mixed $value): bool
     {
         if (\is_scalar($value)) {
             return true;
@@ -115,7 +113,7 @@ abstract class AbstractValueObject implements \Stringable, \JsonSerializable, St
      * @param static|scalar|\Stringable $value
      * @return string
      */
-    final protected static function singletonKey($value): string
+    final protected static function singletonKey(mixed $value): string
     {
         return \serialize(self::toScalar($value instanceof self ? $value->value : $value));
     }
@@ -124,7 +122,7 @@ abstract class AbstractValueObject implements \Stringable, \JsonSerializable, St
      * @param scalar|\Stringable $value
      * @return scalar
      */
-    private static function toScalar($value)
+    private static function toScalar(mixed $value): float|bool|int|string
     {
         if (\is_scalar($value)) {
             return $value;

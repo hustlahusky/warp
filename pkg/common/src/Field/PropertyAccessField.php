@@ -14,15 +14,13 @@ final class PropertyAccessField implements FieldInterface
     /**
      * @var PropertyPath<array-key>
      */
-    private PropertyPath $propertyPath;
-
-    private PropertyAccessorInterface $propertyAccessor;
+    private readonly PropertyPath $propertyPath;
+    private readonly PropertyAccessorInterface $propertyAccessor;
 
     /**
      * @param string|PropertyPath<array-key> $propertyPath
-     * @param PropertyAccessorInterface|null $propertyAccessor
      */
-    public function __construct($propertyPath, ?PropertyAccessorInterface $propertyAccessor = null)
+    public function __construct(string|PropertyPath $propertyPath, ?PropertyAccessorInterface $propertyAccessor = null)
     {
         if (!\class_exists(PropertyAccess::class)) {
             throw PackageMissingException::new('symfony/property-access', null, self::class);
@@ -46,7 +44,7 @@ final class PropertyAccessField implements FieldInterface
         return $this->propertyPath->getElements();
     }
 
-    public function extract($element)
+    public function extract(mixed $element): mixed
     {
         if (!$this->propertyAccessor->isReadable($element, $this->propertyPath)) {
             return null;

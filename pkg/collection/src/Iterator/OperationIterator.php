@@ -14,23 +14,13 @@ use Warp\Collection\OperationInterface;
 final class OperationIterator implements \IteratorAggregate
 {
     /**
-     * @var \Traversable<array-key,mixed>
-     */
-    private \Traversable $iterator;
-
-    /**
-     * @var OperationInterface<array-key,mixed,K,V>
-     */
-    private OperationInterface $operation;
-
-    /**
      * @param \Traversable<array-key,mixed> $iterator
      * @param OperationInterface<array-key,mixed,K,V> $operation
      */
-    public function __construct(\Traversable $iterator, OperationInterface $operation)
-    {
-        $this->iterator = $iterator;
-        $this->operation = $operation;
+    public function __construct(
+        private readonly \Traversable $iterator,
+        private readonly OperationInterface $operation,
+    ) {
     }
 
     /**

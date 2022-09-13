@@ -13,13 +13,12 @@ namespace Warp\Clock;
 trait DateTimeTrait
 {
     /**
-     * @param string $time
-     * @param \DateTimeZone|null $timezone
+     * DateTime constructor.
      */
-    final public function __construct($time = 'now', ?\DateTimeZone $timezone = null)
+    final public function __construct(string|\Stringable|int $time = 'now', \DateTimeZone|null $timezone = null)
     {
         try {
-            parent::__construct($time, $timezone);
+            parent::__construct((string)$time, $timezone);
         } catch (\Throwable $exception) {
             throw new DateException($exception->getMessage(), $exception->getCode(), $exception->getPrevious());
         }
@@ -35,7 +34,7 @@ trait DateTimeTrait
         return new self('now', $timezone);
     }
 
-    public static function from($time): self
+    public static function from(mixed $time): self
     {
         if ($time instanceof static) {
             return $time;
@@ -63,7 +62,7 @@ trait DateTimeTrait
         int $day,
         int $hour = 0,
         int $minute = 0,
-        float $second = 0.0
+        float $second = 0.0,
     ): self {
         $s = \sprintf('%04d-%02d-%02d %02d:%02d:%02.5f', $year, $month, $day, $hour, $minute, $second);
 
@@ -80,7 +79,7 @@ trait DateTimeTrait
     }
 
     #[\ReturnTypeWillChange]
-    public static function createFromFormat($format, $time, ?\DateTimeZone $timezone = null): ?self
+    public static function createFromFormat(string $format, string $time, ?\DateTimeZone $timezone = null): ?self
     {
         $date = parent::createFromFormat($format, $time, $timezone ?? new \DateTimeZone(\date_default_timezone_get()));
         return $date ? static::from($date) : null;
@@ -88,7 +87,6 @@ trait DateTimeTrait
 
     /**
      * Returns JSON representation in ISO 8601 (used by JavaScript).
-     * @return string
      */
     public function jsonSerialize(): string
     {

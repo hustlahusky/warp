@@ -9,11 +9,9 @@ use Warp\Bridge\Cycle\Mapper\Plugin\QueueAfterEvent;
 
 final class BelongsToLinkPlugin implements EventSubscriberInterface
 {
-    private BelongsToLinkHandler $handler;
-
-    public function __construct(BelongsToLinkHandler $handler)
-    {
-        $this->handler = $handler;
+    public function __construct(
+        private readonly BelongsToLinkHandler $handler,
+    ) {
     }
 
     public function handle(QueueAfterEvent $event): void

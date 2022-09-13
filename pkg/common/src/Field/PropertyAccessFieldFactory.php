@@ -12,9 +12,7 @@ use Warp\Exception\PackageMissingException;
 final class PropertyAccessFieldFactory implements FieldFactoryInterface
 {
     private static ?bool $enabled = null;
-
     private static ?PropertyAccessorInterface $defaultPropertyAccessor = null;
-
     private ?PropertyAccessorInterface $propertyAccessor;
 
     public function __construct(?PropertyAccessorInterface $propertyAccessor = null)

@@ -13,13 +13,11 @@ final class LockFacade
 {
     private const LOCK_NAME = 'cycle/migrations';
 
-    private ContainerInterface $container;
-
     private ?LockInterface $lock = null;
 
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        private readonly ContainerInterface $container,
+    ) {
     }
 
     public function __destruct()

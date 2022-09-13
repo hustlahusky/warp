@@ -10,20 +10,12 @@ use Warp\Bridge\Cycle\Mapper\AbstractCommand;
 final class DispatchEventsCommand extends AbstractCommand
 {
     /**
-     * @var object[]
-     */
-    private array $events;
-
-    private EventDispatcherInterface $dispatcher;
-
-    /**
      * @param object[] $events
-     * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct(array $events, EventDispatcherInterface $dispatcher)
-    {
-        $this->events = $events;
-        $this->dispatcher = $dispatcher;
+    public function __construct(
+        private readonly array $events,
+        private readonly EventDispatcherInterface $dispatcher,
+    ) {
     }
 
     public function isReady(): bool

@@ -14,11 +14,9 @@ use Warp\Common\Field\FieldInterface;
  */
 final class MedianOperation implements AlterValueTypeOperationInterface
 {
-    private ?FieldInterface $field;
-
-    public function __construct(?FieldInterface $field = null)
-    {
-        $this->field = $field;
+    public function __construct(
+        private readonly ?FieldInterface $field = null,
+    ) {
     }
 
     /**
@@ -34,7 +32,7 @@ final class MedianOperation implements AlterValueTypeOperationInterface
      * @param \Traversable<K,V> $iterator
      * @return float|int|null
      */
-    private function calcMedian(\Traversable $iterator)
+    private function calcMedian(\Traversable $iterator): float|int|null
     {
         /** @var array<float|int> $array */
         $array = [];

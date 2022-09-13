@@ -7,7 +7,6 @@ namespace Warp\Container\Fixtures;
 final class MethodsCallFixture
 {
     public ?string $name = null;
-
     public ?string $color = null;
 
     public function __construct()

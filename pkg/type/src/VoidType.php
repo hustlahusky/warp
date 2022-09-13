@@ -28,7 +28,7 @@ final class VoidType implements TypeInterface, StaticConstructorInterface
         return self::NAME;
     }
 
-    public function check($value): bool
+    public function check(mixed $value): bool
     {
         throw new \LogicException('Void type cannot be checked.');
     }
@@ -38,11 +38,7 @@ final class VoidType implements TypeInterface, StaticConstructorInterface
         return self::singletonFetch(self::NAME) ?? new self();
     }
 
-    /**
-     * @param self $value
-     * @return string
-     */
-    protected static function singletonKey($value): string
+    protected static function singletonKey(mixed $value): string
     {
         return self::NAME;
     }

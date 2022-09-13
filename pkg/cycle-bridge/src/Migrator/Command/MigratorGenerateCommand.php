@@ -15,17 +15,14 @@ use Warp\Bridge\Cycle\Migrator\Input;
 final class MigratorGenerateCommand extends Command
 {
     protected static $defaultName = 'migrator:generate';
-
     protected static $defaultDescription = 'Generate migrations from Cycle ORM schema';
 
-    private Input\DryRunOption $dryRun;
+    private readonly Input\DryRunOption $dryRun;
 
-    private ContainerInterface $container;
-
-    public function __construct(ContainerInterface $container, ?string $name = null)
-    {
-        $this->container = $container;
-
+    public function __construct(
+        private readonly ContainerInterface $container,
+        ?string $name = null,
+    ) {
         parent::__construct($name);
 
         $this->dryRun = new Input\DryRunOption();

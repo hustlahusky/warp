@@ -20,24 +20,17 @@ final class Substring extends Literal
     public const STARTS_WITH = 1;
     public const ENDS_WITH = 2;
 
-    private string $substring;
-    private int $substringLength;
-    private bool $caseSensitive;
-
-    /**
-     * @var SubstringMode
-     */
-    private int $mode;
+    private readonly int $substringLength;
 
     /**
      * @param SubstringMode $mode
      */
-    private function __construct(string $substring, bool $caseSensitive, int $mode)
-    {
-        $this->substring = $substring;
+    private function __construct(
+        private readonly string $substring,
+        private readonly bool $caseSensitive,
+        private readonly int $mode,
+    ) {
         $this->substringLength = \strlen($this->substring);
-        $this->caseSensitive = $caseSensitive;
-        $this->mode = $mode;
     }
 
     public static function startsWith(string $substring, bool $caseSensitive = true): self
@@ -55,11 +48,13 @@ final class Substring extends Literal
         return new self($substring, $caseSensitive, self::CONTAINS);
     }
 
-    public function evaluate($value): bool
+    public function evaluate(mixed $value): bool
     {
         if ('' === $this->substring || $value === $this->substring) {
             return true;
         }
+
+        $value = (string)$value;
 
         if (self::STARTS_WITH === $this->mode) {
             return 0 === \substr_compare($value, $this->substring, 0, $this->substringLength, !$this->caseSensitive);

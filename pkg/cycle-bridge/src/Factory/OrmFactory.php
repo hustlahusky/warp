@@ -31,11 +31,7 @@ final class OrmFactory implements FactoryInterface
     /**
      * @var RelationConfig<array-key,array<array-key,class-string>>
      */
-    private RelationConfig $config;
-
-    private CoreFactory $factory;
-
-    private DatabaseProviderInterface $dbal;
+    private readonly RelationConfig $config;
 
     /**
      * @var array<array-key,class-string|null>
@@ -49,18 +45,14 @@ final class OrmFactory implements FactoryInterface
     ];
 
     /**
-     * @param DatabaseProviderInterface $dbal
      * @param RelationConfig<array-key,array<array-key,class-string>>|null $config
-     * @param CoreFactory|null $factory
      */
     public function __construct(
-        DatabaseProviderInterface $dbal,
+        private readonly DatabaseProviderInterface $dbal,
         ?RelationConfig $config = null,
-        ?CoreFactory $factory = null
+        private readonly CoreFactory $factory = new Container()
     ) {
-        $this->dbal = $dbal;
         $this->config = $config ?? SchemaExtra::getRelationConfig();
-        $this->factory = $factory ?? new Container();
     }
 
     /**
@@ -126,7 +118,7 @@ final class OrmFactory implements FactoryInterface
             + $relationSchemaExtra;
 
         $def = $this->collectionFactory($relationSchema);
-        $collectionFactory = null === $def ? null : $def->resolve($this, [
+        $collectionFactory = $def?->resolve($this, [
             'orm' => $orm,
             'schema' => $schema,
             'role' => $role,
@@ -148,11 +140,7 @@ final class OrmFactory implements FactoryInterface
     }
 
     /**
-     * @param ORMInterface $orm
-     * @param SchemaInterface $schema
-     * @param string $role
      * @param Select<object>|null $select
-     * @return RepositoryInterface
      */
     public function repository(
         ORMInterface $orm,
@@ -200,7 +188,6 @@ final class OrmFactory implements FactoryInterface
 
     /**
      * @param array<array-key,class-string|null> $defaults
-     * @return self
      */
     public function withDefaultSchemaClasses(array $defaults): self
     {
@@ -213,7 +200,6 @@ final class OrmFactory implements FactoryInterface
 
     /**
      * @param array<array-key,mixed> $relationSchema
-     * @return Autowire|null
      */
     private function collectionFactory(array $relationSchema): ?Autowire
     {
@@ -228,12 +214,6 @@ final class OrmFactory implements FactoryInterface
         return Autowire::wire($collectionFactoryClass);
     }
 
-    /**
-     * @param SchemaInterface $schema
-     * @param string $role
-     * @param int $service
-     * @return Autowire|null
-     */
     private function getSchemaService(SchemaInterface $schema, string $role, int $service): ?Autowire
     {
         $class = $schema->define($role, $service) ?? $this->defaults[$service] ?? null;

@@ -28,37 +28,21 @@ use Warp\Type\TypeInterface;
 final class WarpObjectCollectionPromise extends AbstractCollectionDecorator implements ObjectCollectionPromiseInterface, StaticConstructorInterface, ChangesEnabledInterface
 {
     /**
-     * @var ObjectCollectionPromiseInterface<V,P>
-     */
-    private ObjectCollectionPromiseInterface $promise;
-
-    private ?TypeInterface $valueType;
-
-    /**
-     * @var WarpObjectCollection<V,P>|null
-     */
-    private ?WarpObjectCollection $collection;
-
-    /**
      * @var ChangesAggregate<V,P>
      */
-    private ChangesAggregate $changes;
+    private readonly ChangesAggregate $changes;
 
     /**
      * @param ObjectCollectionPromiseInterface<V,P> $promise
-     * @param TypeInterface|null $valueType
      * @param WarpObjectCollection<V,P>|null $collection
      * @param ChangesAggregate<V,P>|null $changes
      */
     private function __construct(
-        ObjectCollectionPromiseInterface $promise,
-        ?TypeInterface $valueType = null,
-        ?WarpObjectCollection $collection = null,
+        private readonly ObjectCollectionPromiseInterface $promise,
+        private readonly ?TypeInterface $valueType = null,
+        private ?WarpObjectCollection $collection = null,
         ?ChangesAggregate $changes = null
     ) {
-        $this->promise = $promise;
-        $this->valueType = $valueType;
-        $this->collection = $collection;
         // @phpstan-ignore-next-line
         $this->changes = $changes ?? ChangesAggregate::new();
     }
@@ -90,7 +74,6 @@ final class WarpObjectCollectionPromise extends AbstractCollectionDecorator impl
 
     /**
      * @param ObjectCollectionPromiseInterface<V,P> $promise
-     * @param TypeInterface|null $valueType
      * @return self<V,P>
      */
     public static function new(ObjectCollectionPromiseInterface $promise, ?TypeInterface $valueType = null): self
@@ -104,7 +87,6 @@ final class WarpObjectCollectionPromise extends AbstractCollectionDecorator impl
     }
 
     /**
-     * @param ScopeInterface $scope
      * @return self<V,P>
      */
     public function withScope(ScopeInterface $scope): self
@@ -131,7 +113,7 @@ final class WarpObjectCollectionPromise extends AbstractCollectionDecorator impl
         return $this->__resolve()->getPivot($element);
     }
 
-    public function setPivot(object $element, $pivot): void
+    public function setPivot(object $element, mixed $pivot): void
     {
         if (null !== $change = $this->changes->get($element)) {
             $change->setPivot($pivot);
@@ -164,7 +146,7 @@ final class WarpObjectCollectionPromise extends AbstractCollectionDecorator impl
         return $this->promise->count();
     }
 
-    public function add($element, ...$elements): void
+    public function add(mixed $element, mixed ...$elements): void
     {
         if ($this->__loaded()) {
             parent::add($element, ...$elements);
@@ -176,7 +158,7 @@ final class WarpObjectCollectionPromise extends AbstractCollectionDecorator impl
         $this->recordChanges(...Change::addElements($element, ...$elements));
     }
 
-    public function remove($element, ...$elements): void
+    public function remove(mixed $element, mixed ...$elements): void
     {
         if ($this->__loaded()) {
             parent::remove($element, ...$elements);
@@ -188,7 +170,7 @@ final class WarpObjectCollectionPromise extends AbstractCollectionDecorator impl
         $this->recordChanges(...Change::removeElements($element, ...$elements));
     }
 
-    public function replace($element, $replacement): void
+    public function replace(mixed $element, mixed $replacement): void
     {
         if ($this->__loaded()) {
             parent::replace($element, $replacement);

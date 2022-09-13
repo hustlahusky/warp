@@ -7,22 +7,18 @@ namespace Warp\Type\Cast;
 final class NullCaster implements CasterInterface
 {
     public const ACCEPT_NULL = '@null';
-
     public const ACCEPT_EMPTY = '@empty';
-
     public const ACCEPT_ALL = '@all';
-
-    private string $accept;
 
     /**
      * @phpstan-param self::ACCEPT_* $accept
      */
-    public function __construct(string $accept = self::ACCEPT_ALL)
-    {
-        $this->accept = $accept;
+    public function __construct(
+        private readonly string $accept = self::ACCEPT_ALL,
+    ) {
     }
 
-    public function accepts($value): bool
+    public function accepts(mixed $value): bool
     {
         if (self::ACCEPT_ALL === $this->accept) {
             return true;
@@ -35,7 +31,7 @@ final class NullCaster implements CasterInterface
         return null === $value;
     }
 
-    public function cast($value)
+    public function cast(mixed $value): mixed
     {
         if (!$this->accepts($value)) {
             throw new \InvalidArgumentException(\sprintf(

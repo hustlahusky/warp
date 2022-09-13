@@ -17,9 +17,7 @@ namespace Warp\CommandBus;
 interface MiddlewareInterface
 {
     /**
-     * @param object $command
      * @param callable(object):mixed $next
-     * @return mixed
      */
-    public function execute(object $command, callable $next);
+    public function execute(object $command, callable $next): mixed;
 }

@@ -6,7 +6,7 @@ namespace Warp\DataSource;
 
 final class IdenticalPropertyExtractor implements PropertyExtractorInterface
 {
-    public function extractValue(string $name, $value)
+    public function extractValue(string $name, mixed $value): mixed
     {
         return $value;
     }

@@ -13,13 +13,11 @@ use Warp\Type\TypeInterface;
  */
 final class TypeCheckOperation extends AbstractOperation
 {
-    private TypeInterface $valueType;
-
-    public function __construct(TypeInterface $valueType, bool $preserveKeys = false)
-    {
+    public function __construct(
+        private readonly TypeInterface $valueType,
+        bool $preserveKeys = false,
+    ) {
         parent::__construct($preserveKeys);
-
-        $this->valueType = $valueType;
     }
 
     protected function generator(\Traversable $iterator): \Generator

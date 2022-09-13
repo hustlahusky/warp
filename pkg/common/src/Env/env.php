@@ -15,7 +15,7 @@ use Dotenv\Repository\RepositoryBuilder;
  * @return string|bool|mixed|null
  * @todo refactor
  */
-function env(string $name, $default = null)
+function env(string $name, mixed $default = null): mixed
 {
     static $dotEnv;
 
@@ -35,7 +35,7 @@ function env(string $name, $default = null)
         }
 
         if (isset($_SERVER['DOCUMENT_ROOT'])) {
-            $envPath[] = \rtrim($_SERVER['DOCUMENT_ROOT'], '\\/');
+            $envPath[] = \rtrim((string)$_SERVER['DOCUMENT_ROOT'], '\\/');
         }
 
         if (\PHP_SAPI === 'cli') {

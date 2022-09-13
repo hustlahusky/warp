@@ -31,7 +31,7 @@ use Warp\Container\ServiceProvider\AbstractServiceProvider;
 
 abstract class AbstractMigratorProvider extends AbstractServiceProvider
 {
-    public const COMMANDS = [
+    final public const COMMANDS = [
         MigratorListCommand::class,
         MigratorUpCommand::class,
         MigratorDownCommand::class,
@@ -62,8 +62,8 @@ abstract class AbstractMigratorProvider extends AbstractServiceProvider
 
     public function register(): void
     {
-        $this->getContainer()->define(MigrationConfig::class, [$this, 'makeMigrationConfig'], true);
-        $this->getContainer()->define(Migrator::class, [$this, 'makeMigrator'], true);
+        $this->getContainer()->define(MigrationConfig::class, $this->makeMigrationConfig(...), true);
+        $this->getContainer()->define(Migrator::class, $this->makeMigrator(...), true);
 
         foreach (static::COMMANDS as $command) {
             $this->registerCommand($command);

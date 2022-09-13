@@ -34,7 +34,7 @@ final class SingletonValueObject implements StaticConstructorInterface
      * @param self $value
      * @return string
      */
-    protected static function singletonKey($value): string
+    protected static function singletonKey(mixed $value): string
     {
         return $value->value;
     }

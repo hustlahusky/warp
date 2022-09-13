@@ -12,9 +12,7 @@ namespace Warp\Collection\Operation;
 final class UniqueOperation extends AbstractOperation
 {
     private const NULL = 'n';
-
     private const TRUE = 'b:1';
-
     private const FALSE = 'b:0';
 
     protected function generator(\Traversable $iterator): \Generator
@@ -33,11 +31,7 @@ final class UniqueOperation extends AbstractOperation
         }
     }
 
-    /**
-     * @param mixed $value
-     * @return string
-     */
-    private function getValueId($value): string
+    private function getValueId(mixed $value): string
     {
         if (\is_object($value)) {
             return \sprintf('o:%s', \spl_object_hash($value));

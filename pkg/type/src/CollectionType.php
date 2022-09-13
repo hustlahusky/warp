@@ -11,21 +11,11 @@ final class CollectionType implements TypeInterface, StaticConstructorInterface
 {
     use SingletonStorageTrait;
 
-    private TypeInterface $iterableType;
-
-    private TypeInterface $valueType;
-
-    private ?TypeInterface $keyType;
-
     private function __construct(
-        TypeInterface $iterableType,
-        TypeInterface $valueType,
-        ?TypeInterface $keyType = null
+        private readonly TypeInterface $iterableType,
+        private readonly TypeInterface $valueType,
+        private readonly ?TypeInterface $keyType = null,
     ) {
-        $this->iterableType = $iterableType;
-        $this->valueType = $valueType;
-        $this->keyType = $keyType;
-
         self::singletonAttach($this);
     }
 
@@ -58,7 +48,7 @@ final class CollectionType implements TypeInterface, StaticConstructorInterface
             ?? new self($iterableType, $valueType, $keyType);
     }
 
-    public function check($value): bool
+    public function check(mixed $value): bool
     {
         if (!$this->iterableType->check($value)) {
             return false;
@@ -79,9 +69,8 @@ final class CollectionType implements TypeInterface, StaticConstructorInterface
 
     /**
      * @param self|array{TypeInterface,TypeInterface,TypeInterface|null} $value
-     * @return string
      */
-    protected static function singletonKey($value): string
+    protected static function singletonKey(mixed $value): string
     {
         if ($value instanceof self) {
             $iterableType = $value->iterableType;

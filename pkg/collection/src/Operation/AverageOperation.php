@@ -15,11 +15,9 @@ use Warp\Common\Field\FieldInterface;
  */
 final class AverageOperation implements AlterValueTypeOperationInterface
 {
-    private ?FieldInterface $field;
-
-    public function __construct(?FieldInterface $field = null)
-    {
-        $this->field = $field;
+    public function __construct(
+        private readonly FieldInterface|null $field = null,
+    ) {
     }
 
     /**

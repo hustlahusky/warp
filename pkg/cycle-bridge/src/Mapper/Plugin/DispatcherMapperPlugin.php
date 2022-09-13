@@ -9,11 +9,9 @@ use Warp\Bridge\Cycle\Mapper\MapperPluginInterface;
 
 final class DispatcherMapperPlugin implements MapperPluginInterface
 {
-    private EventDispatcherInterface $dispatcher;
-
-    public function __construct(EventDispatcherInterface $dispatcher)
-    {
-        $this->dispatcher = $dispatcher;
+    public function __construct(
+        private readonly EventDispatcherInterface $dispatcher,
+    ) {
     }
 
     /**

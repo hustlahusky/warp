@@ -18,7 +18,6 @@ final class Collection extends AbstractCollection implements StaticConstructorIn
 {
     /**
      * @param iterable<V> $elements
-     * @param TypeInterface|null $valueType
      * @return self<V>
      */
     public static function new(iterable $elements = [], ?TypeInterface $valueType = null): self
@@ -48,7 +47,7 @@ final class Collection extends AbstractCollection implements StaticConstructorIn
         return new self($source, $valueType ?? $this->valueType);
     }
 
-    protected function getMutableSource(): MutableInterface
+    protected function getMutableSource(): MutableInterface&\Traversable
     {
         return $this->source instanceof MutableInterface
             ? $this->source

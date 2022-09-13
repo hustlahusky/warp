@@ -7,7 +7,6 @@ namespace Warp\Bridge\Cycle\Fixtures;
 class User
 {
     public ?string $id = null;
-
     public ?string $name = null;
 
     public function __construct(string $id, string $name)

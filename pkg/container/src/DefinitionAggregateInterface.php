@@ -16,7 +16,7 @@ interface DefinitionAggregateInterface
      * @param boolean $shared
      * @return DefinitionInterface<T>
      */
-    public function define(string $id, $concrete = null, bool $shared = false): DefinitionInterface;
+    public function define(string $id, mixed $concrete = null, bool $shared = false): DefinitionInterface;
 
     /**
      * @param string $tag

@@ -11,16 +11,14 @@ use Webmozart\Expression\Logic\OrX;
 
 final class Selector extends \Webmozart\Expression\Selector\Selector
 {
-    private FieldInterface $field;
-
-    public function __construct(FieldInterface $field, Expression $expr)
-    {
+    public function __construct(
+        private readonly FieldInterface $field,
+        Expression $expr,
+    ) {
         parent::__construct($expr);
-
-        $this->field = $field;
     }
 
-    public function evaluate($value): bool
+    public function evaluate(mixed $value): bool
     {
         return $this->expr->evaluate($this->field->extract($value));
     }

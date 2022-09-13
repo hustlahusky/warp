@@ -17,20 +17,14 @@ use Warp\Criteria\FilterableInterface;
  */
 final class MatchingOperation implements OperationInterface
 {
-    private CriteriaInterface $criteria;
-
-    private bool $preserveKeys;
-
-    private FieldFactoryInterface $fieldFactory;
+    private readonly FieldFactoryInterface $fieldFactory;
 
     public function __construct(
-        CriteriaInterface $criteria,
+        private readonly CriteriaInterface $criteria,
         ?FieldFactoryInterface $fieldFactory = null,
-        bool $preserveKeys = false
+        private readonly bool $preserveKeys = false,
     ) {
-        $this->criteria = $criteria;
         $this->fieldFactory = $fieldFactory ?? FieldFactoryAggregate::default();
-        $this->preserveKeys = $preserveKeys;
     }
 
     public function apply(\Traversable $iterator): \Traversable
@@ -41,7 +35,7 @@ final class MatchingOperation implements OperationInterface
             if (!$output instanceof \Traversable) {
                 throw new \LogicException(\sprintf(
                     'Expected %s::matching() to return Traversable. Got: %s.',
-                    \get_class($iterator),
+                    $iterator::class,
                     \get_debug_type($output),
                 ));
             }

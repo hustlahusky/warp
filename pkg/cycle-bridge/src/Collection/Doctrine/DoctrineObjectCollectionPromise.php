@@ -17,16 +17,11 @@ use Warp\Bridge\Cycle\Collection\ObjectCollectionPromiseInterface;
 final class DoctrineObjectCollectionPromise extends AbstractLazyCollection implements ObjectCollectionPromiseInterface
 {
     /**
-     * @var ObjectCollectionPromiseInterface<T,P>
-     */
-    private ObjectCollectionPromiseInterface $promise;
-
-    /**
      * @param ObjectCollectionPromiseInterface<T,P> $promise
      */
-    public function __construct(ObjectCollectionPromiseInterface $promise)
-    {
-        $this->promise = $promise;
+    public function __construct(
+        private readonly ObjectCollectionPromiseInterface $promise,
+    ) {
     }
 
     public function __id(): int
@@ -66,7 +61,6 @@ final class DoctrineObjectCollectionPromise extends AbstractLazyCollection imple
     }
 
     /**
-     * @param ScopeInterface $scope
      * @return self<T,P>
      */
     public function withScope(ScopeInterface $scope): self
@@ -85,7 +79,7 @@ final class DoctrineObjectCollectionPromise extends AbstractLazyCollection imple
         return $this->__resolve()->getPivot($element);
     }
 
-    public function setPivot(object $element, $pivot): void
+    public function setPivot(object $element, mixed $pivot): void
     {
         $this->__resolve()->setPivot($element, $pivot);
     }

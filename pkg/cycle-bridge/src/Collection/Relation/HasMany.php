@@ -28,7 +28,6 @@ use Warp\Bridge\Cycle\Select\ScopeAggregate;
 class HasMany extends AbstractToManyRelation
 {
     /**
-     * @param Node $node
      * @param mixed[] $data
      * @return array{ObjectCollectionInterface<object,mixed>,ObjectStorage<object,mixed>}
      */
@@ -60,7 +59,6 @@ class HasMany extends AbstractToManyRelation
     }
 
     /**
-     * @param Node $node
      * @return array{ObjectCollectionInterface<object,mixed>,ObjectCollectionPromiseInterface<object,mixed>|ObjectStorage<object,mixed>}
      */
     public function initPromise(Node $node): array
@@ -81,7 +79,7 @@ class HasMany extends AbstractToManyRelation
      * @param mixed $data
      * @return ObjectCollectionPromiseInterface<object,mixed>|ObjectStorage<object,mixed>
      */
-    public function extract($data)
+    public function extract(mixed $data): ObjectCollectionPromiseInterface|ObjectStorage
     {
         if ($data instanceof ObjectCollectionPromiseInterface && !$data->__loaded()) {
             return $data;
@@ -135,21 +133,18 @@ class HasMany extends AbstractToManyRelation
         return $this->makeCollectionLoader($collection->getScope())->buildQuery()->count();
     }
 
-    public function hasChanges($related, $original): bool
+    public function hasChanges(mixed $related, mixed $original): bool
     {
         return parent::hasChanges($related, $original)
             || ($related instanceof ChangesEnabledInterface && $related->hasChanges());
     }
 
     /**
-     * @param CC $store
      * @param object $entity
-     * @param Node $node
      * @param ObjectCollectionPromiseInterface<object,mixed>|ObjectStorage<object,mixed> $related
      * @param ObjectCollectionPromiseInterface<object,mixed>|ObjectStorage<object,mixed>|null $original
-     * @return CommandInterface
      */
-    public function queue(CC $store, $entity, Node $node, $related, $original): CommandInterface
+    public function queue(CC $store, mixed $entity, Node $node, mixed $related, mixed $original): CommandInterface
     {
         if ($related === $original && $related instanceof ChangesEnabledInterface) {
             return $this->queueCollectionChanges($node, $related);
@@ -159,13 +154,14 @@ class HasMany extends AbstractToManyRelation
     }
 
     /**
-     * @param Node $node
      * @param ObjectCollectionPromiseInterface<object,mixed>|ObjectStorage<object,mixed> $related
      * @param ObjectCollectionPromiseInterface<object,mixed>|ObjectStorage<object,mixed>|null $original
-     * @return CommandInterface
      */
-    protected function queueForceSync(Node $node, $related, $original): CommandInterface
-    {
+    protected function queueForceSync(
+        Node $node,
+        ObjectCollectionPromiseInterface|ObjectStorage $related,
+        ObjectCollectionPromiseInterface|ObjectStorage|null $original,
+    ): CommandInterface {
         $sequence = new Sequence();
 
         $related = ObjectStorage::snapshot($related);
@@ -184,9 +180,7 @@ class HasMany extends AbstractToManyRelation
     }
 
     /**
-     * @param Node $node
      * @param ChangesEnabledInterface<object,mixed> $related
-     * @return CommandInterface
      */
     protected function queueCollectionChanges(Node $node, ChangesEnabledInterface $related): CommandInterface
     {
@@ -242,7 +236,7 @@ class HasMany extends AbstractToManyRelation
 
         if ($this->isNullable()) {
             $command = $this->orm->queueStore($related);
-            $command->waitContext($this->columnName($rNode, $this->outerKey), true);
+            $command->waitContext($this->columnName($rNode, $this->outerKey));
             $command->register($this->columnName($rNode, $this->outerKey), null, true);
             $rNode->getState()->decClaim();
         } else {
@@ -263,7 +257,6 @@ class HasMany extends AbstractToManyRelation
     }
 
     /**
-     * @param Node $parentNode
      * @return array<string,mixed>
      */
     protected function getWhereScope(Node $parentNode): array

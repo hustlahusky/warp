@@ -16,38 +16,18 @@ use Warp\DataSource\Blame\BlameImmutableInterface;
 final class BlameStrategy implements StrategyInterface
 {
     /**
-     * @var class-string<T>|null
-     */
-    private ?string $actorClass;
-
-    /**
-     * @var string[]
-     */
-    private array $fields;
-
-    private ?ClockInterface $clock;
-
-    private StrategyInterface $dateStrategy;
-
-    /**
      * @param class-string<T>|null $actorClass
      * @param string[] $fields
-     * @param StrategyInterface|null $dateStrategy
-     * @param ClockInterface|null $clock
      */
     public function __construct(
-        ?string $actorClass = null,
-        array $fields = [],
-        ?StrategyInterface $dateStrategy = null,
-        ?ClockInterface $clock = null
+        private readonly ?string $actorClass = null,
+        private readonly array $fields = [],
+        private readonly StrategyInterface $dateStrategy = new DefaultStrategy(),
+        private readonly ?ClockInterface $clock = null,
     ) {
-        $this->actorClass = $actorClass;
-        $this->fields = $fields;
-        $this->clock = $clock;
-        $this->dateStrategy = $dateStrategy ?? new DefaultStrategy();
     }
 
-    public function extract($value, ?object $object = null)
+    public function extract(mixed $value, ?object $object = null)
     {
         if (!$value instanceof BlameImmutableInterface) {
             throw new \InvalidArgumentException(\sprintf(
@@ -75,7 +55,7 @@ final class BlameStrategy implements StrategyInterface
      * @param array<array-key,mixed>|null $data
      * @return BlameImmutableInterface<T|object>
      */
-    public function hydrate($value, ?array $data = null): BlameImmutableInterface
+    public function hydrate(mixed $value, ?array $data = null): BlameImmutableInterface
     {
         if ($value instanceof BlameImmutableInterface) {
             return $value;

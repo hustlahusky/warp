@@ -47,15 +47,6 @@ class MapTest extends TestCase
         ], \iterator_to_array($map));
     }
 
-    public function testSetInvalidKey(): void
-    {
-        $this->expectException(\LogicException::class);
-
-        $map = Map::new();
-
-        $map->set(true, 1);
-    }
-
     public function testSetInvalidValue(): void
     {
         $this->expectException(\LogicException::class);
@@ -94,15 +85,6 @@ class MapTest extends TestCase
         ], \iterator_to_array($map));
     }
 
-    public function testUnsetInvalidKey(): void
-    {
-        $this->expectException(\LogicException::class);
-
-        $map = Map::new();
-
-        $map->unset(null);
-    }
-
     public function testHas(): void
     {
         $map = Map::new([
@@ -114,18 +96,6 @@ class MapTest extends TestCase
         self::assertFalse($map->has('key3'));
     }
 
-    public function testHasInvalidKey(): void
-    {
-        $this->expectException(\LogicException::class);
-
-        $map = Map::new([
-            'key1' => 'value1',
-            'key2' => 'value2',
-        ]);
-
-        $map->has([]);
-    }
-
     public function testGet(): void
     {
         $map = Map::new([
@@ -135,18 +105,6 @@ class MapTest extends TestCase
 
         self::assertSame('value1', $map->get('key1'));
         self::assertNull($map->get('key3'));
-    }
-
-    public function testGetInvalidKey(): void
-    {
-        $this->expectException(\LogicException::class);
-
-        $map = Map::new([
-            'key1' => 'value1',
-            'key2' => 'value2',
-        ]);
-
-        $map->get(false);
     }
 
     public function testValues(): void

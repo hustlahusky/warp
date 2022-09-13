@@ -16,14 +16,10 @@ use Warp\Collection\Collection;
 
 final class MigratorFreshCommandHandler extends AbstractCommandHandler
 {
-    private Migrator $migrator;
-
-    private DatabaseProviderInterface $dbal;
-
-    public function __construct(Migrator $migrator, DatabaseProviderInterface $dbal)
-    {
-        $this->migrator = $migrator;
-        $this->dbal = $dbal;
+    public function __construct(
+        private readonly Migrator $migrator,
+        private readonly DatabaseProviderInterface $dbal,
+    ) {
     }
 
     public function handle(Command $command, InputInterface $input, OutputStyle $style): int

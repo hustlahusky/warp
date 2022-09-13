@@ -22,7 +22,7 @@ class UriValue extends AbstractValueObject
         return (string)$this->value;
     }
 
-    protected static function validate($value): void
+    protected static function validate(mixed $value): void
     {
         if ($value instanceof UriInterface) {
             return;
@@ -42,7 +42,7 @@ class UriValue extends AbstractValueObject
         ));
     }
 
-    protected static function cast($value): UriInterface
+    protected static function cast(mixed $value): UriInterface
     {
         return $value instanceof UriInterface
             ? $value

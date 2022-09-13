@@ -6,11 +6,9 @@ namespace Warp\CommandBus\Mapping\ClassName;
 
 final class SuffixClassNameMapping implements ClassNameMappingInterface
 {
-    private string $suffix;
-
-    public function __construct(string $suffix)
-    {
-        $this->suffix = $suffix;
+    public function __construct(
+        private readonly string $suffix,
+    ) {
     }
 
     public function getClassName(string $commandClass): string

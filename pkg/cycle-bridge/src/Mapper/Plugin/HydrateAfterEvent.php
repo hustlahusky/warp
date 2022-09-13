@@ -8,20 +8,13 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 final class HydrateAfterEvent extends Event
 {
-    private object $entity;
-
-    /**
-     * @var array<string,mixed>
-     */
-    private array $data;
-
     /**
      * @param array<string,mixed> $data
      */
-    public function __construct(object $entity, array $data)
-    {
-        $this->entity = $entity;
-        $this->data = $data;
+    public function __construct(
+        private readonly object $entity,
+        private readonly array $data,
+    ) {
     }
 
     public function getEntity(): object

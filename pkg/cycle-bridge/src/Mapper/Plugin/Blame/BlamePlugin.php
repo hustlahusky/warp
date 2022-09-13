@@ -13,16 +13,11 @@ use Warp\Bridge\Cycle\Mapper\Plugin\QueueBeforeEvent;
 final class BlamePlugin implements EventSubscriberInterface
 {
     /**
-     * @var BlameHandler<T>
-     */
-    private BlameHandler $handler;
-
-    /**
      * @param BlameHandler<T> $handler
      */
-    public function __construct(BlameHandler $handler)
-    {
-        $this->handler = $handler;
+    public function __construct(
+        private readonly BlameHandler $handler,
+    ) {
     }
 
     public function handle(QueueBeforeEvent $event): void

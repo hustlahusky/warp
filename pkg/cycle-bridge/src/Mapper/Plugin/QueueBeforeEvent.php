@@ -10,17 +10,11 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 final class QueueBeforeEvent extends Event
 {
-    private object $entity;
-
-    private Node $node;
-
-    private State $state;
-
-    public function __construct(object $entity, Node $node, State $state)
-    {
-        $this->entity = $entity;
-        $this->node = $node;
-        $this->state = $state;
+    public function __construct(
+        private readonly object $entity,
+        private readonly Node $node,
+        private readonly State $state,
+    ) {
     }
 
     public function getEntity(): object

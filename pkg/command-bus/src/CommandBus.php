@@ -15,27 +15,17 @@ use Warp\Container\FactoryOptionsInterface;
  */
 class CommandBus
 {
-    private CommandToHandlerMappingInterface $mapping;
-
-    private FactoryAggregateInterface $factory;
-
     private \Closure $middlewareChain;
-
     private bool $isClone = false;
 
     /**
-     * CommandBus constructor.
-     * @param CommandToHandlerMappingInterface $mapping
      * @param array<MiddlewareInterface|class-string<MiddlewareInterface>> $middleware
-     * @param FactoryAggregateInterface|null $factory
      */
     public function __construct(
-        CommandToHandlerMappingInterface $mapping,
+        private readonly CommandToHandlerMappingInterface $mapping,
         array $middleware = [],
-        ?FactoryAggregateInterface $factory = null
+        private readonly FactoryAggregateInterface $factory = new FactoryContainer()
     ) {
-        $this->mapping = $mapping;
-        $this->factory = $factory ?? new FactoryContainer();
         $this->middlewareChain = $this->makeMiddlewareChain($middleware);
     }
 
@@ -52,10 +42,8 @@ class CommandBus
 
     /**
      * Executes the given command and optionally returns a value
-     * @param object $command
-     * @return mixed
      */
-    public function handle(object $command)
+    public function handle(object $command): mixed
     {
         return ($this->middlewareChain)($command);
     }
@@ -70,14 +58,15 @@ class CommandBus
      * @param FactoryOptionsInterface|array<string,mixed>|null $options
      * @return T
      */
-    protected function makeHandlerObject(string $handlerClass, $options = null): object
-    {
+    protected function makeHandlerObject(
+        string $handlerClass,
+        array|FactoryOptionsInterface|null $options = null
+    ): object {
         return $this->factory->make($handlerClass, $options);
     }
 
     /**
      * @param array<MiddlewareInterface|class-string<MiddlewareInterface>> $middlewareList
-     * @return \Closure
      */
     private function makeMiddlewareChain(array $middlewareList): \Closure
     {
@@ -107,13 +96,9 @@ class CommandBus
         return $lastCallable;
     }
 
-    /**
-     * @param object $command
-     * @return callable
-     */
     private function makeCommandHandler(object $command): callable
     {
-        $commandClass = \get_class($command);
+        $commandClass = $command::class;
         $handlerClass = $this->mapping->getClassName($commandClass);
         $handlerMethod = $this->mapping->getMethodName($commandClass);
 

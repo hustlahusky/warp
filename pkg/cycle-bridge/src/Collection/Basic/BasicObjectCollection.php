@@ -18,7 +18,7 @@ final class BasicObjectCollection implements ObjectCollectionInterface, \Iterato
     /**
      * @var ObjectStorage<T,P|null>
      */
-    private ObjectStorage $storage;
+    private readonly ObjectStorage $storage;
 
     /**
      * @param iterable<T> $elements
@@ -52,7 +52,7 @@ final class BasicObjectCollection implements ObjectCollectionInterface, \Iterato
         return $this->storage->getPivot($element);
     }
 
-    public function setPivot(object $element, $pivot): void
+    public function setPivot(object $element, mixed $pivot): void
     {
         $this->storage->setPivot($element, $pivot);
     }

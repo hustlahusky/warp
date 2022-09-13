@@ -16,16 +16,15 @@ final class DateValueStrategy implements StrategyInterface
     /**
      * @var class-string<T>
      */
-    private string $dateClass;
-
-    private string $format;
+    private readonly string $dateClass;
 
     /**
-     * @param string $format
      * @param class-string<T> $dateClass
      */
-    public function __construct(string $format, string $dateClass = DateTimeImmutableValue::class)
-    {
+    public function __construct(
+        private readonly string $format,
+        string $dateClass = DateTimeImmutableValue::class,
+    ) {
         if (!\is_subclass_of($dateClass, DateTimeValueInterface::class)) {
             throw new \InvalidArgumentException(\sprintf(
                 'Argument #2 ($dateClass) expected to be subclass of %s. Got: %s.',
@@ -35,16 +34,13 @@ final class DateValueStrategy implements StrategyInterface
         }
 
         $this->dateClass = $dateClass;
-        $this->format = $format;
     }
 
     /**
      * @inheritDoc
      * @param T $value
-     * @param object|null $object
-     * @return string
      */
-    public function extract($value, ?object $object = null): string
+    public function extract(mixed $value, ?object $object = null): string
     {
         if (!$value instanceof DateTimeValueInterface) {
             throw new \InvalidArgumentException(\sprintf(
@@ -62,7 +58,7 @@ final class DateValueStrategy implements StrategyInterface
      * @param array<string,mixed>|null $data
      * @return T
      */
-    public function hydrate($value, ?array $data = null)
+    public function hydrate(mixed $value, ?array $data = null)
     {
         if ($value instanceof \DateTimeInterface) {
             return $this->dateClass::from($value);

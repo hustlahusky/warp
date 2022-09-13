@@ -27,5 +27,5 @@ interface FactoryAggregateInterface
      * @param FactoryOptionsInterface|array<string,mixed>|null $options
      * @return T
      */
-    public function make(string $class, $options = null);
+    public function make(string $class, array|FactoryOptionsInterface|null $options = null): mixed;
 }

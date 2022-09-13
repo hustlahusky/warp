@@ -27,7 +27,7 @@ abstract class AbstractAggregatedTypeFactory implements TypeFactoryInterface
             ));
         }
 
-        if (1 !== \strlen(self::constant(static::TYPE_CLASS, 'DELIMITER'))) {
+        if (1 !== \strlen((string)self::constant(static::TYPE_CLASS, 'DELIMITER'))) {
             throw new \RuntimeException(\sprintf('%s::DELIMITER should be 1 symbol string.', static::TYPE_CLASS));
         }
     }
@@ -45,11 +45,10 @@ abstract class AbstractAggregatedTypeFactory implements TypeFactoryInterface
             throw new TypeNotSupportedException($type, static::TYPE_CLASS);
         }
 
-        return \call_user_func([static::TYPE_CLASS, 'new'], ...\array_map([$this->parent, 'make'], $parsed));
+        return \call_user_func([static::TYPE_CLASS, 'new'], ...\array_map($this->parent->make(...), $parsed));
     }
 
     /**
-     * @param string $type
      * @return array{string,string}|null
      */
     private function parse(string $type): ?array
@@ -86,7 +85,6 @@ abstract class AbstractAggregatedTypeFactory implements TypeFactoryInterface
     }
 
     /**
-     * @param string $string
      * @return string[]
      */
     private function split(string $string): array
@@ -96,10 +94,8 @@ abstract class AbstractAggregatedTypeFactory implements TypeFactoryInterface
 
     /**
      * @param class-string $className
-     * @param string $constName
-     * @return mixed
      */
-    private static function constant(string $className, string $constName)
+    private static function constant(string $className, string $constName): mixed
     {
         return \constant(\sprintf('%s::%s', $className, $constName));
     }

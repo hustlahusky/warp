@@ -9,9 +9,8 @@ abstract class ArrayHelper
     /**
      * Check that array is associative (have at least one string key)
      * @param mixed $var variable to check
-     * @return bool
      */
-    public static function isArrayAssoc($var): bool
+    public static function isArrayAssoc(mixed $var): bool
     {
         if (!\is_array($var)) {
             return false;
@@ -41,7 +40,7 @@ abstract class ArrayHelper
     }
 
     /**
-     * Convert single-dimensional associative array to multi-dimensional by splitting keys with separator
+     * Convert single-dimensional associative array to multidimensional by splitting keys with separator
      * @param array<string,mixed> $array Source single-dimensional array
      * @param non-empty-string $delimiter Glue string for exploding keys
      * @return array<string,mixed>
@@ -61,8 +60,6 @@ abstract class ArrayHelper
 
     /**
      * @param array<array-key,mixed> $array
-     * @param string $glue
-     * @param string $prefix
      * @return \Generator<string,mixed>
      */
     private static function flattenGenerator(array $array, string $glue, string $prefix): \Generator

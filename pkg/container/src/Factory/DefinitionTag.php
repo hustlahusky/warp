@@ -15,5 +15,5 @@ abstract class DefinitionTag
      * @var string
      * @see https://symfony.com/doc/current/reference/dic_tags.html#console-command
      */
-    public const CONSOLE_COMMAND = 'console.command';
+    final public const CONSOLE_COMMAND = 'console.command';
 }

@@ -43,7 +43,6 @@ class FieldFactoryTest extends TestCase
     {
         $testReadInfoExtractor = new class implements PropertyReadInfoExtractorInterface {
             private ReflectionExtractor $reader;
-
             public bool $called = false;
 
             public function __construct()

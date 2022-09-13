@@ -9,29 +9,26 @@ use Yiisoft\Arrays\ArrayHelper;
 
 final class YiiField implements FieldInterface
 {
-    private string $field;
-
     /**
      * @var string[]
      */
-    private array $elements;
+    private readonly array $elements;
 
     /**
      * @var array-key|array<array-key>|\Closure
      */
-    private $extractKey;
+    private mixed $extractKey;
 
     /**
-     * @param string $field
      * @param array-key|array<array-key>|\Closure|null $extractKey
      */
-    public function __construct(string $field, $extractKey = null)
-    {
+    public function __construct(
+        private readonly string $field,
+        mixed $extractKey = null,
+    ) {
         if (!\class_exists(ArrayHelper::class)) {
             throw PackageMissingException::new('yiisoft/arrays', null, self::class);
         }
-
-        $this->field = $field;
         $this->elements = DefaultField::parseElements($field);
         $this->extractKey = $extractKey ?? $this->elements;
     }
@@ -46,7 +43,7 @@ final class YiiField implements FieldInterface
         return $this->elements;
     }
 
-    public function extract($element)
+    public function extract(mixed $element): mixed
     {
         return ArrayHelper::getValue($element, $this->extractKey);
     }

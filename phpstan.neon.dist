@@ -12,6 +12,7 @@ parameters:
         - pkg/command-bus/src/
         - pkg/command-bus/.phpstan/
         - pkg/common/src/
+        - pkg/common/.phpstan/
         - pkg/container/src/
         - pkg/criteria/src/
         - pkg/cycle-bridge/src/

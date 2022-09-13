@@ -15,17 +15,13 @@ use Warp\DataSource\PropertyExtractorInterface;
  */
 final class CyclePropertyExtractor implements PropertyExtractorInterface
 {
-    private ORMInterface $orm;
-
-    private string $role;
-
-    public function __construct(ORMInterface $orm, string $role)
-    {
-        $this->orm = $orm;
-        $this->role = $role;
+    public function __construct(
+        private readonly ORMInterface $orm,
+        private readonly string $role,
+    ) {
     }
 
-    public function extractValue(string $name, $value)
+    public function extractValue(string $name, mixed $value): mixed
     {
         $name = $this->getPropertyExtractor()->extractName($name);
         [$relation, $property] = $this->splitName($name);
@@ -43,7 +39,6 @@ final class CyclePropertyExtractor implements PropertyExtractorInterface
     }
 
     /**
-     * @param string $name
      * @return array<array-key,mixed>|null
      */
     public function getRelationSchemaIfExists(string $name): ?array
@@ -62,12 +57,7 @@ final class CyclePropertyExtractor implements PropertyExtractorInterface
         return $this->orm->getSchema()->defineRelation($this->role, $property);
     }
 
-    /**
-     * @param string $key
-     * @param object $entity
-     * @return mixed
-     */
-    public function fetchKey(string $key, object $entity)
+    public function fetchKey(string $key, object $entity): mixed
     {
         $node = $this->orm->getHeap()->get($entity);
 
@@ -84,7 +74,6 @@ final class CyclePropertyExtractor implements PropertyExtractorInterface
     }
 
     /**
-     * @param string $name
      * @return array{string|null,string}
      */
     private function splitName(string $name): array
@@ -124,19 +113,18 @@ final class CyclePropertyExtractor implements PropertyExtractorInterface
         return $schema->defines($this->role) && \in_array($relation, $schema->getRelations($this->role), true);
     }
 
-    private function assertFieldDefined(string $field, ?string $role = null): void
+    private function assertFieldDefined(string $field): void
     {
         if (\str_contains($field, '.')) {
             return;
         }
 
-        $role ??= $this->role;
-        $fields = $this->orm->getSchema()->define($role, SchemaInterface::COLUMNS);
+        $fields = $this->orm->getSchema()->define($this->role, SchemaInterface::COLUMNS);
 
         if (isset($fields[$field]) || \in_array($field, $fields, true)) {
             return;
         }
 
-        throw new \InvalidArgumentException(\sprintf('Entity "%s" has not field "%s".', $role, $field));
+        throw new \InvalidArgumentException(\sprintf('Entity "%s" has not field "%s".', $this->role, $field));
     }
 }

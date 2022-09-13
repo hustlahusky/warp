@@ -12,18 +12,14 @@ use Warp\DevTool\Monorepo\Composer\MonorepoProject;
 
 final class ComposerJsonSynchronizer
 {
-    private ComposerJson $rootComposer;
-
-    private string $monorepoDir;
+    private readonly string $monorepoDir;
+    private readonly VersionParser $versionParser;
+    private readonly Filesystem $filesystem;
 
     /**
      * @var \SplObjectStorage<MonorepoProject,ComposerJson>
      */
-    private \SplObjectStorage $projects;
-
-    private VersionParser $versionParser;
-
-    private Filesystem $filesystem;
+    private readonly \SplObjectStorage $projects;
 
     /**
      * @var array<string,array<string,true>>
@@ -41,6 +37,11 @@ final class ComposerJsonSynchronizer
     private array $requireDev = [];
 
     /**
+     * @var array<string,array<string,true>>
+     */
+    private array $replace = [];
+
+    /**
      * @var string[]
      */
     private array $bin = [];
@@ -55,9 +56,9 @@ final class ComposerJsonSynchronizer
      */
     private array $autoloadDev = [];
 
-    public function __construct(ComposerJson $rootComposer)
-    {
-        $this->rootComposer = $rootComposer;
+    public function __construct(
+        private readonly ComposerJson $rootComposer,
+    ) {
         $this->projects = new \SplObjectStorage();
         $this->versionParser = new VersionParser();
         $this->filesystem = new Filesystem();
@@ -82,6 +83,15 @@ final class ComposerJsonSynchronizer
         foreach ($monorepoConfig->getSection(MonorepoConfig::REQUIRE_DEV, []) as $package => $version) {
             $this->requireDev[$package] ??= [];
             $this->requireDev[$package][$version] = true;
+        }
+
+        /**
+         * @phpstan-var string $package
+         * @phpstan-var string $version
+         */
+        foreach ($monorepoConfig->getSection(MonorepoConfig::REPLACE, []) as $package => $version) {
+            $this->replace[$package] ??= [];
+            $this->replace[$package][$version] = true;
         }
 
         foreach ($monorepoConfig->getProjects() as $project) {
@@ -272,6 +282,13 @@ final class ComposerJsonSynchronizer
             unset($require[$projectComposer->getName()], $requireDev[$projectComposer->getName()]);
         }
 
+        foreach ($this->replace as $package => $versions) {
+            $version = \array_key_first($versions);
+            \assert(\is_string($version));
+            $replace[$package] = $version;
+        }
+        $replace = $this->sortRequireList($replace);
+
         $this->rootComposer->setSection(ComposerJson::REQUIRE, $require);
         $this->rootComposer->setSection(ComposerJson::REQUIRE_DEV, $requireDev);
 
@@ -329,7 +346,6 @@ final class ComposerJsonSynchronizer
 
     /**
      * @param array<string,mixed> $autoload
-     * @param MonorepoProject $project
      * @param array<string,mixed> $projectAutoload
      * @return array<string,mixed>
      */
@@ -433,11 +449,11 @@ final class ComposerJsonSynchronizer
                 return 1;
             }
 
-            if (0 === \strpos($a, 'ext-')) {
+            if (\str_starts_with($a, 'ext-')) {
                 return -1;
             }
 
-            if (0 === \strpos($b, 'ext-')) {
+            if (\str_starts_with($b, 'ext-')) {
                 return 1;
             }
 

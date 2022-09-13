@@ -22,10 +22,8 @@ final class DefinitionContainer implements
     InvokerInterface
 {
     private ContainerInterface $rootContainer;
-
-    private FactoryAggregateInterface $factory;
-
-    private InvokerInterface $invoker;
+    private readonly FactoryAggregateInterface $factory;
+    private readonly InvokerInterface $invoker;
 
     /**
      * @var array<string,Definition<mixed>>
@@ -54,7 +52,7 @@ final class DefinitionContainer implements
         $this->setContainer($this);
     }
 
-    public function addServiceProvider($provider): void
+    public function addServiceProvider(ServiceProviderInterface|string $provider): void
     {
         if (\is_string($provider)) {
             $provider = $this->make($provider);
@@ -84,7 +82,7 @@ final class DefinitionContainer implements
         }
     }
 
-    public function define(string $id, $concrete = null, bool $shared = false): DefinitionInterface
+    public function define(string $id, mixed $concrete = null, bool $shared = false): DefinitionInterface
     {
         if (isset($this->definitions[$id])) {
             throw new Exception\ContainerException(\sprintf('Alias (%s) definition already defined.', $id));
@@ -102,7 +100,7 @@ final class DefinitionContainer implements
         return isset($this->definitions[$id]) || isset($this->providesMap[$id]);
     }
 
-    public function get(string $id, $options = null)
+    public function get(string $id, array|FactoryOptionsInterface|null $options = null): mixed
     {
         $this->tryRegisterService($id);
 
@@ -124,12 +122,12 @@ final class DefinitionContainer implements
         return $this->factory->getFactory($class);
     }
 
-    public function make(string $class, $options = null)
+    public function make(string $class, array|FactoryOptionsInterface|null $options = null): mixed
     {
         return $this->factory->make($class, $options);
     }
 
-    public function invoke(callable $callable, $options = null)
+    public function invoke(callable $callable, array|InvokerOptionsInterface|null $options = null): mixed
     {
         return $this->invoker->invoke($callable, $options);
     }

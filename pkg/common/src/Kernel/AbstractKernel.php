@@ -23,24 +23,17 @@ abstract class AbstractKernel
      */
     protected ContainerInterface $container;
 
-    protected bool $debugModeEnabled;
-
-    /**
-     * @param ContainerInterface|null $container
-     * @param bool $debugModeEnabled
-     */
     public function __construct(
         ?ContainerInterface $container = null,
-        bool $debugModeEnabled = false
+        protected bool $debugModeEnabled = false,
     ) {
         $this->container = $this->prepareContainer($container);
-        $this->debugModeEnabled = $debugModeEnabled;
 
-        $this->container->define(ContainerInterface::class, [$this, 'getContainer']);
+        $this->container->define(ContainerInterface::class, $this->getContainer(...));
 
         $this->container->define('kernel', static::class);
         $this->container->define(static::class, $this, true);
-        $this->container->define('kernel.debug', [$this, 'isDebugModeEnabled']);
+        $this->container->define('kernel.debug', $this->isDebugModeEnabled(...));
 
         foreach ($this->loadServiceProviders() as $serviceProvider) {
             $this->container->addServiceProvider($serviceProvider);
@@ -58,7 +51,6 @@ abstract class AbstractKernel
 
     /**
      * Running debug mode?
-     * @return bool
      */
     public function isDebugModeEnabled(): bool
     {
@@ -78,11 +70,7 @@ abstract class AbstractKernel
         return [];
     }
 
-    /**
-     * @param ContainerInterface|null $container
-     * @return ContainerInterface&ServiceProviderAggregateInterface&DefinitionAggregateInterface&FactoryAggregateInterface&InvokerInterface
-     */
-    private function prepareContainer(?ContainerInterface $container): ContainerInterface
+    private function prepareContainer(?ContainerInterface $container): ContainerInterface&ServiceProviderAggregateInterface&DefinitionAggregateInterface&FactoryAggregateInterface&InvokerInterface
     {
         if (
             $container instanceof ServiceProviderAggregateInterface &&

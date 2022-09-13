@@ -12,23 +12,18 @@ use Laminas\Hydrator\Strategy\StrategyInterface;
 final class RefreshStrategy implements StrategyInterface
 {
     /**
-     * @var T
-     */
-    private $value;
-
-    /**
      * @param T $value
      */
-    public function __construct($value = null)
-    {
-        $this->value = $value;
+    public function __construct(
+        private readonly mixed $value = null,
+    ) {
     }
 
     /**
      * @inheritDoc
      * @return T
      */
-    public function extract($value, ?object $object = null)
+    public function extract(mixed $value, ?object $object = null)
     {
         return $this->value;
     }
@@ -38,7 +33,7 @@ final class RefreshStrategy implements StrategyInterface
      * @param array<string,mixed>|null $data
      * @return T
      */
-    public function hydrate($value, ?array $data = null)
+    public function hydrate(mixed $value, ?array $data = null)
     {
         return $this->value;
     }

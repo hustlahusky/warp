@@ -30,12 +30,7 @@ abstract class AbstractConfig implements \JsonSerializable
         }
     }
 
-    /**
-     * @param string $section
-     * @param mixed $default
-     * @return mixed
-     */
-    public function getSection(string $section, $default = null)
+    public function getSection(string $section, mixed $default = null): mixed
     {
         return $this->data[$section] ?? $this->source[$section] ?? $default;
     }
@@ -48,11 +43,7 @@ abstract class AbstractConfig implements \JsonSerializable
             || \array_key_exists($section, $this->source);
     }
 
-    /**
-     * @param string $section
-     * @param mixed $value
-     */
-    public function setSection(string $section, $value = null): void
+    public function setSection(string $section, mixed $value = null): void
     {
         $this->data[$section] = $value;
     }

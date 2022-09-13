@@ -15,7 +15,7 @@ final class ValueObjectStrategy implements StrategyInterface
     /**
      * @var class-string<T>
      */
-    private string $valueObjectClass;
+    private readonly string $valueObjectClass;
 
     /**
      * @param class-string<T> $valueObjectClass
@@ -37,7 +37,7 @@ final class ValueObjectStrategy implements StrategyInterface
      * @inheritDoc
      * @param T $value
      */
-    public function extract($value, ?object $object = null)
+    public function extract(mixed $value, ?object $object = null)
     {
         if ($value instanceof $this->valueObjectClass) {
             return $value->value();
@@ -51,7 +51,7 @@ final class ValueObjectStrategy implements StrategyInterface
      * @param array<string,mixed>|null $data
      * @return T
      */
-    public function hydrate($value, ?array $data = null)
+    public function hydrate(mixed $value, ?array $data = null)
     {
         if ($value instanceof $this->valueObjectClass) {
             return $value;

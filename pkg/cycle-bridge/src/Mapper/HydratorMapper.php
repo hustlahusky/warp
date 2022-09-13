@@ -22,13 +22,13 @@ use Warp\DataSource\PropertyExtractorInterface;
 
 class HydratorMapper extends Mapper
 {
-    private MapperPluginInterface $plugin;
+    private readonly MapperPluginInterface $plugin;
 
     public function __construct(
         ORMInterface $orm,
         string $role,
         ?HydratorInterface $hydrator = null,
-        ?MapperPluginInterface $plugin = null
+        ?MapperPluginInterface $plugin = null,
     ) {
         parent::__construct($orm, $role);
 
@@ -40,7 +40,7 @@ class HydratorMapper extends Mapper
      * @inheritDoc
      * @param array<string,mixed> $data
      */
-    public function hydrate($entity, array $data): object
+    public function hydrate(mixed $entity, array $data): object
     {
         /** @var Plugin\HydrateBeforeEvent $event */
         $event = $this->plugin->dispatch(new Plugin\HydrateBeforeEvent($entity, $data));
@@ -60,7 +60,7 @@ class HydratorMapper extends Mapper
      * @inheritDoc
      * @return array<string,mixed>
      */
-    public function extract($entity): array
+    public function extract(mixed $entity): array
     {
         /** @var Plugin\ExtractBeforeEvent $event */
         $event = $this->plugin->dispatch(new Plugin\ExtractBeforeEvent($entity));
@@ -75,7 +75,7 @@ class HydratorMapper extends Mapper
         return $event->getData();
     }
 
-    public function queueCreate($entity, Node $node, State $state): ContextCarrierInterface
+    public function queueCreate(mixed $entity, Node $node, State $state): ContextCarrierInterface
     {
         /** @var Plugin\QueueBeforeEvent $event */
         $event = $this->plugin->dispatch(new Plugin\QueueBeforeEvent($entity, $node, $state));
@@ -94,7 +94,7 @@ class HydratorMapper extends Mapper
         return $command;
     }
 
-    public function queueUpdate($entity, Node $node, State $state): ContextCarrierInterface
+    public function queueUpdate(mixed $entity, Node $node, State $state): ContextCarrierInterface
     {
         /** @var Plugin\QueueBeforeEvent $event */
         $event = $this->plugin->dispatch(new Plugin\QueueBeforeEvent($entity, $node, $state));
@@ -113,7 +113,7 @@ class HydratorMapper extends Mapper
         return $command;
     }
 
-    public function queueDelete($entity, Node $node, State $state): CommandInterface
+    public function queueDelete(mixed $entity, Node $node, State $state): CommandInterface
     {
         /** @var Plugin\QueueBeforeEvent $event */
         $event = $this->plugin->dispatch(new Plugin\QueueBeforeEvent($entity, $node, $state));

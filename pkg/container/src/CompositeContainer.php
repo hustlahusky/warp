@@ -7,6 +7,7 @@ namespace Warp\Container;
 use Psr\Container\ContainerInterface;
 use Warp\Container\Exception\ContainerException;
 use Warp\Container\Exception\NotFoundException;
+use Warp\Container\ServiceProvider\ServiceProviderInterface;
 
 /**
  * @implements \IteratorAggregate<ContainerInterface>
@@ -62,13 +63,11 @@ final class CompositeContainer implements
 
     /**
      * Attaches a container to the composite container.
-     * @param ContainerInterface $container
-     * @param int|null $priority
      */
     public function addContainer(ContainerInterface $container, ?int $priority = null): void
     {
         $priority ??= $this->lastPriority + 10;
-        $this->lastPriority = $priority > $this->lastPriority ? $priority : $this->lastPriority;
+        $this->lastPriority = \max($priority, $this->lastPriority);
 
         $this->setActiveInstance($container, $priority);
 
@@ -95,7 +94,7 @@ final class CompositeContainer implements
         }
     }
 
-    public function get(string $id, $options = null)
+    public function get(string $id, array|FactoryOptionsInterface|null $options = null): mixed
     {
         if (isset($this->activeInstances[$id]) && $this instanceof $id) {
             return $this;
@@ -139,22 +138,22 @@ final class CompositeContainer implements
         return $this->getActiveInstance(FactoryAggregateInterface::class)->getFactory($class);
     }
 
-    public function make(string $class, $options = null)
+    public function make(string $class, array|FactoryOptionsInterface|null $options = null): mixed
     {
         return $this->getActiveInstance(FactoryAggregateInterface::class)->make($class, $options);
     }
 
-    public function invoke(callable $callable, $options = null)
+    public function invoke(callable $callable, array|InvokerOptionsInterface|null $options = null): mixed
     {
         return $this->getActiveInstance(InvokerInterface::class)->invoke($callable, $options);
     }
 
-    public function define(string $id, $concrete = null, bool $shared = false): DefinitionInterface
+    public function define(string $id, mixed $concrete = null, bool $shared = false): DefinitionInterface
     {
         return $this->getActiveInstance(DefinitionAggregateInterface::class)->define($id, $concrete, $shared);
     }
 
-    public function addServiceProvider($provider): void
+    public function addServiceProvider(ServiceProviderInterface|string $provider): void
     {
         $this->getActiveInstance(ServiceProviderAggregateInterface::class)->addServiceProvider($provider);
     }

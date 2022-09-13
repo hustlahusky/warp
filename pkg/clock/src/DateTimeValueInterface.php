@@ -47,7 +47,7 @@ interface DateTimeValueInterface extends \DateTimeInterface, \Stringable, \JsonS
      * @param string|int|float|\DateTimeInterface|null $time
      * @return static
      */
-    public static function from($time): self;
+    public static function from(mixed $time): self;
 
     /**
      * Creates DateTime object.
@@ -65,7 +65,7 @@ interface DateTimeValueInterface extends \DateTimeInterface, \Stringable, \JsonS
         int $day,
         int $hour = 0,
         int $minute = 0,
-        float $second = 0.0
+        float $second = 0.0,
     ): self;
 
     /**
@@ -75,5 +75,5 @@ interface DateTimeValueInterface extends \DateTimeInterface, \Stringable, \JsonS
      * @param \DateTimeZone|null $timezone (default timezone is used if null is passed)
      * @return static|null
      */
-    public static function createFromFormat($format, $time, ?\DateTimeZone $timezone = null): ?self;
+    public static function createFromFormat(string $format, string $time, ?\DateTimeZone $timezone = null): ?self;
 }

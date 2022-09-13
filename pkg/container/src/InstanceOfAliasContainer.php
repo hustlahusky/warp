@@ -28,7 +28,7 @@ final class InstanceOfAliasContainer implements
         return new self($container);
     }
 
-    public function get(string $id, $options = null)
+    public function get(string $id, array|FactoryOptionsInterface|null $options = null): mixed
     {
         if ($this->container->has($id)) {
             return $this->container instanceof GetWithOptionsMethodInterface

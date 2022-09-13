@@ -7,6 +7,7 @@ namespace Warp\Container\Fixtures;
 use Warp\Container\Exception\NotFoundException;
 use Warp\Container\FactoryAggregateInterface;
 use Warp\Container\FactoryInterface;
+use Warp\Container\FactoryOptionsInterface;
 
 final class ArrayFactoryAggregate implements FactoryAggregateInterface
 {
@@ -31,7 +32,7 @@ final class ArrayFactoryAggregate implements FactoryAggregateInterface
         throw NotFoundException::factory($class);
     }
 
-    public function make(string $class, $options = null)
+    public function make(string $class, array|FactoryOptionsInterface|null $options = null): mixed
     {
         return $this->getFactory($class)->make($options);
     }

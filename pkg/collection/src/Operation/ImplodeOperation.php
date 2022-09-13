@@ -14,14 +14,10 @@ use Warp\Common\Field\FieldInterface;
  */
 final class ImplodeOperation implements AlterValueTypeOperationInterface
 {
-    private ?string $glue;
-
-    private ?FieldInterface $field;
-
-    public function __construct(?string $glue = null, ?FieldInterface $field = null)
-    {
-        $this->glue = $glue;
-        $this->field = $field;
+    public function __construct(
+        private readonly string $glue = '',
+        private readonly FieldInterface|null $field = null
+    ) {
     }
 
     /**

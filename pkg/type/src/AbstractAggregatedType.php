@@ -17,17 +17,11 @@ abstract class AbstractAggregatedType implements TypeInterface, StaticConstructo
     public const DELIMITER = '';
 
     /**
-     * @var TypeInterface[]
-     */
-    protected array $types;
-
-    /**
      * @param TypeInterface[] $types
      */
-    final private function __construct(array $types)
-    {
-        $this->types = $types;
-
+    final private function __construct(
+        protected array $types,
+    ) {
         self::singletonAttach($this);
     }
 
@@ -42,7 +36,6 @@ abstract class AbstractAggregatedType implements TypeInterface, StaticConstructo
     }
 
     /**
-     * @param TypeInterface ...$types
      * @return static
      */
     public static function new(TypeInterface ...$types): self
@@ -74,9 +67,8 @@ abstract class AbstractAggregatedType implements TypeInterface, StaticConstructo
 
     /**
      * @param iterable<TypeInterface> $value
-     * @return string
      */
-    final protected static function singletonKey($value): string
+    final protected static function singletonKey(mixed $value): string
     {
         return \implode(
             static::DELIMITER,

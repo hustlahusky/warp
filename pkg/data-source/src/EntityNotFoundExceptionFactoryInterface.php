@@ -11,5 +11,5 @@ interface EntityNotFoundExceptionFactoryInterface
      * @param scalar|\Stringable $primary
      * @return EntityNotFoundException
      */
-    public function make(string $entity, $primary): EntityNotFoundException;
+    public function make(string $entity, mixed $primary): EntityNotFoundException;
 }

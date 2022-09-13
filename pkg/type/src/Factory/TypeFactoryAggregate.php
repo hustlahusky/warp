@@ -14,7 +14,7 @@ final class TypeFactoryAggregate implements TypeFactoryInterface
     /**
      * @var TypeFactoryInterface[]
      */
-    private array $factories;
+    private readonly array $factories;
 
     public function __construct(TypeFactoryInterface ...$factories)
     {

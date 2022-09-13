@@ -17,6 +17,7 @@ use Warp\Container\Fixtures\ArrayContainer;
 use Warp\Container\Fixtures\ArrayFactoryAggregate;
 use Warp\Container\Fixtures\B;
 use Warp\Container\InvokerInterface;
+use Warp\Container\InvokerOptionsInterface;
 
 class DefinitionTest extends TestCase
 {
@@ -89,7 +90,7 @@ class DefinitionTest extends TestCase
 
         $container = new ArrayContainer([
             InvokerInterface::class => new class implements InvokerInterface {
-                public function invoke(callable $callable, $options = null)
+                public function invoke(callable $callable, array|InvokerOptionsInterface|null $options = null): mixed
                 {
                     return $callable();
                 }

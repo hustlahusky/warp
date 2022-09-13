@@ -23,7 +23,7 @@ class EntityNotFoundException extends \OutOfBoundsException implements
      * @param MessageTemplate|scalar|\Stringable $message
      * @noinspection MagicMethodsValidityInspection PhpMissingParentConstructorInspection
      */
-    public function __construct($message = 'Entity not found', int $code = 0, ?\Throwable $previous = null)
+    public function __construct(mixed $message = 'Entity not found', int $code = 0, ?\Throwable $previous = null)
     {
         $this->construct($message, $code, $previous);
     }
@@ -33,7 +33,7 @@ class EntityNotFoundException extends \OutOfBoundsException implements
      * @param scalar|\Stringable $primary
      * @return self
      */
-    public static function byPrimary(string $entity, $primary): self
+    public static function byPrimary(string $entity, mixed $primary): self
     {
         return new self(MessageTemplate::new('Entity "%entity%" not found by primary: %primary%.', [
             '%entity%' => $entity,

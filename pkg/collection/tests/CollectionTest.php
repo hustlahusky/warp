@@ -613,15 +613,6 @@ class CollectionTest extends TestCase
         self::assertSame(\array_combine($keys, $array), \iterator_to_array($map));
     }
 
-    public function testIndexByInvalidKeyExtractor(): void
-    {
-        $this->expectException(\LogicException::class);
-
-        $collection = Collection::new();
-
-        $collection->indexBy(null);
-    }
-
     public function testGroupBy(): void
     {
         $collection = Collection::new([

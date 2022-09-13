@@ -9,14 +9,10 @@ use Symfony\Component\Filesystem\Filesystem;
 
 final class MoveClassRefactor
 {
-    private ClassLoader $classLoader;
-
-    private Filesystem $filesystem;
-
-    public function __construct(ClassLoader $classLoader, Filesystem $filesystem)
-    {
-        $this->classLoader = $classLoader;
-        $this->filesystem = $filesystem;
+    public function __construct(
+        private readonly ClassLoader $classLoader,
+        private readonly Filesystem $filesystem,
+    ) {
     }
 
     public function run(string $from, string $to): void

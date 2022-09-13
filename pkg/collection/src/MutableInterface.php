@@ -19,19 +19,19 @@ interface MutableInterface
      * @param V $element
      * @param V ...$elements
      */
-    public function add($element, ...$elements): void;
+    public function add(mixed $element, mixed ...$elements): void;
 
     /**
      * Remove element(s) from collection.
      * @param V $element
      * @param V ...$elements
      */
-    public function remove($element, ...$elements): void;
+    public function remove(mixed $element, mixed ...$elements): void;
 
     /**
      * Replace one element with another.
      * @param V $element
      * @param V $replacement
      */
-    public function replace($element, $replacement): void;
+    public function replace(mixed $element, mixed $replacement): void;
 }

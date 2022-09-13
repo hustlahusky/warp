@@ -10,6 +10,7 @@ use Warp\Container\ContainerAwareTrait;
 use Warp\Container\Exception\ContainerException;
 use Warp\Container\Factory\FactoryOptions;
 use Warp\Container\InvokerInterface;
+use Warp\Container\InvokerOptionsInterface;
 
 final class ReflectionInvoker implements ContainerAwareInterface, InvokerInterface
 {
@@ -20,7 +21,7 @@ final class ReflectionInvoker implements ContainerAwareInterface, InvokerInterfa
         $this->setContainer($container);
     }
 
-    public function invoke(callable $callable, $options = null)
+    public function invoke(callable $callable, array|InvokerOptionsInterface|null $options = null): mixed
     {
         try {
             $options = FactoryOptions::wrap($options);
@@ -41,7 +42,6 @@ final class ReflectionInvoker implements ContainerAwareInterface, InvokerInterfa
     }
 
     /**
-     * @param callable $callable
      * @return array{\ReflectionFunction|\ReflectionMethod,object|null}
      * @throws \ReflectionException
      */
@@ -65,6 +65,6 @@ final class ReflectionInvoker implements ContainerAwareInterface, InvokerInterfa
             return [$reflection, $callable];
         }
 
-        return [new \ReflectionFunction(\Closure::fromCallable($callable)), null];
+        return [new \ReflectionFunction($callable(...)), null];
     }
 }

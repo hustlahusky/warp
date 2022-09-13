@@ -33,14 +33,14 @@ final class ArrayIterator implements \IteratorAggregate, \ArrayAccess, \Countabl
         $this->iterator = new \ArrayIterator([], $this->iterator->getFlags());
     }
 
-    public function add($element, ...$elements): void
+    public function add(mixed $element, mixed ...$elements): void
     {
         foreach ([$element, ...$elements] as $e) {
             $this->iterator[] = $e;
         }
     }
 
-    public function remove($element, ...$elements): void
+    public function remove(mixed $element, mixed ...$elements): void
     {
         $elements = [$element, ...$elements];
 
@@ -53,7 +53,7 @@ final class ArrayIterator implements \IteratorAggregate, \ArrayAccess, \Countabl
         );
     }
 
-    public function replace($element, $replacement): void
+    public function replace(mixed $element, mixed $replacement): void
     {
         $array = $this->iterator->getArrayCopy();
         $offset = \array_search($element, $array, true);
@@ -69,9 +69,8 @@ final class ArrayIterator implements \IteratorAggregate, \ArrayAccess, \Countabl
 
     /**
      * @param K $offset
-     * @return bool
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return $this->iterator->offsetExists($offset);
     }
@@ -81,7 +80,7 @@ final class ArrayIterator implements \IteratorAggregate, \ArrayAccess, \Countabl
      * @return V|null
      */
     #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset)
     {
         return $this->iterator->offsetGet($offset);
     }
@@ -90,7 +89,7 @@ final class ArrayIterator implements \IteratorAggregate, \ArrayAccess, \Countabl
      * @param K $offset
      * @param V $value
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->iterator->offsetSet($offset, $value);
     }
@@ -98,7 +97,7 @@ final class ArrayIterator implements \IteratorAggregate, \ArrayAccess, \Countabl
     /**
      * @param K $offset
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         $this->iterator->offsetUnset($offset);
     }

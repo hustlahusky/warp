@@ -15,29 +15,17 @@ use Warp\DataSource\EntityReferenceInterface;
  */
 final class EntityReference implements EntityReferenceInterface, PromiseInterface
 {
-    /**
-     * @var class-string<E>
-     */
-    private string $class;
-
-    /**
-     * @var E|null
-     */
-    private ?object $entity;
-
-    private ?ReferenceInterface $reference;
-
     private bool $loaded;
 
     /**
      * @param class-string<E> $class
      * @param E|null $entity
      */
-    private function __construct(string $class, ?object $entity = null, ?ReferenceInterface $reference = null)
-    {
-        $this->class = $class;
-        $this->entity = $entity;
-        $this->reference = $reference;
+    private function __construct(
+        private readonly string $class,
+        private ?object $entity = null,
+        private readonly ?ReferenceInterface $reference = null,
+    ) {
         $this->loaded = null !== $this->entity;
     }
 
@@ -117,13 +105,12 @@ final class EntityReference implements EntityReferenceInterface, PromiseInterfac
     /**
      * @template T of object
      * @param T $entity
-     * @param ReferenceInterface|null $reference
      * @return self<T>
      */
     public static function fromEntity(object $entity, ?ReferenceInterface $reference = null): self
     {
         /** @phpstan-var self<T> $ref */
-        $ref = new self(\get_class($entity), $entity, $reference);
+        $ref = new self($entity::class, $entity, $reference);
         \assert(true);
         return $ref;
     }
@@ -131,7 +118,6 @@ final class EntityReference implements EntityReferenceInterface, PromiseInterfac
     /**
      * @template T of object
      * @param class-string<T> $class
-     * @param ReferenceInterface $reference
      * @return self<T>
      */
     public static function fromReference(string $class, ReferenceInterface $reference): self

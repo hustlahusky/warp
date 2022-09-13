@@ -10,14 +10,12 @@ use Laminas\Hydrator\Strategy\StrategyEnabledInterface;
 
 final class LaminasPropertyExtractor implements PropertyExtractorInterface
 {
-    private HydratorInterface $hydrator;
-
-    public function __construct(HydratorInterface $hydrator)
-    {
-        $this->hydrator = $hydrator;
+    public function __construct(
+        private readonly HydratorInterface $hydrator,
+    ) {
     }
 
-    public function extractValue(string $name, $value)
+    public function extractValue(string $name, mixed $value): mixed
     {
         if ($this->hydrator instanceof StrategyEnabledInterface && $this->hydrator->hasStrategy($name)) {
             return $this->hydrator->getStrategy($name)->extract($value);

@@ -125,7 +125,7 @@ final class ArrayCacheIterator implements \Iterator, \Countable
 
     public function count(): int
     {
-        if (null !== $this->keys && null === $this->iterator) {
+        if (null === $this->iterator) {
             return \count($this->keys);
         }
 

@@ -26,15 +26,11 @@ use Webmozart\Expression\Logic;
  */
 final class CycleExpressionVisitor extends AbstractExpressionVisitor
 {
-    private CyclePropertyExtractor $propertyExtractor;
-
     public function __construct(
-        CyclePropertyExtractor $propertyExtractor,
-        ?ExpressionFactory $expressionFactory = null
+        private readonly CyclePropertyExtractor $propertyExtractor,
+        ?ExpressionFactory $expressionFactory = null,
     ) {
         parent::__construct($expressionFactory);
-
-        $this->propertyExtractor = $propertyExtractor;
     }
 
     public function dispatch(Expression $expression): callable
@@ -192,11 +188,8 @@ final class CycleExpressionVisitor extends AbstractExpressionVisitor
 
     /**
      * Format expression value for storage
-     * @param FieldInterface $field
-     * @param mixed $value
-     * @return mixed
      */
-    public function visitValue(FieldInterface $field, $value)
+    public function visitValue(FieldInterface $field, mixed $value): mixed
     {
         return $this->propertyExtractor->extractValue(\implode('.', $field->getElements()), $value);
     }
@@ -372,20 +365,18 @@ final class CycleExpressionVisitor extends AbstractExpressionVisitor
                     $valueGroups[$role][$innerKey][] = $innerValue;
                 }
 
-                $disjuncts = \array_map(function ($group) use ($fieldWithoutRelation, $innerKey, $morphKey) {
-                    return $this->expressionFactory->andX([
-                        $this->expressionFactory->selector(
-                            \ltrim($fieldWithoutRelation . '.' . $morphKey, '.'),
-                            $this->expressionFactory->same($group[$morphKey])
-                        ),
-                        $this->expressionFactory->selector(
-                            \ltrim($fieldWithoutRelation . '.' . $morphKey, '.'),
-                            1 === \count($group[$innerKey])
-                                ? $this->expressionFactory->same(\reset($group[$innerKey]))
-                                : $this->expressionFactory->in($group[$innerKey])
-                        ),
-                    ]);
-                }, $valueGroups);
+                $disjuncts = \array_map(fn ($group) => $this->expressionFactory->andX([
+                    $this->expressionFactory->selector(
+                        \ltrim($fieldWithoutRelation . '.' . $morphKey, '.'),
+                        $this->expressionFactory->same($group[$morphKey])
+                    ),
+                    $this->expressionFactory->selector(
+                        \ltrim($fieldWithoutRelation . '.' . $morphKey, '.'),
+                        1 === (\is_countable($group[$innerKey]) ? \count($group[$innerKey]) : 0)
+                            ? $this->expressionFactory->same(\reset($group[$innerKey]))
+                            : $this->expressionFactory->in($group[$innerKey])
+                    ),
+                ]), $valueGroups);
 
                 return $this->dispatch(self::negateExpression(
                     1 === \count($disjuncts) ? \reset($disjuncts) : $this->expressionFactory->orX($disjuncts),

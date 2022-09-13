@@ -30,38 +30,29 @@ use Webmozart\Expression\Logic\AlwaysTrue;
  */
 final class CycleEntityReader implements EntityReaderInterface
 {
-    private ORMInterface $orm;
-
-    private string $role;
-
-    private PrimaryBuilder $primaryBuilder;
+    private readonly string $role;
+    private readonly PrimaryBuilder $primaryBuilder;
 
     /**
      * @var class-string<E>|null
      */
-    private ?string $classname;
-
-    private EntityNotFoundExceptionFactoryInterface $notFoundExceptionFactory;
+    private readonly ?string $classname;
 
     /**
-     * @param ORMInterface $orm
      * @param string|class-string<E> $role
      * @phpstan-param class-string<E> $role
-     * @param EntityNotFoundExceptionFactoryInterface|null $notFoundExceptionFactory
      */
     public function __construct(
-        ORMInterface $orm,
+        private readonly ORMInterface $orm,
         string $role,
-        ?EntityNotFoundExceptionFactoryInterface $notFoundExceptionFactory = null
+        private readonly EntityNotFoundExceptionFactoryInterface $notFoundExceptionFactory = new DefaultEntityNotFoundExceptionFactory(),
     ) {
-        $this->orm = $orm;
         $this->role = $this->orm->resolveRole($role);
         $this->primaryBuilder = new PrimaryBuilder($this->orm, $this->role);
         $this->classname = $this->resolveEntityClass($role);
-        $this->notFoundExceptionFactory = $notFoundExceptionFactory ?? new DefaultEntityNotFoundExceptionFactory();
     }
 
-    public function findByPrimary($primary, ?CriteriaInterface $criteria = null): object
+    public function findByPrimary(mixed $primary, ?CriteriaInterface $criteria = null): object
     {
         $primaryBuilder = $this->primaryBuilder->withScope($primary);
 
@@ -104,7 +95,6 @@ final class CycleEntityReader implements EntityReaderInterface
     }
 
     /**
-     * @param CriteriaInterface|null $criteria
      * @return Select<E>
      */
     private function makeSelect(?CriteriaInterface $criteria = null): Select
@@ -136,7 +126,7 @@ final class CycleEntityReader implements EntityReaderInterface
     {
         $object = $this->orm->get($reference->__role(), $reference->__scope(), false);
 
-        $filter = (null !== $criteria ? $criteria->getWhere() : null) ?? new AlwaysTrue();
+        $filter = $criteria?->getWhere() ?? new AlwaysTrue();
 
         return \is_object($object) && $filter->evaluate($object) ? $object : null;
     }

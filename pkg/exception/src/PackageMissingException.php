@@ -19,7 +19,7 @@ final class PackageMissingException extends \RuntimeException implements
      * @param MessageTemplate|scalar|\Stringable|null $solution
      * @noinspection MagicMethodsValidityInspection PhpMissingParentConstructorInspection
      */
-    private function __construct($message, $solution = null, int $code = 0, ?\Throwable $previous = null)
+    private function __construct(mixed $message, mixed $solution = null, int $code = 0, ?\Throwable $previous = null)
     {
         $this->construct($message, $code, $previous);
 

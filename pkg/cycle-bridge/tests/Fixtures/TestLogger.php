@@ -13,9 +13,7 @@ final class TestLogger implements LoggerInterface
     use LoggerTrait;
 
     private bool $display = false;
-
     private int $countWrites = 0;
-
     private int $countReads = 0;
 
     public function countWriteQueries(): int

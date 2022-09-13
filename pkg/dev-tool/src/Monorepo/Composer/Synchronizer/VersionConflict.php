@@ -6,28 +6,19 @@ namespace Warp\DevTool\Monorepo\Composer\Synchronizer;
 
 final class VersionConflict
 {
-    private string $message;
-
-    /**
-     * @var array<string,string>
-     */
-    private array $options;
-
     /**
      * @var callable
      */
     private $resolver;
 
     /**
-     * VersionConflict constructor.
-     * @param string $message
      * @param array<string,string> $options
-     * @param callable $resolver
      */
-    public function __construct(string $message, array $options, callable $resolver)
-    {
-        $this->message = $message;
-        $this->options = $options;
+    public function __construct(
+        private readonly string $message,
+        private readonly array $options,
+        callable $resolver,
+    ) {
         $this->resolver = $resolver;
     }
 

@@ -25,15 +25,8 @@ final class TestCommand extends Command
 {
     protected static $defaultName = 'monorepo:dependency';
 
-    private Composer\ComposerJson $composer;
-
-    private MonorepoConfig $monorepo;
-
-    private ComposerPackagesCollation $collation;
-
-    private PhpParser $phpParser;
-
-    private Filesystem $filesystem;
+    private readonly PhpParser $phpParser;
+    private readonly Filesystem $filesystem;
 
     public function __construct(?string $name = null)
     {
@@ -51,21 +44,23 @@ final class TestCommand extends Command
         /** @var ComposerHelper $composerHelper */
         $composerHelper = $this->getHelper(ComposerHelper::NAME);
 
-        $this->composer = $composerHelper->getComposerJson();
-        $this->monorepo = MonorepoConfig::fromComposer($this->composer);
+        $composer = $composerHelper->getComposerJson();
+        $monorepo = MonorepoConfig::fromComposer($composer);
+        $monorepoDir = \dirname($monorepo->getFilename()) . '/';
+        $collation = new ComposerPackagesCollation($composer);
 
-        $this->collation = new ComposerPackagesCollation($this->composer);
-
-        foreach ($this->monorepo->getProjects() as $project) {
-            $this->checkProject($project);
+        foreach ($monorepo->getProjects() as $project) {
+            $this->checkProject($project, $monorepoDir, $collation);
         }
 
         return self::SUCCESS;
     }
 
-    private function checkProject(MonorepoProject $project): void
-    {
-        $monorepoDir = \dirname($this->monorepo->getFilename()) . '/';
+    private function checkProject(
+        MonorepoProject $project,
+        string $monorepoDir,
+        ComposerPackagesCollation $collation
+    ): void {
         $projectComposer = ComposerJson::read($monorepoDir . $project->getDir() . '/composer.json');
 
         $srcDirs = (array)($projectComposer->getSection(ComposerJson::AUTOLOAD, [])['psr-4'] ?? []);
@@ -81,7 +76,8 @@ final class TestCommand extends Command
                 Finder::create()
                     ->files()
                     ->name('*.php')
-                    ->in($srcDirs)
+                    ->in($srcDirs),
+                $collation,
             );
 
         $devPackages = 0 === \count($testDirs)
@@ -90,7 +86,8 @@ final class TestCommand extends Command
                 Finder::create()
                     ->files()
                     ->name('*.php')
-                    ->in($testDirs)
+                    ->in($testDirs),
+                $collation,
             );
 
         unset($packages[$projectComposer->getName()], $devPackages[$projectComposer->getName()]);
@@ -99,14 +96,14 @@ final class TestCommand extends Command
 
         $require = $projectComposer->getSection(ComposerJson::REQUIRE);
         foreach ($packages as $package) {
-            $require[$package] = $require[$package] ?? $this->collation->getPackageVersion($package);
+            $require[$package] ??= $collation->getPackageVersion($package);
         }
         $projectComposer->setSection(ComposerJson::REQUIRE, $require);
         // TODO: do not add packages to require if there already in require-dev. Add them to suggest instead.
 
         $requireDev = $projectComposer->getSection(ComposerJson::REQUIRE_DEV);
         foreach ($devPackages as $package) {
-            $requireDev[$package] = $requireDev[$package] ?? $this->collation->getPackageVersion($package);
+            $requireDev[$package] ??= $collation->getPackageVersion($package);
         }
         $projectComposer->setSection(ComposerJson::REQUIRE_DEV, $requireDev);
 
@@ -114,10 +111,9 @@ final class TestCommand extends Command
     }
 
     /**
-     * @param Finder $finder
      * @return array<string,string>
      */
-    private function resolveUsedPackages(Finder $finder): array
+    private function resolveUsedPackages(Finder $finder, ComposerPackagesCollation $collation): array
     {
         $files = \iterator_to_array($finder, false);
 
@@ -140,7 +136,7 @@ final class TestCommand extends Command
                 continue;
             }
 
-            $dependencyPackage = $this->collation->getPackageName($filename);
+            $dependencyPackage = $collation->getPackageName($filename);
 
             if (null === $dependencyPackage) {
                 continue;
@@ -153,7 +149,6 @@ final class TestCommand extends Command
     }
 
     /**
-     * @param \SplFileInfo $file
      * @return string[]
      */
     private function findNamesInFile(\SplFileInfo $file): array
@@ -185,7 +180,6 @@ final class TestCommand extends Command
     }
 
     /**
-     * @param string $name
      * @phpstan-param class-string $name
      * @return \ReflectionClass<object>|\ReflectionFunction|null
      */
@@ -199,7 +193,7 @@ final class TestCommand extends Command
         foreach ($reflections as $reflection) {
             try {
                 return new $reflection($name);
-            } catch (\ReflectionException $e) {
+            } catch (\ReflectionException) {
                 continue;
             }
         }

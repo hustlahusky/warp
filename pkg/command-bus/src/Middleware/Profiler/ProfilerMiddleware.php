@@ -16,36 +16,24 @@ use Warp\CommandBus\MiddlewareInterface;
  */
 final class ProfilerMiddleware implements MiddlewareInterface, LoggerAwareInterface
 {
-    private Stopwatch $stopwatch;
-
     /**
      * @var callable(object):bool
      */
     private $predicate;
 
-    private LoggerInterface $logger;
-
-    private string $logLevel;
-
     /**
-     * @param Stopwatch $stopwatch
      * @param null|callable(object):bool $predicate
-     * @param LoggerInterface|null $logger
-     * @param string $logLevel
      */
     public function __construct(
-        Stopwatch $stopwatch,
+        private readonly Stopwatch $stopwatch,
         ?callable $predicate = null,
-        ?LoggerInterface $logger = null,
-        string $logLevel = LogLevel::DEBUG
+        private LoggerInterface $logger = new NullLogger(),
+        private readonly string $logLevel = LogLevel::DEBUG
     ) {
-        $this->stopwatch = $stopwatch;
         $this->predicate = $predicate ?? static fn (object $message): bool => true;
-        $this->logger = $logger ?? new NullLogger();
-        $this->logLevel = $logLevel;
     }
 
-    public function execute(object $command, callable $next)
+    public function execute(object $command, callable $next): mixed
     {
         if (!($this->predicate)($command)) {
             return $next($command);
@@ -68,7 +56,7 @@ final class ProfilerMiddleware implements MiddlewareInterface, LoggerAwareInterf
     private function resolveCommandProfilingEventName(object $command): string
     {
         $eventName = $command instanceof MayBeProfiledMessageInterface ? $command->getProfilingEventName() : null;
-        return $eventName ?? \get_class($command);
+        return $eventName ?? $command::class;
     }
 
     private function startStopwatch(object $command): void
@@ -92,7 +80,7 @@ final class ProfilerMiddleware implements MiddlewareInterface, LoggerAwareInterf
 
         $this->logger->log(
             $this->logLevel,
-            \sprintf('Profiling event %s finished (%s)', $eventName, (string)$profilingData),
+            \sprintf('Profiling event %s finished (%s)', $eventName, $profilingData),
             [
                 'event' => $profilingData,
             ]

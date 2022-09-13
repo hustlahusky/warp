@@ -10,46 +10,27 @@ use Warp\CommandBus\MiddlewareInterface;
 
 final class LoggerMiddleware implements MiddlewareInterface
 {
-    private LoggerInterface $logger;
-
-    private string $logLevel;
-
-    /**
-     * @var array<class-string<\Throwable>,string>
-     */
-    private array $exceptionLogLevelMap;
-
-    private string $defaultExceptionLogLevel;
-
     /**
      * @var callable(object):bool
      */
     private $predicate;
 
     /**
-     * LoggerMiddleware constructor.
-     * @param LoggerInterface $logger
      * @param null|callable(object):bool $predicate
-     * @param string $logLevel
      * @param array<class-string<\Throwable>,string> $exceptionLogLevelMap
-     * @param string $defaultExceptionLogLevel
      */
     public function __construct(
-        LoggerInterface $logger,
+        private readonly LoggerInterface $logger,
         ?callable $predicate = null,
-        string $logLevel = LogLevel::INFO,
-        array $exceptionLogLevelMap = [],
-        string $defaultExceptionLogLevel = LogLevel::ERROR
+        private readonly string $logLevel = LogLevel::INFO,
+        private array $exceptionLogLevelMap = [],
+        private readonly string $defaultExceptionLogLevel = LogLevel::ERROR,
     ) {
-        $this->logger = $logger;
         $this->predicate = $predicate ?? static fn (object $message): bool => true;
-        $this->logLevel = $logLevel;
-        $this->exceptionLogLevelMap = $exceptionLogLevelMap;
-        \uasort($this->exceptionLogLevelMap, [$this, 'compareLogLevel']);
-        $this->defaultExceptionLogLevel = $defaultExceptionLogLevel;
+        \uasort($this->exceptionLogLevelMap, $this->compareLogLevel(...));
     }
 
-    public function execute(object $command, callable $next)
+    public function execute(object $command, callable $next): mixed
     {
         if (!($this->predicate)($command)) {
             return $next($command);
@@ -100,7 +81,7 @@ final class LoggerMiddleware implements MiddlewareInterface
     {
         $message = $command instanceof MayBeLoggedMessageInterface ? $command->renderBeforeMessage() : null;
 
-        $this->logger->log($this->logLevel, $message ?? \sprintf('Start handling %s command', \get_class($command)));
+        $this->logger->log($this->logLevel, $message ?? \sprintf('Start handling %s command', $command::class));
     }
 
     private function logAfter(object $command): void
@@ -109,7 +90,7 @@ final class LoggerMiddleware implements MiddlewareInterface
 
         $this->logger->log(
             $this->logLevel,
-            $message ?? \sprintf('%s command handled successfully', \get_class($command))
+            $message ?? \sprintf('%s command handled successfully', $command::class)
         );
     }
 
@@ -119,7 +100,7 @@ final class LoggerMiddleware implements MiddlewareInterface
 
         $this->logger->log(
             $this->logLevel,
-            $message ?? \sprintf('Exception thrown during handle of %s command', \get_class($command))
+            $message ?? \sprintf('Exception thrown during handle of %s command', $command::class)
         );
         $this->logger->log(
             $this->getLogLevelForException($exception),
@@ -132,7 +113,7 @@ final class LoggerMiddleware implements MiddlewareInterface
 
     private function getLogLevelForException(\Throwable $exception): string
     {
-        $logLevel = $this->exceptionLogLevelMap[\get_class($exception)] ?? null;
+        $logLevel = $this->exceptionLogLevelMap[$exception::class] ?? null;
 
         if (null !== $logLevel) {
             return $logLevel;

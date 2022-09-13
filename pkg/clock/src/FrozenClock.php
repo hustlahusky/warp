@@ -6,13 +6,11 @@ namespace Warp\Clock;
 
 final class FrozenClock implements ClockInterface
 {
-    private ClockInterface $clock;
-
     private ?DateTimeImmutableValue $now = null;
 
-    public function __construct(ClockInterface $clock)
-    {
-        $this->clock = $clock;
+    public function __construct(
+        private readonly ClockInterface $clock,
+    ) {
     }
 
     public function reset(): void

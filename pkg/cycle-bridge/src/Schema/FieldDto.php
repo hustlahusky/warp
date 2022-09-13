@@ -14,28 +14,18 @@ use Cycle\Schema\Definition\Field;
 final class FieldDto
 {
     public const NAME = 'name';
-
     public const COLUMN = 'column';
-
     public const TYPE = 'type';
-
     public const PRIMARY = 'primary';
-
     public const TYPECAST = 'typecast';
-
     public const REFERENCED = 'referenced';
-
     public const OPTIONS = 'options';
-
     public const OPTION_DEFAULT = 'default';
-
     public const OPTION_CAST_DEFAULT = 'castDefault';
-
     public const OPTION_NULLABLE = 'nullable';
 
     /**
      * @param FieldShape $data
-     * @return Field
      */
     public static function makeSchema(array $data): Field
     {

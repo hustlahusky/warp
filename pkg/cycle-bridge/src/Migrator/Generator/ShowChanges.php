@@ -12,19 +12,16 @@ use Symfony\Component\Console\Style\OutputStyle;
 final class ShowChanges implements GeneratorInterface
 {
     private const ADDITION = 1;
-
     private const DROP = 0;
-
-    private OutputStyle $out;
 
     /**
      * @var array<string,array{database:string,schema:AbstractTable}>
      */
     private array $changes = [];
 
-    public function __construct(OutputStyle $style)
-    {
-        $this->out = $style;
+    public function __construct(
+        private readonly OutputStyle $out,
+    ) {
     }
 
     public function run(Registry $registry): Registry

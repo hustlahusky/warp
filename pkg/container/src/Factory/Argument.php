@@ -25,34 +25,24 @@ use Warp\Type\TypeInterface;
  */
 final class Argument implements ContainerAwareInterface
 {
-    private string $name;
-
-    private string $location;
-
-    private TypeInterface $type;
+    private readonly TypeInterface $type;
 
     /**
      * @var Option<A>
      */
-    private Option $defaultValue;
-
-    private bool $variadic;
-
+    private readonly Option $defaultValue;
+    private readonly bool $variadic;
     private ?InstanceOfAliasContainer $container = null;
 
     /**
-     * @param string $name
-     * @param string $location
-     * @param TypeInterface|null $type
      * @param Option<A>|null $defaultValue
-     * @param bool $variadic
      */
     public function __construct(
-        string $name,
-        string $location,
+        private readonly string $name,
+        private readonly string $location,
         ?TypeInterface $type = null,
         ?Option $defaultValue = null,
-        bool $variadic = false
+        bool $variadic = false,
     ) {
         $type ??= MixedType::new();
 
@@ -63,9 +53,6 @@ final class Argument implements ContainerAwareInterface
         if ($type->check(null)) {
             $defaultValue ??= new Some(null);
         }
-
-        $this->name = $name;
-        $this->location = $location;
         $this->type = $type;
         /** @phpstan-var Option<A>|null $defaultValue */
         $this->defaultValue = $defaultValue ?? None::create();
@@ -83,7 +70,6 @@ final class Argument implements ContainerAwareInterface
     }
 
     /**
-     * @param FactoryOptionsInterface|null $options
      * @return \Generator<A>
      */
     public function resolve(?FactoryOptionsInterface $options = null): \Generator
@@ -125,7 +111,6 @@ final class Argument implements ContainerAwareInterface
     }
 
     /**
-     * @param FactoryOptionsInterface|null $options
      * @return Option<A>
      */
     private function resolveUsingOptions(?FactoryOptionsInterface $options = null): Option
@@ -150,7 +135,6 @@ final class Argument implements ContainerAwareInterface
     }
 
     /**
-     * @param TypeInterface $type
      * @return Option<A>
      */
     private function resolveUsingType(TypeInterface $type): Option
@@ -198,7 +182,7 @@ final class Argument implements ContainerAwareInterface
             }
 
             return new Some($container->get($alias));
-        } catch (CannotInstantiateAbstractClassException $e) {
+        } catch (CannotInstantiateAbstractClassException) {
             return None::create();
         } catch (\Throwable $e) {
             throw new CannotResolveArgumentException($this, $e);
@@ -206,7 +190,6 @@ final class Argument implements ContainerAwareInterface
     }
 
     /**
-     * @param string $tag
      * @return Option<A>
      */
     private function resolveFromContainerByTag(string $tag): Option
@@ -227,7 +210,7 @@ final class Argument implements ContainerAwareInterface
 
             // @phpstan-ignore-next-line
             return new Some(\iterator_to_array($definitionContainer->getTagged($tag), false));
-        } catch (CannotInstantiateAbstractClassException $e) {
+        } catch (CannotInstantiateAbstractClassException) {
             return None::create();
         } catch (\Throwable $e) {
             throw new CannotResolveArgumentException($this, $e);

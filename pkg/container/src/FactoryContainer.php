@@ -16,10 +16,8 @@ final class FactoryContainer implements
     InvokerInterface
 {
     private ContainerInterface $rootContainer;
-
-    private FactoryAggregateInterface $factory;
-
-    private InvokerInterface $invoker;
+    private readonly FactoryAggregateInterface $factory;
+    private readonly InvokerInterface $invoker;
 
     public function __construct(?FactoryAggregateInterface $factory = null, ?InvokerInterface $invoker = null)
     {
@@ -31,7 +29,6 @@ final class FactoryContainer implements
     /**
      * @template T
      * @param class-string<T> $id
-     * @return bool
      */
     public function has(string $id): bool
     {
@@ -44,7 +41,7 @@ final class FactoryContainer implements
      * @param FactoryOptionsInterface|array<string,mixed>|null $options
      * @return T
      */
-    public function get(string $id, $options = null)
+    public function get(string $id, array|FactoryOptionsInterface|null $options = null): mixed
     {
         return $this->make($id, $options);
     }
@@ -59,12 +56,12 @@ final class FactoryContainer implements
         return $this->factory->getFactory($class);
     }
 
-    public function make(string $class, $options = null)
+    public function make(string $class, array|FactoryOptionsInterface|null $options = null): mixed
     {
         return $this->factory->make($class, $options);
     }
 
-    public function invoke(callable $callable, $options = null)
+    public function invoke(callable $callable, array|InvokerOptionsInterface|null $options = null): mixed
     {
         return $this->invoker->invoke($callable, $options);
     }

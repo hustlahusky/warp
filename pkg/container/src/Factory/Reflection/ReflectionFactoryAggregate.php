@@ -11,6 +11,7 @@ use Warp\Container\Exception\NotFoundException;
 use Warp\Container\Factory\FactoryOptions;
 use Warp\Container\FactoryAggregateInterface;
 use Warp\Container\FactoryInterface;
+use Warp\Container\FactoryOptionsInterface;
 
 final class ReflectionFactoryAggregate implements FactoryAggregateInterface, ContainerAwareInterface
 {
@@ -47,7 +48,7 @@ final class ReflectionFactoryAggregate implements FactoryAggregateInterface, Con
      * @param class-string<T> $class
      * @return T
      */
-    public function make(string $class, $options = null)
+    public function make(string $class, array|FactoryOptionsInterface|null $options = null): mixed
     {
         return $this->getFactory($class)->make(FactoryOptions::wrap($options));
     }

@@ -10,7 +10,6 @@ namespace Warp\Container;
 interface FactoryInterface
 {
     /**
-     * @param FactoryOptionsInterface|null $options
      * @return T
      */
     public function make(?FactoryOptionsInterface $options = null);

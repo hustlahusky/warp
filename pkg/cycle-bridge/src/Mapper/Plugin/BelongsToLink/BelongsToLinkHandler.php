@@ -16,14 +16,10 @@ use Warp\Bridge\Cycle\NodeHelper;
 
 final class BelongsToLinkHandler
 {
-    private ORMInterface $orm;
-
-    private bool $loadReferences;
-
-    public function __construct(ORMInterface $orm, bool $loadReferences = false)
-    {
-        $this->orm = $orm;
-        $this->loadReferences = $loadReferences;
+    public function __construct(
+        private readonly ORMInterface $orm,
+        private readonly bool $loadReferences = false,
+    ) {
     }
 
     public function handle(QueueAfterEvent $event): void

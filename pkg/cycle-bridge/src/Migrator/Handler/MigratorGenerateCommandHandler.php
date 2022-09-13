@@ -15,14 +15,10 @@ use Warp\Bridge\Cycle\Migrator\Generator\ShowChanges;
 
 final class MigratorGenerateCommandHandler extends AbstractCommandHandler
 {
-    private Registry $registry;
-
-    private Migrator $migrator;
-
-    public function __construct(Registry $registry, Migrator $migrator)
-    {
-        $this->registry = $registry;
-        $this->migrator = $migrator;
+    public function __construct(
+        private readonly Registry $registry,
+        private readonly Migrator $migrator,
+    ) {
     }
 
     public function handle(Command $command, InputInterface $input, OutputStyle $style): int

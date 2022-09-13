@@ -13,16 +13,11 @@ use Warp\Clock\DateTimeImmutableValue;
 final class BlameImmutable implements BlameImmutableInterface
 {
     /**
-     * @var BlameImmutableInterface<T>
-     */
-    private BlameImmutableInterface $blame;
-
-    /**
      * @param BlameImmutableInterface<T> $blame
      */
-    public function __construct(BlameImmutableInterface $blame)
-    {
-        $this->blame = $blame;
+    public function __construct(
+        private readonly BlameImmutableInterface $blame,
+    ) {
     }
 
     public function isNew(): bool

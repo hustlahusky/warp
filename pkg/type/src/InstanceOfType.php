@@ -12,17 +12,11 @@ final class InstanceOfType implements TypeInterface, StaticConstructorInterface
     use SingletonStorageTrait;
 
     /**
-     * @var class-string
-     */
-    private string $className;
-
-    /**
      * @param class-string $className
      */
-    private function __construct(string $className)
-    {
-        $this->className = $className;
-
+    private function __construct(
+        private readonly string $className,
+    ) {
         self::singletonAttach($this);
     }
 
@@ -36,14 +30,13 @@ final class InstanceOfType implements TypeInterface, StaticConstructorInterface
         return $this->className;
     }
 
-    public function check($value): bool
+    public function check(mixed $value): bool
     {
         return $value instanceof $this->className;
     }
 
     /**
      * @param class-string $className
-     * @return self
      */
     public static function new(string $className): self
     {
@@ -52,9 +45,8 @@ final class InstanceOfType implements TypeInterface, StaticConstructorInterface
 
     /**
      * @param self $value
-     * @return string
      */
-    protected static function singletonKey($value): string
+    protected static function singletonKey(mixed $value): string
     {
         return $value->className;
     }

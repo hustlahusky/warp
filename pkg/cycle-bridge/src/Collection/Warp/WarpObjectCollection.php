@@ -20,29 +20,20 @@ use Warp\Type\TypeInterface;
 final class WarpObjectCollection extends AbstractCollectionDecorator implements ObjectCollectionInterface, StaticConstructorInterface
 {
     /**
-     * @var ObjectIterator<V,P>
-     */
-    private ObjectIterator $storage;
-
-    private ?TypeInterface $valueType;
-
-    /**
      * @param ObjectIterator<V,P> $storage
-     * @param TypeInterface|null $valueType
      */
-    private function __construct(ObjectIterator $storage, ?TypeInterface $valueType = null)
-    {
-        $this->storage = $storage;
-        $this->valueType = $valueType;
+    private function __construct(
+        private readonly ObjectIterator $storage,
+        private readonly TypeInterface|null $valueType = null,
+    ) {
     }
 
     /**
      * @template T of object
      * @param iterable<T> $elements
-     * @param TypeInterface|null $valueType
      * @return self<T,mixed>
      */
-    public static function new(iterable $elements = [], ?TypeInterface $valueType = null): self
+    public static function new(iterable $elements = [], TypeInterface|null $valueType = null): self
     {
         return new self(new ObjectIterator($elements), $valueType);
     }
@@ -57,7 +48,7 @@ final class WarpObjectCollection extends AbstractCollectionDecorator implements 
         return $this->storage->getPivot($element);
     }
 
-    public function setPivot(object $element, $pivot): void
+    public function setPivot(object $element, mixed $pivot): void
     {
         $this->storage->setPivot($element, $pivot);
     }

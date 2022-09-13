@@ -8,9 +8,10 @@ interface InvokerInterface
 {
     /**
      * Invoke a callable via the container.
-     * @param callable $callable
+     * @template T
+     * @param callable():T $callable
      * @param InvokerOptionsInterface|array<string,mixed>|null $options
-     * @return mixed
+     * @return T
      */
-    public function invoke(callable $callable, $options = null);
+    public function invoke(callable $callable, array|InvokerOptionsInterface|null $options = null): mixed;
 }

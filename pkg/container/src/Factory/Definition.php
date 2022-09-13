@@ -29,16 +29,15 @@ final class Definition implements DefinitionInterface
     /**
      * @var string|class-string<T>
      */
-    private string $abstract;
+    private readonly string $abstract;
 
     /**
      * @var string|class-string<T>|callable():T|null
      */
     private $concrete;
 
-    private bool $shared;
-
-    private FactoryOptions $options;
+    private readonly bool $shared;
+    private readonly FactoryOptions $options;
 
     /**
      * @var array<string,true>
@@ -51,12 +50,10 @@ final class Definition implements DefinitionInterface
     private Option $resolved;
 
     /**
-     * Definition constructor.
      * @param string|class-string<T> $abstract
      * @param T|Option<T>|string|class-string<T>|callable():T|null $concrete
-     * @param bool $shared
      */
-    public function __construct(string $abstract, $concrete = null, bool $shared = false)
+    public function __construct(string $abstract, mixed $concrete = null, bool $shared = false)
     {
         $this->resolved = None::create();
 
@@ -99,7 +96,6 @@ final class Definition implements DefinitionInterface
     }
 
     /**
-     * @param string $tag
      * @return $this
      */
     public function addTag(string $tag): self
@@ -115,7 +111,6 @@ final class Definition implements DefinitionInterface
     }
 
     /**
-     * @param string $constructor
      * @return $this
      */
     public function setStaticConstructor(string $constructor): self
@@ -131,8 +126,6 @@ final class Definition implements DefinitionInterface
     }
 
     /**
-     * @param string $argument
-     * @param string $alias
      * @return $this
      */
     public function setArgumentAlias(string $argument, string $alias): self
@@ -148,8 +141,6 @@ final class Definition implements DefinitionInterface
     }
 
     /**
-     * @param string $argument
-     * @param string $tag
      * @return $this
      */
     public function setArgumentTag(string $argument, string $tag): self
@@ -160,11 +151,9 @@ final class Definition implements DefinitionInterface
     }
 
     /**
-     * @param string $argument
-     * @param mixed $value
      * @return $this
      */
-    public function addArgument(string $argument, $value): self
+    public function addArgument(string $argument, mixed $value): self
     {
         $this->options->addArgument($argument, $value);
 
@@ -182,8 +171,6 @@ final class Definition implements DefinitionInterface
     }
 
     /**
-     * @param string $method
-     * @param InvokerOptionsInterface|null $options
      * @return $this
      */
     public function addMethodCall(string $method, ?InvokerOptionsInterface $options = null): self
@@ -215,7 +202,6 @@ final class Definition implements DefinitionInterface
     }
 
     /**
-     * @param FactoryOptionsInterface|null $options
      * @return T
      */
     private function resolve(?FactoryOptionsInterface $options = null)

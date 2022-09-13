@@ -11,34 +11,18 @@ namespace Warp\Bridge\Cycle\Collection;
 final class Change
 {
     public const ADD = 'ADD';
-
     public const REMOVE = 'REMOVE';
-
-    /**
-     * @phpstan-var self::ADD|self::REMOVE
-     */
-    private string $type;
-
-    /**
-     * @var T
-     */
-    private object $element;
-
-    /**
-     * @var P|null
-     */
-    private $pivot;
 
     /**
      * @phpstan-param self::ADD|self::REMOVE $type
      * @param T $element
      * @param P|null $pivot
      */
-    private function __construct(string $type, object $element, $pivot = null)
-    {
-        $this->type = $type;
-        $this->element = $element;
-        $this->pivot = $pivot;
+    private function __construct(
+        private readonly string $type,
+        private readonly object $element,
+        private mixed $pivot = null,
+    ) {
     }
 
     /**
@@ -60,7 +44,7 @@ final class Change
     /**
      * @return P|null
      */
-    public function getPivot()
+    public function getPivot(): mixed
     {
         return $this->pivot;
     }
@@ -68,7 +52,7 @@ final class Change
     /**
      * @param P|null $pivot
      */
-    public function setPivot($pivot): void
+    public function setPivot(mixed $pivot): void
     {
         $this->pivot = $pivot;
     }
@@ -78,7 +62,7 @@ final class Change
      * @param P|null $pivot
      * @return self<T,P>
      */
-    public static function add(object $element, $pivot = null): self
+    public static function add(object $element, mixed $pivot = null): self
     {
         return new self(self::ADD, $element, $pivot);
     }
@@ -88,7 +72,7 @@ final class Change
      * @param P|null $pivot
      * @return self<T,P>
      */
-    public static function remove(object $element, $pivot = null): self
+    public static function remove(object $element, mixed $pivot = null): self
     {
         return new self(self::REMOVE, $element, $pivot);
     }

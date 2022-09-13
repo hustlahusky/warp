@@ -9,9 +9,5 @@ namespace Warp\Criteria;
  */
 interface FilterableInterface
 {
-    /**
-     * @param CriteriaInterface $criteria
-     * @return mixed
-     */
-    public function matching(CriteriaInterface $criteria);
+    public function matching(CriteriaInterface $criteria): mixed;
 }

@@ -15,8 +15,6 @@ use Warp\Bridge\Cycle\Collection\ObjectStorage;
 
 abstract class AbstractToManyRelation extends AbstractRelation implements ToManyRelationInterface
 {
-    protected CollectionFactoryInterface $collectionFactory;
-
     /**
      * @phpstan-var ORMInterface
      */
@@ -28,22 +26,16 @@ abstract class AbstractToManyRelation extends AbstractRelation implements ToMany
     private array $promiseNodeMap = [];
 
     /**
-     * @param ORMInterface $orm
-     * @param string $name
-     * @param string $target
      * @param array<array-key,mixed> $schema
-     * @param CollectionFactoryInterface $collectionFactory
      */
     public function __construct(
         ORMInterface $orm,
         string $name,
         string $target,
         array $schema,
-        CollectionFactoryInterface $collectionFactory
+        protected CollectionFactoryInterface $collectionFactory,
     ) {
         parent::__construct($orm, $name, $target, $schema);
-
-        $this->collectionFactory = $collectionFactory;
     }
 
     public function getRelationType(): int
@@ -52,7 +44,6 @@ abstract class AbstractToManyRelation extends AbstractRelation implements ToMany
     }
 
     /**
-     * @param Node $node
      * @param ObjectCollectionPromiseInterface<object,mixed> $promise
      * @internal
      */
@@ -70,13 +61,11 @@ abstract class AbstractToManyRelation extends AbstractRelation implements ToMany
 
     /**
      * @param ObjectCollectionPromiseInterface<object,mixed> $promise
-     * @return Node|null
      * @internal
      */
     protected function getNodeByPromise(ObjectCollectionPromiseInterface $promise): ?Node
     {
-        $ref = $this->promiseNodeMap[$promise->__id()] ?? null;
-        return null === $ref ? null : $ref->get();
+        return ($this->promiseNodeMap[$promise->__id()] ?? null)?->get();
     }
 
     /**

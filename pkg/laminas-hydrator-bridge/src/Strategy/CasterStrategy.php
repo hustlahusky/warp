@@ -9,9 +9,8 @@ use Warp\Type\Cast\CasterInterface;
 
 final class CasterStrategy implements StrategyInterface
 {
-    private CasterInterface $hydrateCast;
-
-    private CasterInterface $extractCast;
+    private readonly CasterInterface $hydrateCast;
+    private readonly CasterInterface $extractCast;
 
     public function __construct(CasterInterface $hydrateCast, ?CasterInterface $extractCast = null)
     {
@@ -19,7 +18,7 @@ final class CasterStrategy implements StrategyInterface
         $this->extractCast = $extractCast ?? $hydrateCast;
     }
 
-    public function extract($value, ?object $object = null)
+    public function extract(mixed $value, ?object $object = null)
     {
         return $this->extractCast->cast($value);
     }
@@ -28,7 +27,7 @@ final class CasterStrategy implements StrategyInterface
      * @inheritDoc
      * @param array<string,mixed>|null $data
      */
-    public function hydrate($value, ?array $data = null)
+    public function hydrate(mixed $value, ?array $data = null)
     {
         return $this->hydrateCast->cast($value);
     }

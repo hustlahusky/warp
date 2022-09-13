@@ -15,10 +15,6 @@ use Warp\Bridge\Cycle\Migrator\Exception\ConfirmationException;
  */
 final class ForceOption extends InputOption
 {
-    private bool $confirmDefault;
-
-    private string $confirmQuestion;
-
     /**
      * @param string|string[] $shortcut
      */
@@ -26,13 +22,10 @@ final class ForceOption extends InputOption
         string $name = 'force',
         $shortcut = 'f',
         string $description = 'Force run the operation',
-        bool $default = false,
-        string $confirmQuestion = 'Would you like to continue?'
+        private bool $confirmDefault = false,
+        private string $confirmQuestion = 'Would you like to continue?',
     ) {
         parent::__construct($name, $shortcut, self::VALUE_NONE, $description);
-
-        $this->confirmDefault = $default;
-        $this->confirmQuestion = $confirmQuestion;
     }
 
     public function getDefault(): bool
@@ -43,7 +36,7 @@ final class ForceOption extends InputOption
     /**
      * @param bool $default
      */
-    public function setDefault($default = null): void
+    public function setDefault(mixed $default = null): void
     {
         $this->confirmDefault = (bool)$default;
     }

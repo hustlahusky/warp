@@ -9,39 +9,35 @@ use Warp\DevTool\Monorepo\Composer\MonorepoConfig;
 
 final class ComposerPackagesCollation
 {
-    private ComposerJson $composer;
-
-    private MonorepoConfig $monorepo;
+    /**
+     * @var array<string,string>
+     */
+    private array $autoloadDirs;
 
     /**
      * @var array<string,string>
      */
-    private array $autoloadDirs = [];
+    private array $autoloadFiles;
 
     /**
      * @var array<string,string>
      */
-    private array $autoloadFiles = [];
+    private array $autoloadDevDirs;
 
     /**
      * @var array<string,string>
      */
-    private array $autoloadDevDirs = [];
+    private array $autoloadDevFiles;
 
-    /**
-     * @var array<string,string>
-     */
-    private array $autoloadDevFiles = [];
+    public function __construct(
+        private readonly ComposerJson $composer,
+    ) {
+        $monorepo = MonorepoConfig::fromComposer($this->composer);
 
-    public function __construct(ComposerJson $composer)
-    {
-        $this->composer = $composer;
-        $this->monorepo = MonorepoConfig::fromComposer($this->composer);
-
-        [$this->autoloadDirs, $this->autoloadFiles] = self::collate($this->composer, $this->monorepo);
+        [$this->autoloadDirs, $this->autoloadFiles] = self::collate($this->composer, $monorepo);
         [$this->autoloadDevDirs, $this->autoloadDevFiles] = self::collate(
             $this->composer,
-            $this->monorepo,
+            $monorepo,
             ComposerJson::AUTOLOAD_DEV
         );
     }
@@ -117,34 +113,20 @@ final class ComposerPackagesCollation
 
         $lock = \json_decode($lockFileContent, true, 512, \JSON_THROW_ON_ERROR);
 
-        foreach ($lock['packages'] as $package) {
-            foreach ($package[$section]['psr-4'] ?? [] as $dirs) {
-                foreach ((array)$dirs as $dir) {
+        foreach (['packages', 'packages-dev'] as $key) {
+            foreach ($lock[$key] as $package) {
+                foreach ($package[$section]['psr-4'] ?? [] as $dirs) {
+                    foreach ((array)$dirs as $dir) {
+                        $autoloadDirs[$vendorDir . $package['name'] . '/' . $dir] = $package['name'];
+                    }
+                }
+                foreach ($package[$section]['classmap'] ?? [] as $dir) {
                     $autoloadDirs[$vendorDir . $package['name'] . '/' . $dir] = $package['name'];
                 }
-            }
-            foreach ($package[$section]['classmap'] ?? [] as $dir) {
-                $autoloadDirs[$vendorDir . $package['name'] . '/' . $dir] = $package['name'];
-            }
-            foreach ($package[$section]['files'] ?? [] as $files) {
-                foreach ((array)$files as $file) {
-                    $autoloadFiles[$vendorDir . $package['name'] . '/' . $file] = $package['name'];
-                }
-            }
-        }
-
-        foreach ($lock['packages-dev'] as $package) {
-            foreach ($package[$section]['psr-4'] ?? [] as $dirs) {
-                foreach ((array)$dirs as $dir) {
-                    $autoloadDirs[$vendorDir . $package['name'] . '/' . $dir] = $package['name'];
-                }
-            }
-            foreach ($package[$section]['classmap'] ?? [] as $dir) {
-                $autoloadDirs[$vendorDir . $package['name'] . '/' . $dir] = $package['name'];
-            }
-            foreach ($package[$section]['files'] ?? [] as $files) {
-                foreach ((array)$files as $file) {
-                    $autoloadFiles[$vendorDir . $package['name'] . '/' . $file] = $package['name'];
+                foreach ($package[$section]['files'] ?? [] as $files) {
+                    foreach ((array)$files as $file) {
+                        $autoloadFiles[$vendorDir . $package['name'] . '/' . $file] = $package['name'];
+                    }
                 }
             }
         }

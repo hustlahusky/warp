@@ -9,12 +9,10 @@ use Warp\DevTool\Shared\AbstractConfig;
 final class MonorepoProject extends AbstractConfig
 {
     public const DIR = 'dir';
-
     public const GIT = 'git';
 
     /**
      * @param array<string,mixed> $data
-     * @return static
      */
     public static function fromArray(array $data): self
     {

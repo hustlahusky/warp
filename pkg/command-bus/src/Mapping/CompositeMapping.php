@@ -9,16 +9,10 @@ use Warp\CommandBus\Mapping\Method\MethodNameMappingInterface;
 
 final class CompositeMapping implements CommandToHandlerMappingInterface
 {
-    private ClassNameMappingInterface $classNameMapping;
-
-    private MethodNameMappingInterface $methodNameMapping;
-
     public function __construct(
-        ClassNameMappingInterface $classNameMapping,
-        MethodNameMappingInterface $methodNameMapping
+        private readonly ClassNameMappingInterface $classNameMapping,
+        private readonly MethodNameMappingInterface $methodNameMapping,
     ) {
-        $this->classNameMapping = $classNameMapping;
-        $this->methodNameMapping = $methodNameMapping;
     }
 
     public function getClassName(string $commandClass): string

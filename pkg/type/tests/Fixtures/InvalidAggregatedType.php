@@ -8,7 +8,7 @@ final class InvalidAggregatedType extends \Warp\Type\AbstractAggregatedType
 {
     public const DELIMITER = '';
 
-    public function check($value): bool
+    public function check(mixed $value): bool
     {
         return false;
     }

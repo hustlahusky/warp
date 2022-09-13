@@ -10,7 +10,6 @@ use Gitonomy\Git\Diff\File;
 use Gitonomy\Git\Exception\ProcessException;
 use Gitonomy\Git\Exception\RuntimeException;
 use Gitonomy\Git\Reference\Branch;
-use Gitonomy\Git\Reference\Tag;
 use Gitonomy\Git\Repository;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Symfony\Component\Console\Command\Command;
@@ -29,13 +28,11 @@ final class ProjectsSplitCommand extends Command
 {
     protected static $defaultName = 'monorepo:projects:split';
 
-    private Filesystem $filesystem;
-
-    public function __construct(Filesystem $filesystem, ?string $name = null)
-    {
+    public function __construct(
+        private readonly Filesystem $filesystem,
+        ?string $name = null,
+    ) {
         parent::__construct($name);
-
-        $this->filesystem = $filesystem;
     }
 
     protected function configure(): void
@@ -98,7 +95,7 @@ final class ProjectsSplitCommand extends Command
         [$headTag] = $rootGit->getReferences()->resolveTags($headCommit) + [null];
 
         $token = \trim((string)$input->getOption('token'));
-        $tmpDir = \rtrim($input->getOption('tmp'), '/\\');
+        $tmpDir = \rtrim((string)$input->getOption('tmp'), '/\\');
         \assert(null !== $project->getGit());
         $gitUri = Psr17FactoryDiscovery::findUriFactory()->createUri($project->getGit())->withUserInfo($token);
 
@@ -264,19 +261,17 @@ final class ProjectsSplitCommand extends Command
 
     private function formatCommitAuthor(Commit $commit): string
     {
-        $addr = new Address($commit->getAuthorEmail(), $commit->getAuthorName());
-        return $addr->toString();
+        return (new Address($commit->getAuthorEmail(), $commit->getAuthorName()))->toString();
     }
 
     /**
-     * @param Commit $commit
      * @return \Generator<Branch>
      */
     private function getIncludingBranches(Commit $commit): \Generator
     {
         try {
             $result = $commit->getRepository()->run('branch', ['--contains', $commit->getHash()]);
-        } catch (ProcessException $e) {
+        } catch (ProcessException) {
             return yield from [];
         }
 
@@ -294,7 +289,7 @@ final class ProjectsSplitCommand extends Command
             try {
                 // skip detached state
                 $commit->getRepository()->run('check-ref-format', ['--branch', $row]);
-            } catch (ProcessException $e) {
+            } catch (ProcessException) {
                 continue;
             }
 

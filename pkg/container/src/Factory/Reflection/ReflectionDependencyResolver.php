@@ -21,16 +21,12 @@ use Warp\Type\UnionType;
  */
 final class ReflectionDependencyResolver
 {
-    private ContainerInterface $container;
-
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        private readonly ContainerInterface $container,
+    ) {
     }
 
     /**
-     * @param \ReflectionFunctionAbstract $function
-     * @param FactoryOptionsInterface|null $options
      * @return \Generator<mixed>
      */
     public function resolveDependencies(
@@ -45,7 +41,6 @@ final class ReflectionDependencyResolver
     }
 
     /**
-     * @param \ReflectionParameter $parameter
      * @return Argument<mixed>
      */
     private function makeArgument(\ReflectionParameter $parameter): Argument
@@ -103,15 +98,13 @@ final class ReflectionDependencyResolver
 
     /**
      * @param class-string<AbstractAggregatedType> $class
-     * @param TypeInterface ...$types
-     * @return TypeInterface
      */
     private static function aggregateTypes(string $class, TypeInterface ...$types): TypeInterface
     {
         $types = \array_unique($types);
 
         if (1 < \count($types)) {
-            return \call_user_func([$class, 'new'], ...$types);
+            return $class::new(...$types);
         }
 
         return $types[0];

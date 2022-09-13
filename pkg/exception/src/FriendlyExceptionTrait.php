@@ -8,15 +8,8 @@ use function Symfony\Component\String\s;
 
 trait FriendlyExceptionTrait
 {
-    /**
-     * @var string|\Stringable|null
-     */
-    protected $name = null;
-
-    /**
-     * @var string|\Stringable|null
-     */
-    protected $solution = null;
+    protected string|\Stringable|null $name = null;
+    protected string|\Stringable|null $solution = null;
 
     public function getName(): string
     {

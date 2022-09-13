@@ -4,6 +4,16 @@ All notable changes to `getwarp/container` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## [4.0.0] - XXXX-XX-XX
+
+### Changed
+
+- Minimal supported PHP version bumped up to 8.1.
+
+### Removed
+
+- Class `Warp\Container\RawValueHolder` was removed.
+
 ## [3.1.0] - 2022-08-22
 
 Bump up version.
@@ -12,7 +22,11 @@ Bump up version.
 
 ### Changed
 
-- Invoker/factory options accept argument values wrapped to `PhpOption\Option`
+- Invoker/factory options accept argument values wrapped to `PhpOption\Some`.
+
+### Deprecated
+
+- Class `Warp\Container\RawValueHolder` was deprecated. You should replace its usages with `PhpOption\Some`.
 
 ## [3.0.0] - 2022-04-22
 

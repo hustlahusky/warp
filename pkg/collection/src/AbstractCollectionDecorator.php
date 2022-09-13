@@ -68,7 +68,7 @@ abstract class AbstractCollectionDecorator implements CollectionInterface
         return $this->getCollection()->find($callback);
     }
 
-    public function contains($element): bool
+    public function contains(mixed $element): bool
     {
         return $this->getCollection()->contains($element);
     }
@@ -83,47 +83,47 @@ abstract class AbstractCollectionDecorator implements CollectionInterface
         return $this->getCollection()->last();
     }
 
-    public function reduce(callable $callback, $initialValue = null)
+    public function reduce(callable $callback, mixed $initialValue = null)
     {
         return $this->getCollection()->reduce($callback, $initialValue);
     }
 
-    public function implode(?string $glue = null, ?FieldInterface $field = null): string
+    public function implode(string $glue = '', ?FieldInterface $field = null): string
     {
         return $this->getCollection()->implode($glue, $field);
     }
 
-    public function sum(?FieldInterface $field = null)
+    public function sum(?FieldInterface $field = null): int|float
     {
         return $this->getCollection()->sum($field);
     }
 
-    public function average(?FieldInterface $field = null)
+    public function average(?FieldInterface $field = null): int|float|null
     {
         return $this->getCollection()->average($field);
     }
 
-    public function median(?FieldInterface $field = null)
+    public function median(?FieldInterface $field = null): int|float|null
     {
         return $this->getCollection()->median($field);
     }
 
-    public function max(?FieldInterface $field = null)
+    public function max(?FieldInterface $field = null): int|float|null
     {
         return $this->getCollection()->max($field);
     }
 
-    public function min(?FieldInterface $field = null)
+    public function min(?FieldInterface $field = null): int|float|null
     {
         return $this->getCollection()->min($field);
     }
 
-    public function indexBy($keyExtractor): MapInterface
+    public function indexBy(FieldInterface|callable $keyExtractor): MapInterface
     {
         return $this->getCollection()->indexBy($keyExtractor);
     }
 
-    public function groupBy($keyExtractor): MapInterface
+    public function groupBy(FieldInterface|callable $keyExtractor): MapInterface
     {
         return $this->getCollection()->groupBy($keyExtractor);
     }
@@ -143,17 +143,17 @@ abstract class AbstractCollectionDecorator implements CollectionInterface
         $this->getCollection()->clear();
     }
 
-    public function add($element, ...$elements): void
+    public function add(mixed $element, mixed ...$elements): void
     {
         $this->getCollection()->add($element, ...$elements);
     }
 
-    public function remove($element, ...$elements): void
+    public function remove(mixed $element, mixed ...$elements): void
     {
         $this->getCollection()->remove($element, ...$elements);
     }
 
-    public function replace($element, $replacement): void
+    public function replace(mixed $element, mixed $replacement): void
     {
         $this->getCollection()->replace($element, $replacement);
     }

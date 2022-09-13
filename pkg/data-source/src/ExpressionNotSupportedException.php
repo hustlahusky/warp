@@ -22,19 +22,19 @@ final class ExpressionNotSupportedException extends \InvalidArgumentException im
      * @param MessageTemplate|scalar|\Stringable $message
      * @noinspection MagicMethodsValidityInspection PhpMissingParentConstructorInspection
      */
-    private function __construct($message = '', int $code = 0, ?\Throwable $previous = null)
+    private function __construct(mixed $message = '', int $code = 0, ?\Throwable $previous = null)
     {
         $this->construct($message, $code, $previous);
     }
 
     public static function new(Expression $expression): self
     {
-        return new self(\sprintf('Not supported expression class: %s.', \get_class($expression)));
+        return new self(\sprintf('Not supported expression class: %s.', $expression::class));
     }
 
     public static function cannotBeNegated(Expression $expression): self
     {
-        return new self(\sprintf('Cannot negate expression: %s.', \get_class($expression)));
+        return new self(\sprintf('Cannot negate expression: %s.', $expression::class));
     }
 
     protected static function getDefaultName(): string

@@ -15,7 +15,7 @@ final class SafeReflectionHydrator extends AbstractHydrator
     /**
      * @var array<class-string,array<string,\ReflectionProperty>>
      */
-    private static $reflProperties = [];
+    private static array $reflProperties = [];
 
     public function extract(object $object): array
     {
@@ -39,7 +39,7 @@ final class SafeReflectionHydrator extends AbstractHydrator
         return $result;
     }
 
-    public function hydrate(array $data, object $object)
+    public function hydrate(array $data, object $object): object
     {
         $reflProperties = self::getReflProperties($object);
 
@@ -61,7 +61,7 @@ final class SafeReflectionHydrator extends AbstractHydrator
      */
     private static function getReflProperties(object $input): array
     {
-        $class = \get_class($input);
+        $class = $input::class;
 
         if (isset(self::$reflProperties[$class])) {
             return self::$reflProperties[$class];

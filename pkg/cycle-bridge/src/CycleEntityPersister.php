@@ -15,14 +15,10 @@ use Warp\DataSource\EntityPersisterInterface;
  */
 final class CycleEntityPersister implements EntityPersisterInterface
 {
-    private ORMInterface $orm;
-
-    private int $transactionMode;
-
-    public function __construct(ORMInterface $orm, int $transactionMode = TransactionInterface::MODE_CASCADE)
-    {
-        $this->orm = $orm;
-        $this->transactionMode = $transactionMode;
+    public function __construct(
+        private readonly ORMInterface $orm,
+        private int $transactionMode = TransactionInterface::MODE_CASCADE,
+    ) {
     }
 
     public function persistCascade(): void
