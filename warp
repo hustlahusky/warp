@@ -1,0 +1,31 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+namespace Warp\DevTool;
+
+use Composer\Autoload\ClassLoader;
+use PhpOption\Some;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Warp\DevTool\Monorepo\Composer\ComposerHelper;
+
+$classLoader = require __DIR__ . '/vendor/autoload.php';
+
+$kernel = new DevToolKernel();
+
+$kernel->getContainer()->define(ClassLoader::class, new Some($classLoader), true);
+
+$kernel->configureConsoleApplication(
+    $console = new Application(),
+    $input = new ArgvInput(),
+    $output = new ConsoleOutput(),
+);
+
+$console->getHelperSet()->set(new ComposerHelper(__DIR__ . '/composer.json'));
+
+$exitCode = $console->run($input, $output);
+
+exit(\max(\min($exitCode, 255), 0));

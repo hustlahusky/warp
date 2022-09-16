@@ -9,9 +9,11 @@ use Warp\DevTool\Shared\AbstractConfig;
 final class MonorepoConfig extends AbstractConfig
 {
     public const PROJECTS = 'projects';
-    public const REQUIRE = 'require';
-    public const REQUIRE_DEV = 'require-dev';
-    public const REPLACE = 'replace';
+    public const REQUIRE = ComposerJson::REQUIRE;
+    public const REQUIRE_DEV = ComposerJson::REQUIRE_DEV;
+    public const REPLACE = ComposerJson::REPLACE;
+    public const AUTOLOAD = ComposerJson::AUTOLOAD;
+    public const AUTOLOAD_DEV = ComposerJson::AUTOLOAD_DEV;
 
     protected function __construct(
         array $source,

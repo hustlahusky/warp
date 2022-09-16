@@ -18,9 +18,9 @@ parameters:
         - pkg/cycle-bridge/src/
         - pkg/data-source/src/
         - pkg/data-source/.phpstan/
-        - pkg/dev-tool/src/
         - pkg/exception/src/
         - pkg/laminas-hydrator-bridge/src/
         - pkg/laminas-hydrator-bridge/.phpstan/
         - pkg/type/src/
         - pkg/value-object/src/
+        - ./warp

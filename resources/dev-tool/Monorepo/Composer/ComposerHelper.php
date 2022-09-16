@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Warp\DevTool\Console;
+namespace Warp\DevTool\Monorepo\Composer;
 
 use Symfony\Component\Console\Helper\Helper;
-use Warp\DevTool\Monorepo\Composer\ComposerJson;
 
 final class ComposerHelper extends Helper
 {

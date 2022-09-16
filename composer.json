@@ -16,31 +16,27 @@
   "require": {
     "php": "^8.1",
     "ext-json": "*",
-    "composer/semver": "^3.0",
     "cycle/database": "^1.0",
     "cycle/orm": "^1.7",
-    "gitonomy/gitlib": "^1.2",
     "laminas/laminas-hydrator": "^4.0",
-    "nikic/php-parser": "^4.10",
     "php-http/discovery": "^1.11",
     "phpoption/phpoption": "^1.7",
     "psr/clock": "^1.0",
     "psr/container": "^1.1|^2.0",
     "psr/http-message": "^1.0",
-    "symfony/console": "^5.2|^6.0",
     "symfony/event-dispatcher-contracts": "^2.0|^3.0",
-    "symfony/filesystem": "^5.2|^6.0",
-    "symfony/finder": "^5.2|^6.0",
-    "symfony/mime": "^5.2|^6.0",
     "symfony/string": "^5.2|^6.0",
     "symfony/translation-contracts": "^2.3|^3.0",
     "webmozart/expression": "^1.0",
     "yiisoft/friendly-exception": "^1.0"
   },
   "require-dev": {
+    "composer/semver": "^3.0",
     "cycle/migrations": "^2.0",
     "cycle/schema-builder": "^1.2",
     "cycle/schema-migrations-generator": "^1.0",
+    "gitonomy/gitlib": "^1.2",
+    "nikic/php-parser": "^4.10",
     "nyholm/psr7": "^1.4",
     "phpspec/prophecy": "^1.13",
     "phpspec/prophecy-phpunit": "^2.0",
@@ -50,8 +46,12 @@
     "rector/rector": "^0.14.2",
     "roave/security-advisories": "dev-latest",
     "slevomat/coding-standard": "^7.0",
+    "symfony/console": "^5.2|^6.0",
     "symfony/event-dispatcher": "^5.2|^6.0",
+    "symfony/filesystem": "^5.2|^6.0",
+    "symfony/finder": "^5.2|^6.0",
     "symfony/lock": "^5.2|^6.0",
+    "symfony/mime": "^5.2|^6.0",
     "symfony/property-access": "^5.2|^6.0",
     "symfony/property-info": "^5.2|^6.0",
     "symfony/stopwatch": "^5.2|^6.0",
@@ -70,7 +70,6 @@
     "getwarp/criteria": "self.version",
     "getwarp/cycle-bridge": "self.version",
     "getwarp/data-source": "self.version",
-    "getwarp/dev-tool": "self.version",
     "getwarp/easy-coding-standard-bridge": "self.version",
     "getwarp/exception": "self.version",
     "getwarp/laminas-hydrator-bridge": "self.version",
@@ -85,23 +84,22 @@
     "symfony/polyfill-php81": "*"
   },
   "bin": [
-    "pkg/dev-tool/bin/dev-tool",
     "pkg/easy-coding-standard-bridge/bin/ecs-baseliner.php",
     "pkg/easy-coding-standard-bridge/bin/ecs-init.php"
   ],
   "autoload": {
     "psr-4": {
+      "Warp\\Bridge\\Cycle\\": "pkg/cycle-bridge/src",
+      "Warp\\Bridge\\LaminasHydrator\\": "pkg/laminas-hydrator-bridge/src",
       "Warp\\Clock\\": "pkg/clock/src",
       "Warp\\Collection\\": "pkg/collection/src",
       "Warp\\CommandBus\\": "pkg/command-bus/src",
       "Warp\\Common\\": "pkg/common/src",
       "Warp\\Container\\": "pkg/container/src",
       "Warp\\Criteria\\": "pkg/criteria/src",
-      "Warp\\Bridge\\Cycle\\": "pkg/cycle-bridge/src",
       "Warp\\DataSource\\": "pkg/data-source/src",
-      "Warp\\DevTool\\": "pkg/dev-tool/src",
+      "Warp\\DevTool\\": "resources/dev-tool",
       "Warp\\Exception\\": "pkg/exception/src",
-      "Warp\\Bridge\\LaminasHydrator\\": "pkg/laminas-hydrator-bridge/src",
       "Warp\\Type\\": "pkg/type/src",
       "Warp\\ValueObject\\": "pkg/value-object/src"
     },
@@ -111,17 +109,16 @@
   },
   "autoload-dev": {
     "psr-4": {
+      "Warp\\Bridge\\Cycle\\": "pkg/cycle-bridge/tests",
+      "Warp\\Bridge\\LaminasHydrator\\": "pkg/laminas-hydrator-bridge/tests",
       "Warp\\Clock\\": "pkg/clock/tests",
       "Warp\\Collection\\": "pkg/collection/tests",
       "Warp\\CommandBus\\": "pkg/command-bus/tests",
       "Warp\\Common\\": "pkg/common/tests",
       "Warp\\Container\\": "pkg/container/tests",
       "Warp\\Criteria\\": "pkg/criteria/tests",
-      "Warp\\Bridge\\Cycle\\": "pkg/cycle-bridge/tests",
       "Warp\\DataSource\\": "pkg/data-source/tests",
-      "Warp\\DevTool\\": "pkg/dev-tool/tests",
       "Warp\\Exception\\": "pkg/exception/tests",
-      "Warp\\Bridge\\LaminasHydrator\\": "pkg/laminas-hydrator-bridge/tests",
       "Warp\\Type\\": "pkg/type/tests",
       "Warp\\ValueObject\\": "pkg/value-object/tests"
     },
@@ -170,10 +167,6 @@
           "git": "https://github.com/getwarp/data-source.git"
         },
         {
-          "dir": "pkg/dev-tool",
-          "git": null
-        },
-        {
           "dir": "pkg/easy-coding-standard-bridge",
           "git": "https://github.com/getwarp/easy-coding-standard-bridge.git"
         },
@@ -194,13 +187,24 @@
           "git": "https://github.com/getwarp/value-object.git"
         }
       ],
+      "require": {
+        "php": "^8.1",
+        "ext-json": "*"
+      },
       "require-dev": {
+        "composer/semver": "^3.0",
+        "gitonomy/gitlib": "^1.2",
+        "nikic/php-parser": "^4.10",
         "phpspec/prophecy": "^1.13",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpstan/phpstan": "^1.0",
         "phpunit/phpunit": "^9.5",
         "rector/rector": "^0.14.2",
-        "roave/security-advisories": "dev-latest"
+        "roave/security-advisories": "dev-latest",
+        "symfony/console": "^5.2|^6.0",
+        "symfony/filesystem": "^5.2|^6.0",
+        "symfony/finder": "^5.2|^6.0",
+        "symfony/mime": "^5.2|^6.0"
       },
       "replace": {
         "symfony/polyfill-php70": "*",
@@ -210,6 +214,11 @@
         "symfony/polyfill-php74": "*",
         "symfony/polyfill-php80": "*",
         "symfony/polyfill-php81": "*"
+      },
+      "autoload": {
+        "psr-4": {
+          "Warp\\DevTool\\": "resources/dev-tool"
+        }
       }
     }
   },

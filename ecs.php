@@ -10,18 +10,19 @@ use Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Option;
 
-return static function (ECSConfig $containerConfigurator): void {
-    $parameters = $containerConfigurator->parameters();
+return static function (ECSConfig $config): void {
+    $config->parameters()->set(Option::CACHE_DIRECTORY, __DIR__ . '/._ecs_cache');
+    $config->parallel();
 
-    $parameters->set(Option::PARALLEL, true);
-    $parameters->set(Option::CACHE_DIRECTORY, __DIR__ . '/._ecs_cache');
-
-    $parameters->set(Option::PATHS, \array_merge(
-        \glob(__DIR__ . '/pkg/*/src'),
-        \glob(__DIR__ . '/pkg/*/bin'),
+    $config->paths(\array_merge(
+        \glob(__DIR__ . '/pkg/*/src') ?: [],
+        \glob(__DIR__ . '/pkg/*/bin') ?: [],
+        [
+            __DIR__ . '/warp',
+        ]
     ));
 
-    $parameters->set(Option::SKIP, [
+    $config->skip([
         'Unused variable $_.' => null,
         'Unused parameter $_.' => null,
 
@@ -39,7 +40,7 @@ return static function (ECSConfig $containerConfigurator): void {
         ],
     ]);
 
-    $containerConfigurator->import(__DIR__ . '/vendor/getwarp/easy-coding-standard-bridge/resources/config/warp.php', null, 'not_found');
-    $containerConfigurator->import(__DIR__ . '/pkg/easy-coding-standard-bridge/resources/config/warp.php', null, 'not_found');
-    $containerConfigurator->import(__DIR__ . '/ecs-baseline.php', null, 'not_found');
+    $config->import(__DIR__ . '/vendor/getwarp/easy-coding-standard-bridge/resources/config/warp.php', null, 'not_found');
+    $config->import(__DIR__ . '/pkg/easy-coding-standard-bridge/resources/config/warp.php', null, 'not_found');
+    $config->import(__DIR__ . '/ecs-baseline.php', null, 'not_found');
 };

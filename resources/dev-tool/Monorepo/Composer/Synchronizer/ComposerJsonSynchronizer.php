@@ -49,12 +49,12 @@ final class ComposerJsonSynchronizer
     /**
      * @var array<string,mixed>
      */
-    private array $autoload = [];
+    private array $autoload;
 
     /**
      * @var array<string,mixed>
      */
-    private array $autoloadDev = [];
+    private array $autoloadDev;
 
     public function __construct(
         private readonly ComposerJson $rootComposer,
@@ -93,6 +93,9 @@ final class ComposerJsonSynchronizer
             $this->replace[$package] ??= [];
             $this->replace[$package][$version] = true;
         }
+
+        $this->autoload = $monorepoConfig->getSection(MonorepoConfig::AUTOLOAD, []);
+        $this->autoloadDev = $monorepoConfig->getSection(MonorepoConfig::AUTOLOAD_DEV, []);
 
         foreach ($monorepoConfig->getProjects() as $project) {
             $this->addProject($project);
@@ -420,6 +423,8 @@ final class ComposerJsonSynchronizer
                         $dirs = (array)$dirs;
                         $output['psr-4'][$namespace] = 1 === \count($dirs) ? $dirs[0] : $dirs;
                     }
+
+                    \ksort($output['psr-4']);
                     break;
 
                 case 'files':

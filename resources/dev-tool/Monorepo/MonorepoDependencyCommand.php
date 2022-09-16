@@ -16,12 +16,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Warp\DevTool\Console\ComposerHelper;
+use Warp\DevTool\Monorepo\Composer\ComposerHelper;
 use Warp\DevTool\Monorepo\Composer\ComposerJson;
 use Warp\DevTool\Monorepo\Composer\MonorepoConfig;
 use Warp\DevTool\Monorepo\Composer\MonorepoProject;
 
-final class TestCommand extends Command
+final class MonorepoDependencyCommand extends Command
 {
     protected static $defaultName = 'monorepo:dependency';
 

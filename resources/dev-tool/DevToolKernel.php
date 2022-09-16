@@ -13,6 +13,6 @@ final class DevToolKernel extends AbstractKernel
 
     protected function loadServiceProviders(): iterable
     {
-        yield DI\CommandsProvider::class;
+        yield \Warp\DevTool\CommandsProvider::class;
     }
 }
