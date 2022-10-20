@@ -56,6 +56,11 @@
       "target": "git@github.com:getwarp/laminas-hydrator-bridge.git"
     },
     {
+      "name": "monad",
+      "directory": "pkg/monad",
+      "target": "git@github.com:getwarp/monad.git"
+    },
+    {
       "name": "type",
       "directory": "pkg/type",
       "target": "git@github.com:getwarp/type.git"

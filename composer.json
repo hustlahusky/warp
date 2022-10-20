@@ -73,6 +73,7 @@
     "getwarp/easy-coding-standard-bridge": "self.version",
     "getwarp/exception": "self.version",
     "getwarp/laminas-hydrator-bridge": "self.version",
+    "getwarp/monad": "self.version",
     "getwarp/type": "self.version",
     "getwarp/value-object": "self.version",
     "symfony/polyfill-php70": "*",
@@ -100,11 +101,13 @@
       "Warp\\DataSource\\": "pkg/data-source/src",
       "Warp\\DevTool\\": "resources/dev-tool",
       "Warp\\Exception\\": "pkg/exception/src",
+      "Warp\\Monad\\": "pkg/monad/src",
       "Warp\\Type\\": "pkg/type/src",
       "Warp\\ValueObject\\": "pkg/value-object/src"
     },
     "files": [
-      "pkg/common/functions.php"
+      "pkg/common/functions.php",
+      "pkg/monad/src/autoload.php"
     ]
   },
   "autoload-dev": {
@@ -119,6 +122,7 @@
       "Warp\\Criteria\\": "pkg/criteria/tests",
       "Warp\\DataSource\\": "pkg/data-source/tests",
       "Warp\\Exception\\": "pkg/exception/tests",
+      "Warp\\Monad\\": "pkg/monad/tests",
       "Warp\\Type\\": "pkg/type/tests",
       "Warp\\ValueObject\\": "pkg/value-object/tests"
     },
@@ -179,6 +183,10 @@
           "git": "https://github.com/getwarp/laminas-hydrator-bridge.git"
         },
         {
+          "dir": "pkg/monad",
+          "git": "https://github.com/getwarp/monad.git"
+        },
+        {
           "dir": "pkg/type",
           "git": "https://github.com/getwarp/type.git"
         },
@@ -228,7 +236,8 @@
     "preferred-install": "dist",
     "sort-packages": true,
     "allow-plugins": {
-      "dealerdirect/phpcodesniffer-composer-installer": true
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "php-http/discovery": true
     }
   }
 }
