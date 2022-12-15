@@ -15,12 +15,12 @@ final class YiiField implements FieldInterface
     private readonly array $elements;
 
     /**
-     * @var array-key|array<array-key>|\Closure
+     * @var array-key|list<array-key>|\Closure
      */
     private mixed $extractKey;
 
     /**
-     * @param array-key|array<array-key>|\Closure|null $extractKey
+     * @param array-key|list<array-key>|\Closure|null $extractKey
      */
     public function __construct(
         private readonly string $field,
