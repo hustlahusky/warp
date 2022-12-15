@@ -10,9 +10,21 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 - Minimal supported PHP version bumped up to 8.1.
 
+## [3.1.1] - 2022-12-15
+
+### Misc
+
+- Fix phpstan notices
+
 ## [3.1.0] - 2022-08-22
 
 Bump up version.
+
+## [3.0.3] - 2022-12-15
+
+### Misc
+
+- Fix phpstan notices
 
 ## [3.0.0] - 2022-04-22
 
