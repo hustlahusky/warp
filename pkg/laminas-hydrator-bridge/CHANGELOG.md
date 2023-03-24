@@ -10,6 +10,18 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 - Minimal supported PHP version bumped up to 8.1.
 
+## [3.1.3] - 2023-02-15
+
+### Fixed
+
+- fix timezone offsets comparison in `DateValueStrategy`
+
+## [3.1.2] - 2023-02-14
+
+### Changed
+
+- `DateValueStrategy` now supports timezone
+
 ## [3.1.0] - 2022-08-22
 
 Bump up version.

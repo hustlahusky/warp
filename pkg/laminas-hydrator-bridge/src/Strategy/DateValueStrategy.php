@@ -6,10 +6,11 @@ namespace Warp\Bridge\LaminasHydrator\Strategy;
 
 use Laminas\Hydrator\Strategy\StrategyInterface;
 use Warp\Clock\DateTimeImmutableValue;
+use Warp\Clock\DateTimeValue;
 use Warp\Clock\DateTimeValueInterface;
 
 /**
- * @template T of DateTimeValueInterface
+ * @template T of DateTimeValue|DateTimeImmutableValue
  */
 final class DateValueStrategy implements StrategyInterface
 {
@@ -17,6 +18,8 @@ final class DateValueStrategy implements StrategyInterface
      * @var class-string<T>
      */
     private readonly string $dateClass;
+    private readonly \DateTimeZone $timezone;
+    private readonly string $timezoneOffset;
 
     /**
      * @param class-string<T> $dateClass
@@ -24,6 +27,7 @@ final class DateValueStrategy implements StrategyInterface
     public function __construct(
         private readonly string $format,
         string $dateClass = DateTimeImmutableValue::class,
+        \DateTimeZone|string|null $timezone = null
     ) {
         if (!\is_subclass_of($dateClass, DateTimeValueInterface::class)) {
             throw new \InvalidArgumentException(\sprintf(
@@ -34,6 +38,10 @@ final class DateValueStrategy implements StrategyInterface
         }
 
         $this->dateClass = $dateClass;
+        $this->timezone = $timezone instanceof \DateTimeZone
+            ? $timezone
+            : new \DateTimeZone($timezone ?: \date_default_timezone_get());
+        $this->timezoneOffset = (new \DateTimeImmutable('now', $this->timezone))->format('Z');
     }
 
     /**
@@ -50,7 +58,7 @@ final class DateValueStrategy implements StrategyInterface
             ));
         }
 
-        return $value->format($this->format);
+        return $this->makeDateValueObject($value)->format($this->format);
     }
 
     /**
@@ -61,24 +69,47 @@ final class DateValueStrategy implements StrategyInterface
     public function hydrate(mixed $value, ?array $data = null)
     {
         if ($value instanceof \DateTimeInterface) {
-            return $this->dateClass::from($value);
+            return $this->makeDateValueObject($value);
         }
 
-        if (!\is_string($value) && !\is_numeric($value)) {
-            throw new \InvalidArgumentException(\sprintf(
-                'Expected value to be a string or number. Got: %s.',
-                \get_debug_type($value),
-            ));
+        $date = \DateTimeImmutable::createFromFormat($this->format, (string)$value, $this->timezone);
+        // @phpstan-ignore-next-line
+        return $date ? $this->dateClass::from($date) : $this->makeDateValueObject($value);
+    }
+
+    /**
+     * @param \DateTimeInterface|int|string $value
+     * @return T
+     */
+    private function makeDateValueObject(mixed $value): DateTimeValueInterface
+    {
+        if ($value instanceof $this->dateClass && $this->timezoneOffset === $value->format('Z')) {
+            return $value;
         }
 
-        $date = DateTimeImmutableValue::createFromFormat($this->format, (string)$value)
-            ?? DateTimeImmutableValue::createFromFormat(
-                $this->format,
-                DateTimeImmutableValue::from($value)->format($this->format)
+        if ($value instanceof \DateTimeInterface) {
+            $date = \DateTimeImmutable::createFromFormat(
+                'Y-m-d H:i:s.u',
+                $value->format('Y-m-d H:i:s.u'),
+                $value->getTimezone()
             );
+            \assert(false !== $date);
+            $date = $date->setTimezone($this->timezone);
 
-        \assert(null !== $date);
+            // @phpstan-ignore-next-line
+            return $this->dateClass::from($date);
+        }
 
-        return $this->dateClass::from($date);
+        $timestamp = \filter_var($value, \FILTER_VALIDATE_INT);
+        if ($timestamp) {
+            return new $this->dateClass('@' . $timestamp, $this->timezone);
+        }
+
+        $value = \trim((string)$value);
+        if ('' === $value) {
+            throw new \InvalidArgumentException('Unable to create date from empty string.');
+        }
+
+        return new $this->dateClass($value, $this->timezone);
     }
 }
