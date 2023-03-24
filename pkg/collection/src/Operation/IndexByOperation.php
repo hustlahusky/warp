@@ -27,13 +27,13 @@ final class IndexByOperation extends AbstractOperation
 
         if ($keyExtractor instanceof FieldInterface) {
             $field = $keyExtractor;
-            /** @phpstan-var callable(V):K $keyExtractor */
             $keyExtractor = static function ($element) use ($field): string|int {
                 $offset = $field->extract($element);
                 return \is_string($offset) || \is_int($offset) ? $offset : (string)$offset;
             };
         }
 
+        // @phpstan-ignore-next-line
         $this->keyExtractor = $keyExtractor;
     }
 

@@ -109,10 +109,7 @@ final class EntityReference implements EntityReferenceInterface, PromiseInterfac
      */
     public static function fromEntity(object $entity, ?ReferenceInterface $reference = null): self
     {
-        /** @phpstan-var self<T> $ref */
-        $ref = new self($entity::class, $entity, $reference);
-        \assert(true);
-        return $ref;
+        return new self($entity::class, $entity, $reference);
     }
 
     /**
@@ -122,9 +119,6 @@ final class EntityReference implements EntityReferenceInterface, PromiseInterfac
      */
     public static function fromReference(string $class, ReferenceInterface $reference): self
     {
-        /** @phpstan-var self<T> $ref */
-        $ref = new self($class, null, $reference);
-        \assert(true);
-        return $ref;
+        return new self($class, null, $reference);
     }
 }
